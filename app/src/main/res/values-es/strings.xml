@@ -1,0 +1,137 @@
+<resources>
+    <string name="app_name">Mi consumo eléctrico</string>
+    <string name="title_activity_main">Consumo eléctrico</string>
+
+    <string name="action_settings">Ajustes</string>
+    <string name="title.activity.new.reading">Registrar lectura</string>
+    <string name="activity.new.reading.date">Fecha de lectura</string>
+    <string name="activity.new.reading.help">**Puedes cambiar la fecha desde el menú superior derecho</string>
+    <string name="activity.new.reading.observation">Observaciones</string>
+    <string name="activity.new.reading.error1">Valor erróneo</string>
+    <string name="activity.new.reading.input.error">Ingresa un mínimo de 1 caracteres</string>
+    <string name="activity.new.reading.input.error2">Lectura fuera de rango</string>
+
+    <string name="activity.new.reading.snack.warning">Lectura para fecha ya existe</string>
+    <string name="activity.new.reading.dialog.title">Aviso</string>
+    <string name="activity.new.reading.dialog.content">Al finalizar un periodo se reinicia el contador de consumo acumulado</string>
+    <string name="activity.main.dialog.end.period.content">Al finalizar un periodo se reinicia el contador de consumo acumulado, a continuacion seleccione la fecha en la que desea
+    finalizar el periodo
+    </string>
+    <string name="main.fragment.end.period.snack.content.ok">Periodo finalizado con éxito.</string>
+    <string name="main.fragment.end.period.snack.content.error">Error inesperado al intentar esta acción.</string>
+    <string name="main.fragment.end.period.snack.content.error2">No es posible finalizar periodo, ingrese lecturas primero.</string>
+
+
+    <string name="label_date">Fecha</string>
+    <string name="label_reading">Lectura</string>
+    <string name="label_readings">Lecturas</string>v
+    <string name="label_avg">Promedio</string>
+    <string name="label_start_consumption">Inicio consumo</string>
+    <string name="label_billing_period">Periodo facturación</string>
+    <string name="label_consump_proyection">Consumo estimado</string>
+    <string name="label_consump_avg">Consumo promedio</string>
+
+    <string name="label_consumption">Consumo kWh</string>
+    <string name="label_last_reading">Ultima lectura</string>
+
+
+    <string name="label_day">Día</string>
+    <string name="label_days">Días</string>
+    '<string name="label_days_consumption">Días consumo</string>
+
+    <string name="main.emty.title">No hay datos para mostrar.</string>
+    <string name="main.empty.suggest">Registra medidas frecuentemente para dar seguimiento a tu consumo electrico.</string>
+
+    <string name="end_period">Finalizar periodo</string>
+    <string name="end_period_ask">¿Esta seguro que desea finalizar periodo en esta fecha?</string>
+    <string name="end_period_psoitive">Continuar</string>
+
+    <string name="edit_reading">Editar lectura</string>
+    <string name="save">Guardar</string>
+
+    <string name="settings.ac.period">Periodo (días)</string>
+    <string name="settings.ac.period.limit">Límite de consumo por periodo</string>
+    <string name="chart.legend.avg.limit">Límite promedio (kWh)</string>
+    <string name="chart.legend.period.limit">Límite Periodo (kWh)</string>
+    <string name="chart.legend.bar">Consumo desde lectura anterior (kWh)</string>
+    <string name="chart.legend.avg">Promedio (kWh)</string>
+    <string name="chart.legend.accumulated">Consumo acumulado (kWh)</string>
+    <string name="chart.legend.estimate">Consumo estimado (kWh)</string>
+
+    <string name="alert_over_range">Valor fuera de rango</string>
+
+    <string name="cancel">Cancelar</string>
+    <string name="options">Opciones</string>
+
+    <string-array name="readings_options">
+        <item>Finalizar periodo</item>
+        <item>Editar lectura</item>
+    </string-array>
+
+    <string-array name="main_options">
+        <item>Ingresar lectura</item>
+        <item>Finalizar periodo</item>
+    </string-array>
+
+
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+
+    <!-- Example settings for Data & Sync -->
+
+    <!-- Example settings for Notifications -->
+
+    <string name="share_app_msg">Toma registro de tu consumo eléctrico de manera fácil con esta app.</string>
+    <string name="share_using">Compartir usando</string>
+    <string name="share">Compartir</string>
+    <string name="rate">Calificar</string>
+    <string name="remove_ads">Quitar publicidad</string>
+    <string name="notice">Aviso</string>
+    <string name="billing_error">Ha ocurrido un error inesperado y no se pudo efectuar la compra</string>
+    <string name="remove_ads_thank">Gracias por colaborar con esta aplicación</string>
+    <string name="no_data_chart">Sin datos para mostrar</string>
+    <string name="first_reading_notice">Este es tu primer registro, asegúrate siempre que sea posible, de que el primer registro coincida con la lectura reflejada en tu última factura con el objetivo obtener una mejor estimación, de lo contrario la aplicación tomara como inicio de periodo la fecha actual y hará estimaciones a partir de hoy hasta fin del periodo aproximado</string>
+    <string name="calculator.explanation">Esta herramienta fue diseñada para calcular el consumo eléctrico en tiempo real basado en el número de impulsos emitidos por tu medidor de energía en un periodo de tiempo específico.
+        \n\nPara lograr esto es necesario que sepas cuantos impulsos por kWh emite tu equipo, esta información la encuentras en frente del medidor.
+        \n\n(Ej. 1600 imp / kWh. o sea, que por cada kilowatt-hora (kWh) de consumo de energía, tu contador emite 1 600 destellos de luz.)
+        \n\n <b>Para un mejor calculo inicia el cronometro con el primer impulso y detenlo con el ultimo, los pulsos mínimos requeridos son dos, sin embargo para un cálculo más acertado ingresa de 5 a 10 destellos mínimo haciendo clic por cada uno en la parte consumo de la pantalla.</b></string>
+    <string name="not_show_again">Not show again</string>
+    <string name="help">Help</string>
+    <string name="settings.ac.price.kwh">Precio por kWh</string>
+    <string name="settings.ac.discount.kwh">Descuento por kWh</string>
+    <string name="settings.ac.currency">Moneda</string>
+    <string name="energy_meter_name">Medidor de energía</string>
+    <string name="initial_reading">Lectura inicial</string>
+    <string name="estimated_expense">Gasto estimado</string>
+    <string name="estimated_unsubsidized_expense">Gasto sin descuento estimado</string>
+    <string name="settings.ac.fixed_charges">Costos fijos</string>
+    <string name="days_consumed_val">%1$s días</string>
+    <string name="label_medidor">Nombre/ID</string>
+    <string name="description">"Descripción  "</string>
+    <string name="invalid_medidor_name">Se requiere un nombre o ID valido</string>
+    <string name="new_medidor">Nuevo medidor</string>
+    <string name="agree">Continuar</string>
+    <string name="date_format">dd MMM yyy</string>
+    <string name="last_reading_suggest">Ultima lectura (%1$s): %2$s kWh</string>
+    <string name="delete_medidor_notice">Esta acción borrará permanentemente el medidor de energía seleccionado y todos los registros asociados con él, ¿desea continuar?</string>
+    <string name="detail.period.init">Inicio de periodo</string>
+    <string name="detail.period.title">Detalles del período de facturación</string>
+    <string name="detail.period.last_lecture.date">Ultima lectura</string>
+    <string name="detail.period.lenght">Duración del período</string>
+    <string name="detail.period.title2">Detalles de consumo de período</string>
+    <string name="calculator.resume">Consumo diario estimado %1$s kWh</string>
+    <string name="calculator.title">Calculadora de consumo</string>
+    <string name="calculator.menu.pulses">Pulsos por kWh</string>
+
+    <string-array name="medidor_options">
+        <item>Nueva lectura</item>
+        <item>Detalles</item>
+        <item>Editar</item>
+        <item>Borrar</item>
+    </string-array>
+    <string name="detail.period">Periodo</string>
+    <string name="detail.consumption">Consumo</string>
+
+</resources>

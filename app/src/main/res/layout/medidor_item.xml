@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_resume"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/md_yellow_800"
+        app:cardUseCompatPadding="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <LinearLayout
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:paddingTop="8dp"
+                    android:background="@color/md_yellow_900"
+                    android:textAlignment="center"
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="200dp"
+                    android:textSize="12sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:text="@string/energy_meter_name" />
+
+                <TextView
+                    android:paddingBottom="8dp"
+                    android:textAlignment="center"
+                    android:background="@color/md_yellow_900"
+                    android:textStyle="bold"
+                    android:id="@+id/txt_medidor"
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_width="match_parent"
+                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:text="Casa Coonsuelo" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_margin="4dp"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_last_reading"
+                    android:textSize="13sp"
+                    />
+
+                <TextView
+                    android:id="@+id/txt_last_reading"
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="----"
+                    android:textSize="16sp"
+                    android:gravity="end"
+                    android:layout_marginStart="16dp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_margin="4dp"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/initial_reading"
+                    android:textSize="13sp"
+                    />
+
+                <TextView
+                    android:id="@+id/txt_initial_reading"
+                    android:gravity="end"
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="----"
+                    android:textSize="16sp"
+                    android:layout_marginStart="16dp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_margin="4dp"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_consumption"
+                    android:textSize="13sp"
+                    />
+
+                <TextView
+                    android:id="@+id/txt_current_consumption"
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="----"
+                    android:textSize="16sp"
+                    android:gravity="end"
+                    android:layout_marginStart="16dp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_margin="4dp"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_days_consumption"
+                    android:textSize="13sp"
+                    />
+
+                <TextView
+                    android:id="@+id/txt_days_consumed"
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="----"
+                    android:textSize="16sp"
+                    android:gravity="end"
+                    android:layout_marginStart="16dp" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:textColor="@color/label_text_light"
+                fontPath="fonts/pierRegular.otf"
+                tools:ignore="MissingPrefix"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_billing_period"
+                android:textSize="13sp"
+                android:layout_marginStart="16dp" />
+
+            <LinearLayout
+                android:layout_marginEnd="4dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:paddingStart="26dp"
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="12sp"
+                    />
+
+                <TextView
+                    android:id="@+id/txt_period_limit"
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:gravity="end"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="30 days"
+                    android:textSize="12sp"
+                    android:layout_marginStart="16dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_margin="4dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    app:tint="@color/md_white_1000"
+                    android:layout_marginEnd="4dp"
+                    app:srcCompat="@drawable/ic_calendar"
+                    android:layout_height="wrap_content" />
+
+                <com.daimajia.numberprogressbar.NumberProgressBar
+                    android:id="@+id/period_bar"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+
+                    app:progress_unreached_color="@color/md_yellow_600"
+                    app:progress_reached_color="@color/md_yellow_500"
+
+                    app:progress_unreached_bar_height="2dp"
+                    app:progress_reached_bar_height="3.5dp"
+
+                    app:progress_text_size="13sp"
+                    app:progress_text_color="@color/md_white_1000"
+                    app:progress_text_offset="2dp"
+                    app:progress_text_visibility="visible"
+                    app:progress_max="30"
+                    app:progress_current="0"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:textColor="@color/label_text_light"
+                fontPath="fonts/pierRegular.otf"
+                tools:ignore="MissingPrefix"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_consumption"
+                android:textSize="13sp"
+                android:layout_marginStart="16dp" />
+
+            <LinearLayout
+                android:layout_marginEnd="4dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:paddingStart="26dp"
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="0 Kwh"
+                    android:textSize="12sp"
+                    />
+
+                <TextView
+                    android:id="@+id/txt_consumption_limit"
+                    android:textColor="@color/label_text_light"
+                    fontPath="fonts/pierRegular.otf"
+                    tools:ignore="MissingPrefix"
+                    android:gravity="end"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="150 Kwh"
+                    android:textSize="12sp"
+                    android:layout_marginStart="16dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_margin="4dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    app:srcCompat="@drawable/ic_flash"
+                    app:tint="@color/md_white_1000"
+                    android:layout_height="wrap_content" />
+
+                <com.daimajia.numberprogressbar.NumberProgressBar
+                    android:id="@+id/consumption_bar"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+
+                    app:progress_unreached_color="@color/md_yellow_600"
+                    app:progress_reached_color="@color/md_yellow_500"
+
+                    app:progress_unreached_bar_height="2dp"
+                    app:progress_reached_bar_height="3.5dp"
+
+                    app:progress_text_size="13sp"
+                    app:progress_text_color="@color/md_white_1000"
+                    app:progress_text_offset="2dp"
+                    app:progress_text_visibility="visible"
+                    app:progress_max="150"
+                    app:progress_current="0"
+                    />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+
+</LinearLayout>

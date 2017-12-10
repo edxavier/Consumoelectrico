@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Consumo de energia doméstica</string>
+    <string name="title_activity_main">Consumo de energia doméstica</string>
+    <string name="action_settings">configurações</string>
+    <string name="title.activity.new.reading">Leitura gravada</string>
+    <string name="activity.new.reading.date">Data de leitura</string>
+    <string name="activity.new.reading.help">** Você pode alterar a data de leitura no menu superior direito</string>
+    <string name="activity.new.reading.observation">Observações</string>
+    <string name="activity.new.reading.error1">Valor errado</string>
+    <string name="activity.new.reading.input.error">Insira pelo menos 1 personagem</string>
+    <string name="activity.new.reading.input.error2">Leitura fora do alcance</string>
+    <string name="activity.new.reading.snack.warning">A leitura para a data selecionada já existe</string>
+    <string name="activity.new.reading.dialog.title">Aviso</string>
+    <string name="activity.new.reading.dialog.content">No final de um período de cobrança, o contador de consumo acumulado é reiniciado</string>
+    <string name="activity.main.dialog.end.period.content">No final de um período de cobrança, o contador de consumo acumulado é reiniciado e selecione a data em que deseja encerrar o período</string>
+    <string name="main.fragment.end.period.snack.content.ok">Período concluído com sucesso.</string>
+    <string name="main.fragment.end.period.snack.content.error">Erro inesperado ao tentar esta ação.</string>
+    <string name="main.fragment.end.period.snack.content.error2">Não pode terminar o período, digite as leituras primeiro</string>
+    <string name="label_date">Data</string>
+    <string name="label_reading">Leitura</string>
+    <string name="label_readings">Leituras</string>
+    <string name="label_avg">Média</string>
+    <string name="label_start_consumption">Início do consumo</string>
+    <string name="label_billing_period">Período de pagamento</string>
+    <string name="label_consump_proyection">Consumo estimado</string>
+    <string name="label_consump_avg">Consumo médio</string>
+    <string name="label_consumption">Consumo</string>
+    <string name="label_last_reading">Última leitura</string>
+    <string name="label_day">dia</string>
+    <string name="label_days">dias</string>
+    <string name="label_days_consumption">Dias consumidos</string>
+    <string name="main.emty.title">Não há dados para mostrar</string>
+    <string name="main.empty.suggest">Registre as medidas com frequência para acompanhar o consumo de eletricidade doméstica.</string>
+    <string name="end_period">Fim do período de cobrança</string>
+    <string name="end_period_ask">Tem certeza de terminar o período de cobrança nessa data?</string>
+    <string name="end_period_psoitive">Continuar</string>
+    <string name="edit_reading">Editar leitura</string>
+    <string name="save">Salve</string>
+    <string name="settings.ac.period">Período de faturamento (dias)</string>
+    <string name="settings.ac.period.limit">limite de kWh por período</string>
+    <string name="chart.legend.avg.limit">Limite médio (kWh)</string>
+    <string name="chart.legend.period.limit">limite de período (kWh)</string>
+    <string name="chart.legend.bar">Consumo desde a leitura anterior (kWh)</string>
+    <string name="chart.legend.avg">Média (kWh)</string>
+    <string name="chart.legend.accumulated">Consumo acumulado (kWh)</string>
+    <string name="chart.legend.estimate">Consumo estimado</string>
+    <string name="alert_over_range">Valor fora de rango</string>
+    <string name="cancel">Cancelar</string>
+    <string name="options">opções</string>
+    <string name="share_app_msg">Grave e acompanhe facilmente o consumo de eletricidade de sua casa com este aplicativo</string>
+    <string name="share_using">Compartilhe usando</string>
+    <string name="share">Compartilhar</string>
+    <string name="rate">Qualificar</string>
+    <string name="remove_ads">Remover anúncios</string>
+    <string name="notice">Aviso</string>
+    <string name="billing_error">Ha ocurrido um erro inesperado y não se pudo efectuar a compra</string>
+    <string name="remove_ads_thank">Obrigado por colaborar com este aplicativo</string>
+    <string name="no_data_chart">Não há dados para mostrar</string>
+    <string name="first_reading_notice">Este é o seu primeiro registro, certifique-se sempre que possível que o primeiro registro corresponda à leitura refletida em sua última fatura para obter uma estimativa melhor, caso contrário, a aplicação terá a data atual como o início do período e fazer estimativas a partir de hoje até o fim do período aproximado</string>
+    <string name="not_show_again">Não mostrar novamente</string>
+    <string name="help">Socorro</string>
+    <string name="settings.ac.price.kwh">Preço por kWh</string>
+    <string name="settings.ac.discount.kwh">Desconto por kWh</string>
+    <string name="settings.ac.currency">moeda</string>
+    <string name="energy_meter_name">Medidor de energia</string>
+    <string name="initial_reading">Leitura inicial</string>
+    <string name="estimated_expense">Despesa estimada</string>
+    <string name="estimated_unsubsidized_expense">Estimativa de despesa não subsidiada</string>
+    <string name="settings.ac.fixed_charges">custos fixos</string>
+    <string name="days_consumed_val">%1$s dias</string>
+    <string name="label_medidor">Nome / ID</string>
+    <string name="description">Descrição</string>
+    <string name="invalid_medidor_name">O nome válido ou o ID são necessários</string>
+    <string name="new_medidor">Novo medidor</string>
+    <string name="agree">Continuar</string>
+    <string name="date_format">dd MMM yyy</string>
+    <string name="last_reading_suggest">Última leitura  (%1$s): %2$s kWh</string>
+    <string name="delete_medidor_notice">Esta ação apagará permanentemente o medidor de energia selecionado e todos os registros associados a ele, você deseja prosseguir?</string>
+    <string name="detail.period.init">Início do período</string>
+    <string name="detail.period.title">Detalhes do período de faturamento</string>
+    <string name="detail.period.last_lecture.date">Última data de leitura</string>
+    <string name="detail.period.lenght">Duração do período</string>
+    <string name="detail.period.title2">Detalhes do consumo do período</string>
+    <string name="calculator.resume">Consumo diário estimado   %1$s kWh</string>
+    <string name="calculator.title">Calculadora de consumo</string>
+    <string name="calculator.menu.pulses">Legumes por kWh</string>
+    <string name="detail.period">Período</string>
+    <string name="detail.consumption">Consumo</string>
+
+    <string-array name="medidor_options">
+        <item>Nova leitura</item>
+        <item>Detalhes</item>
+        <item>Editar</item>
+        <item>Apagar</item>
+    </string-array>
+
+    <string-array name="readings_options">
+        <item>Período final</item>
+        <item>Editar leitura</item>
+    </string-array>
+
+    <string-array name="main_options">
+        <item>Nova leitura</item>
+        <item>Período final</item>
+    </string-array>
+
+    <string name="calculator.explanation">
+      Esta ferramenta foi projetada para calcular o consumo de energia em tempo real com base no número de pulsos emitidos pelo seu medidor de energia em um período de tempo específico.
+
+        \n\nPara conseguir isso, é necessário que você saiba quantos pulsos por kWh seu equipamento emite, esta informação é encontrada na frente do medidor.
+
+        \n\n(Por exemplo, 1600 imp / kWh, ou seja, por cada kilowatt-hora de consumo de energia, o seu medidor emite 1.600 flashes de luz).
+
+        \n\n <b>Para um melhor cálculo, comece o cronômetro com o primeiro impulso e pare com o último, os impulsos mínimos necessários são dois, no entanto, para um cálculo mais preciso, entre 5 a 10 flashes mínimos, clicando em cada um na parte de consumo da tela . </b>
+    </string>
+
+
+</resources>

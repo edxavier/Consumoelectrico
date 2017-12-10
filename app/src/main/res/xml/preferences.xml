@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+        <EditTextPreference
+            android:icon="@drawable/ic_public_black"
+            android:defaultValue="$"
+            android:maxLength="3"
+            android:inputType="text"
+            android:key="price_simbol"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/settings.ac.currency" />
+
+        <EditTextPreference
+            android:icon="@drawable/ic_monetization"
+            android:defaultValue="1"
+            android:inputType="numberDecimal"
+            android:key="price_kwh"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/settings.ac.price.kwh" />
+
+        <EditTextPreference
+            android:defaultValue="1"
+            android:icon="@drawable/ic_coins_on_hand"
+            android:inputType="numberDecimal"
+            android:key="discount_kwh"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/settings.ac.discount.kwh" />
+
+        <EditTextPreference
+            android:defaultValue="1"
+            android:icon="@drawable/ic_coins_on_hand"
+            android:inputType="numberDecimal"
+            android:key="fixed_charges"
+            android:summary="Indicates the sum of all fixed costs reflected in the invoice such as public lighting"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/settings.ac.fixed_charges" />
+        <!--
+
+        <SwitchPreference android:defaultValue="false"
+                android:icon="@drawable/ic_flash"
+                android:key="lose_discount"
+                android:summary="Indicate if the discount is conditioned to the limit of kWh consumed at the end of period, if you exceed the limit you lose the benefit"
+                android:title="Conditioned discount"/>
+        -->
+        <EditTextPreference
+            android:summary="Indicate which is the maximum consumption you want at the end of a billing period, either by self-control or by discounts benefits"
+            android:icon="@drawable/ic_network_gauge"
+            android:defaultValue="150"
+            android:inputType="number"
+            android:key="kw_limit"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/settings.ac.period.limit" />
+
+        <EditTextPreference
+            android:icon="@drawable/ic_calendar_black"
+            android:defaultValue="30"
+            android:inputType="number"
+            android:key="period_lenght"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/settings.ac.period" />
+
+
+</PreferenceScreen>

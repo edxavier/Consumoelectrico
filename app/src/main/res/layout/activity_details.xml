@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:id="@+id/coordinator"
+    tools:context="com.nicrosoft.consumoelectrico.activities.perio_details.DetailsActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="3dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/md_pink_700"
+                app:cardUseCompatPadding="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <LinearLayout
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <com.github.lzyzsd.circleprogress.ArcProgress
+                        android:id="@+id/arc_progress_consumo"
+                        android:background="@color/md_pink_700"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        app:arc_max="150"
+                        app:arc_progress="0"
+                        app:arc_suffix_text="kWh"
+                        app:arc_suffix_text_padding="16dp"
+                        app:arc_unfinished_color="@color/md_pink_300"
+                        app:arc_suffix_text_size="12sp"
+                        app:arc_text_size="36sp"
+                        app:arc_text_color="@color/md_pink_100"
+                        app:arc_bottom_text="@string/detail.consumption"/>
+
+
+                    <com.github.lzyzsd.circleprogress.ArcProgress
+                        android:id="@+id/arc_progress_period"
+                        android:layout_marginStart="16dp"
+                        android:background="@color/md_pink_700"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        app:arc_progress="0"
+                        app:arc_suffix_text_padding="16dp"
+                        app:arc_suffix_text="@string/label_days"
+                        app:arc_unfinished_color="@color/md_pink_300"
+                        app:arc_suffix_text_size="12sp"
+                        app:arc_text_size="36sp"
+                        app:arc_max="30"
+                        app:arc_text_color="@color/md_pink_100"
+                        app:arc_bottom_text="@string/detail.period"/>
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_resume"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/md_grey_700"
+                app:cardUseCompatPadding="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:layout_margin="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:textColor="@color/md_white_1000_75"
+                        android:text="@string/detail.period.title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <LinearLayout
+                        android:padding="4dp"
+                        android:background="@color/md_grey_800"
+                        android:visibility="visible"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:textColor="@color/label_text_light"
+                            fontPath="fonts/pierRegular.otf"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/detail.period.init"
+                            android:textSize="13sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_beginning_period"
+                            android:textColor="@color/label_text_light"
+                            fontPath="fonts/pierRegular.otf"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="----"
+                            android:textSize="16sp"
+                            android:gravity="end"
+                            android:layout_marginStart="16dp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:padding="4dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:textColor="@color/label_text_light"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/initial_reading"
+                            android:textSize="13sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_initial_reading"
+                            android:gravity="end"
+                            android:textColor="@color/label_text_light"
+                            fontPath="fonts/pierRegular.otf"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="----"
+                            android:textSize="16sp"
+                            android:layout_marginStart="16dp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:background="@color/md_grey_800"
+                        android:padding="4dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:textColor="@color/label_text_light"
+                            fontPath="fonts/pierRegular.otf"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/detail.period.last_lecture.date"
+                            android:textSize="13sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_last_reading_date"
+                            android:textColor="@color/label_text_light"
+                            fontPath="fonts/pierRegular.otf"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="----"
+                            android:textSize="16sp"
+                            android:gravity="end"
+                            android:layout_marginStart="16dp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:padding="4dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:textColor="@color/label_text_light"
+                            fontPath="fonts/pierRegular.otf"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/detail.period.lenght"
+                            android:textSize="13sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_period_len"
+                            android:textColor="@color/label_text_light"
+                            fontPath="fonts/pierRegular.otf"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="----"
+                            android:textSize="16sp"
+                            android:gravity="end"
+                            android:layout_marginStart="16dp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:padding="4dp"
+                        android:background="@color/md_grey_800"
+                        android:visibility="visible"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:textColor="@color/label_text_light"
+                            fontPath="fonts/pierRegular.otf"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_days_consumption"
+                            android:textSize="13sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_days_consumed"
+                            android:textColor="@color/label_text_light"
+                            fontPath="fonts/pierRegular.otf"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="----"
+                            android:textSize="16sp"
+                            android:gravity="end"
+                            android:layout_marginStart="16dp" />
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <com.google.android.gms.ads.AdView
+                android:descendantFocusability="blocksDescendants"
+                android:id="@+id/adView"
+                android:visibility="gone"
+                android:layout_margin="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/admob_banner">
+            </com.google.android.gms.ads.AdView>
+
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="3dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/md_blue_grey_700"
+                app:cardUseCompatPadding="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:layout_margin="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:textColor="@color/md_white_1000_75"
+                        android:text="@string/detail.period.title2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <LinearLayout
+                        android:padding="4dp"
+                        android:background="@color/md_blue_grey_800"
+                        android:visibility="visible"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:textColor="@color/label_text_light"
+                            fontPath="fonts/pierRegular.otf"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_last_reading"
+                            android:textSize="13sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_last_reading"
+                            android:textColor="@color/label_text_light"
+                            fontPath="fonts/pierRegular.otf"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="----"
+                            android:textSize="16sp"
+                            android:gravity="end"
+                            android:layout_marginStart="16dp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:padding="4dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:textColor="@color/label_text_light"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_consumption"
+                            android:textSize="13sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_current_consumption"
+                            android:gravity="end"
+                            android:textColor="@color/label_text_light"
+                            fontPath="fonts/pierRegular.otf"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="----"
+                            android:textSize="16sp"
+                            android:layout_marginStart="16dp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:background="@color/md_blue_grey_800"
+                        android:padding="4dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:textColor="@color/label_text_light"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_consump_avg"
+                            android:textSize="13sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_avg_consumption"
+                            android:textColor="@color/label_text_light"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="----"
+                            android:textSize="16sp"
+                            android:gravity="end"
+                            android:layout_marginStart="16dp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:padding="4dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:textColor="@color/label_text_light"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="wrap_content"
+                            android:text="@string/chart.legend.estimate"
+                            android:textSize="13sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_estimate_consumptio_kwh"
+                            android:textColor="@color/label_text_light"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="----"
+                            android:textSize="16sp"
+                            android:gravity="end"
+                            android:layout_marginStart="16dp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:padding="4dp"
+                        android:background="@color/md_blue_grey_800"
+                        android:visibility="visible"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:textColor="@color/label_text_light"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/estimated_expense"
+                            android:textSize="13sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_estimate_expense"
+                            android:textColor="@color/label_text_light"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="----"
+                            android:textSize="16sp"
+                            android:gravity="end"
+                            android:layout_marginStart="16dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:padding="4dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:textColor="@color/label_text_light"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="wrap_content"
+                            android:text="@string/estimated_unsubsidized_expense"
+                            android:textSize="13sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_estimate_expense_no_discount"
+                            android:textColor="@color/label_text_light"
+                            tools:ignore="MissingPrefix"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="----"
+                            android:textSize="16sp"
+                            android:gravity="end"
+                            android:layout_marginStart="16dp" />
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                app:cardUseCompatPadding="true"
+                ads:contentPadding="8dp"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/md_cyan_800"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp" />
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                app:cardUseCompatPadding="true"
+                ads:contentPadding="8dp"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/md_blue_800"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/chart2"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp" />
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_white_1000"
+    android:id="@+id/coordinator">
+
+
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:id="@+id/activity_help"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    <RelativeLayout
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="180dp">
+
+
+        <com.hookedonplay.decoviewlib.DecoView
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            custom:dv_lineWidth="26dp"
+            android:id="@+id/resumen_consumo_arc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                fontPath="fonts/Gotham-light.otf"
+                tools:ignore="MissingPrefix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:text="@string/label_consumption"
+                android:textSize="12sp"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <TextView
+                android:text="0 kW"
+                android:id="@+id/textPercentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                fontPath="fonts/Gotham_Rounded.otf"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                fontPath="fonts/Gotham-light.otf"
+                tools:ignore="MissingPrefix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:text="@string/label_last_reading"
+                android:textSize="12sp"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+
+            <TextView
+                fontPath="fonts/Gotham-light.otf"
+                tools:ignore="MissingPrefix"
+                android:id="@+id/txtUltimaLectura"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:text="-- --- --"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <TextView
+                android:id="@+id/txtUltimaLecturaValor"
+                fontPath="fonts/Gotham-light.otf"
+                tools:ignore="MissingPrefix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:text="0"
+                android:textSize="12sp"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+        <LinearLayout
+            android:layout_margin="8dp"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:id="@+id/admob_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_resume"
+            android:layout_margin="8dp"
+            app:contentPadding="0dp"
+            app:cardCornerRadius="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/card_backgnd"
+                    android:src="@drawable/green_bulb"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="115dp" />
+                <View
+                android:layout_width="match_parent"
+                android:layout_height="115dp"
+                android:alpha="0.95"
+                android:background="@drawable/blue_gradient"/>
+                <LinearLayout
+                    android:layout_margin="8dp"
+                    android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <LinearLayout
+                    android:paddingTop="4dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:textColor="@color/label_text_light"
+                        fontPath="fonts/pierRegular.otf"
+                        tools:ignore="MissingPrefix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="200dp"
+                        android:textSize="13sp"
+                        android:text="@string/label_start_consumption"
+                        />
+
+                    <TextView
+                        android:id="@+id/txt_inicio_periodo"
+                        android:gravity="end"
+                        android:textColor="@color/label_text_light"
+                        fontPath="fonts/pierRegular.otf"
+                        tools:ignore="MissingPrefix"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:textSize="13sp"
+                        android:layout_height="wrap_content"
+                        android:text="-- --- ----"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textColor="@color/label_text_light"
+                        fontPath="fonts/pierRegular.otf"
+                        tools:ignore="MissingPrefix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="200dp"
+                        android:text="@string/label_billing_period"
+                        android:textSize="13sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/txt_longitud_periodo"
+                        android:gravity="end"
+                        android:textColor="@color/label_text_light"
+                        fontPath="fonts/pierRegular.otf"
+                        tools:ignore="MissingPrefix"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="--"
+                        android:textSize="13sp"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textColor="@color/label_text_light"
+                        fontPath="fonts/pierRegular.otf"
+                        tools:ignore="MissingPrefix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="200dp"
+                        android:text="@string/label_days_consumption"
+                        android:textSize="13sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/txt_dias_periodo"
+                        android:gravity="end"
+                        android:textColor="@color/label_text_light"
+                        fontPath="fonts/pierRegular.otf"
+                        tools:ignore="MissingPrefix"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="--"
+                        android:textSize="13sp"
+                        />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textColor="@color/label_text_light"
+                        fontPath="fonts/pierRegular.otf"
+                        tools:ignore="MissingPrefix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="200dp"
+                        android:text="@string/label_consump_proyection"
+                        android:textSize="13sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/txt_periodo_proyection"
+                        android:gravity="end"
+                        android:textColor="@color/label_text_light"
+                        fontPath="fonts/pierRegular.otf"
+                        tools:ignore="MissingPrefix"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="0 kWh"
+                        android:textSize="13sp"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textColor="@color/label_text_light"
+                        fontPath="fonts/pierRegular.otf"
+                        tools:ignore="MissingPrefix"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:text="@string/label_consump_avg"
+                        />
+
+                    <TextView
+                        android:id="@+id/txt_period_avg"
+                        android:gravity="end"
+                        android:textColor="@color/label_text_light"
+                        fontPath="fonts/pierRegular.otf"
+                        tools:ignore="MissingPrefix"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:text="0
+                         kWh/d"
+                        />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+
+
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_margin="8dp"
+            app:cardCornerRadius="3dp"
+            app:cardBackgroundColor="@color/chart_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+                <com.github.mikephil.charting.charts.CombinedChart
+                    android:background="@color/chart_background"
+                    android:id="@+id/chart2"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
+
+        </android.support.v7.widget.CardView>
+
+
+        <com.google.android.gms.ads.AdView
+            android:descendantFocusability="blocksDescendants"
+            android:id="@+id/adView"
+            android:visibility="gone"
+            android:layout_margin="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/admob_banner">
+        </com.google.android.gms.ads.AdView>
+
+        <android.support.v7.widget.CardView
+            android:layout_margin="8dp"
+            app:cardCornerRadius="3dp"
+            app:cardBackgroundColor="@color/chart_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:layout_marginTop="8dp"
+                android:background="@color/chart_background"
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_gauge" />
+
+
+</android.support.design.widget.CoordinatorLayout>

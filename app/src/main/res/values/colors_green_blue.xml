@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="primary">#4CAF50</color>
+    <color name="primary_dark">#388E3C</color>
+  <color name="primary_light">#C8E6C9</color>
+  <color name="accent">@color/md_green_A700</color>
+    <color name="divider">#BDBDBD</color>
+
+
+  <color name="chart_background">@color/md_blue_grey_600</color>
+  <color name="chart_consumo_line_color">@color/md_blue_400</color>
+  <color name="chart_consumo_line_fill">@color/md_blue_grey_50</color>
+
+  <color name="decoview_color_total_color">#FFE2E2E2</color>
+  <color name="decoview_color_value_color">#FFFF8800</color>
+
+</resources>
