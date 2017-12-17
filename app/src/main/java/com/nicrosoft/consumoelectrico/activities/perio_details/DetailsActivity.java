@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
@@ -26,14 +27,13 @@ import com.nicrosoft.consumoelectrico.fragments.main.chart_helpers.ChartStyler;
 import com.nicrosoft.consumoelectrico.realm.Lectura;
 import com.nicrosoft.consumoelectrico.realm.Periodo;
 import com.pixplicity.easyprefs.library.Prefs;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -75,11 +75,18 @@ public class DetailsActivity extends AppCompatActivity {
     LineChart chart;
     @BindView(R.id.chart2)
     LineChart chart2;
+    @BindView(R.id.description)
+    TextView description;
+    @BindView(R.id.btn_show_readings)
+    Button btnShowReadings;
+    @BindView(R.id.card_desc)
+    CardView cardDesc;
     private String medidor_id;
     private String medidor_name;
     private PeriodDetailsPresenter presenter;
     private SimpleDateFormat time_format;
     Bundle extras;
+    private String medidor_desc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,12 +100,13 @@ public class DetailsActivity extends AppCompatActivity {
         if (extras != null) {
             medidor_id = extras.getString("id");
             medidor_name = (extras.getString("name"));
+            medidor_desc = (extras.getString("description"));
         }
         getSupportActionBar().setTitle(medidor_name);
         presenter = new PeriodDetailPresenterImpl(this);
         presenter.onCreate();
         setupBillingPeriodDetails(medidor_id);
-        if(!Prefs.getBoolean("isPurchased", false))
+        if (!Prefs.getBoolean("isPurchased", false))
             showAds();
     }
 
@@ -115,7 +123,10 @@ public class DetailsActivity extends AppCompatActivity {
         chart2.invalidate();
 
         try {
-
+            if (medidor_desc != null && medidor_desc.length()>0)
+                description.setText(medidor_desc);
+            else
+                cardDesc.setVisibility(View.GONE);
             txtBeginningPeriod.setText(time_format.format(period.inicio));
             txtInitialReading.setText(getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", primer_lectura.lectura)));
             txtLastReading.setText(getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", ultima_lectura.lectura)));
@@ -203,5 +214,12 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         setupBillingPeriodDetails(medidor_id);
+    }
+
+    @OnClick(R.id.btn_show_readings)
+    public void onViewClicked() {
+        Intent intent = new Intent(this, PeriodReadingsActivity.class);
+        intent.putExtras(extras);
+        startActivityForResult(intent, 0);
     }
 }

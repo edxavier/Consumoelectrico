@@ -4,7 +4,7 @@
 
         <EditTextPreference
             android:icon="@drawable/ic_public_black"
-            android:defaultValue="$"
+            android:defaultValue="C$"
             android:maxLength="3"
             android:inputType="text"
             android:key="price_simbol"
@@ -14,7 +14,7 @@
 
         <EditTextPreference
             android:icon="@drawable/ic_monetization"
-            android:defaultValue="1"
+            android:defaultValue="5.5"
             android:inputType="numberDecimal"
             android:key="price_kwh"
             android:selectAllOnFocus="true"
@@ -22,7 +22,7 @@
             android:title="@string/settings.ac.price.kwh" />
 
         <EditTextPreference
-            android:defaultValue="1"
+            android:defaultValue="2.86"
             android:icon="@drawable/ic_coins_on_hand"
             android:inputType="numberDecimal"
             android:key="discount_kwh"
@@ -31,7 +31,7 @@
             android:title="@string/settings.ac.discount.kwh" />
 
         <EditTextPreference
-            android:defaultValue="1"
+            android:defaultValue="33"
             android:icon="@drawable/ic_coins_on_hand"
             android:inputType="numberDecimal"
             android:key="fixed_charges"

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,8 +17,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.nicrosoft.consumoelectrico.R;
-import com.nicrosoft.consumoelectrico.activities.perio_details.DetailsActivity;
 import com.nicrosoft.consumoelectrico.activities.Main;
+import com.nicrosoft.consumoelectrico.activities.PeriodReadingsActivity;
+import com.nicrosoft.consumoelectrico.activities.perio_details.DetailsActivity;
 import com.nicrosoft.consumoelectrico.activities.reading.NewReadingActivity;
 import com.nicrosoft.consumoelectrico.fragments.medidor.contracts.MedidorPresenter;
 import com.nicrosoft.consumoelectrico.fragments.medidor.contracts.MedidorView;
@@ -26,7 +28,6 @@ import com.nicrosoft.consumoelectrico.realm.Medidor;
 import com.nicrosoft.consumoelectrico.realm.Periodo;
 import com.pixplicity.easyprefs.library.Prefs;
 
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -62,6 +63,12 @@ public class AdapterMedidor extends RecyclerView.Adapter<AdapterMedidor.ViewHold
         TextView txtPeriodLimit;
         @BindView(R.id.period_bar)
         NumberProgressBar periodBar;
+        @BindView(R.id.bnt_details)
+        Button bntDetails;
+        @BindView(R.id.bnt_readings)
+        Button bntReadings;
+        @BindView(R.id.bnt_new_readings)
+        Button bnt_new_readings;
 
         @BindView(R.id.txt_medidor)
         TextView txtMedidor;
@@ -130,6 +137,27 @@ public class AdapterMedidor extends RecyclerView.Adapter<AdapterMedidor.ViewHold
             holder.periodBar.setMax(period_limit);
             holder.txtPeriodLimit.setText(context.getString(R.string.days_consumed_val, String.format(Locale.getDefault(), "%02d", period_limit)));
             holder.txtConsumptionLimit.setText(context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02d", kw_limit)));
+            RxView.clicks(holder.bntDetails).subscribe(o -> {
+                Intent intentDetails = new Intent(context, DetailsActivity.class);
+                intentDetails.putExtra("id", medidor.id);
+                intentDetails.putExtra("name", medidor.name);
+                intentDetails.putExtra("description", medidor.descripcion);
+                //context.startActivityForResult(intent, 1);
+                view.startNewReadingActivity(intentDetails, position);
+            });
+            RxView.clicks(holder.bntReadings).subscribe(o -> {
+                Intent intent = new Intent(context, PeriodReadingsActivity.class);
+                intent.putExtra("id", medidor.id);
+                intent.putExtra("name", medidor.name);
+                view.startNewReadingActivity(intent, position);
+            });
+            RxView.clicks(holder.bnt_new_readings).subscribe(o -> {
+                Intent intent = new Intent(context, NewReadingActivity.class);
+                intent.putExtra("id", medidor.id);
+                intent.putExtra("name", medidor.name);
+                //context.startActivityForResult(intent, 1);
+                view.startNewReadingActivity(intent, position);
+            });
 
             RxView.clicks(holder.cardResume).subscribe(o -> {
                 new MaterialDialog.Builder(context)
@@ -137,7 +165,7 @@ public class AdapterMedidor extends RecyclerView.Adapter<AdapterMedidor.ViewHold
                         .items(R.array.medidor_options)
                         .itemsCallback((dialog, itemView, position1, text) -> {
                             switch (position1) {
-                                case 0:
+                                /*case 0:
                                     Intent intent = new Intent(context, NewReadingActivity.class);
                                     intent.putExtra("id", medidor.id);
                                     intent.putExtra("name", medidor.name);
@@ -148,10 +176,11 @@ public class AdapterMedidor extends RecyclerView.Adapter<AdapterMedidor.ViewHold
                                     Intent intentDetails = new Intent(context, DetailsActivity.class);
                                     intentDetails.putExtra("id", medidor.id);
                                     intentDetails.putExtra("name", medidor.name);
+                                    intentDetails.putExtra("description", medidor.descripcion);
                                     //context.startActivityForResult(intent, 1);
                                     view.startNewReadingActivity(intentDetails, position);
-                                    break;
-                                case 2:
+                                    break;*/
+                                case 0:
                                     MaterialDialog dlg = new MaterialDialog.Builder(context)
                                             .title(medidor.name)
                                             .customView(R.layout.dlg_medidor, true)
@@ -166,7 +195,7 @@ public class AdapterMedidor extends RecyclerView.Adapter<AdapterMedidor.ViewHold
                                                             medidor.name = med.getText().toString();
                                                         } else
                                                             Toast.makeText(context, context.getString(R.string.invalid_medidor_name), Toast.LENGTH_LONG).show();
-                                                        if (desc != null && !desc.getText().toString().isEmpty()) {
+                                                        if (desc != null) {
                                                             medidor.descripcion = desc.getText().toString();
                                                         }
                                                     });
@@ -181,7 +210,7 @@ public class AdapterMedidor extends RecyclerView.Adapter<AdapterMedidor.ViewHold
                                     }
                                     dlg.show();
                                     break;
-                                case 3:
+                                case 1:
                                     new MaterialDialog.Builder(context)
                                             .title(medidor.name)
                                             .content(R.string.delete_medidor_notice)

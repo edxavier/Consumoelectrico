@@ -45,7 +45,6 @@
 
 
         <TextView
-            fontPath="fonts/Roboto-Bold.ttf"
             android:textColor="@color/md_white_1000"
             android:layout_gravity="center"
             android:text="@string/main.emty.title"

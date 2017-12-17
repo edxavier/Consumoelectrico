@@ -236,7 +236,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_margin="4dp"
+                android:layout_margin="6dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -316,7 +316,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_margin="4dp"
+                android:layout_margin="6dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -350,6 +350,58 @@
 
             </LinearLayout>
 
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/bnt_details"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/md_amber_500_50"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/details"
+                    android:textColor="@color/md_white_1000"
+                    android:textSize="12sp" />
+                <View
+                    android:layout_margin="1dp"
+                    android:background="@color/md_white_1000_50"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"/>
+
+                <Button
+                    android:id="@+id/bnt_readings"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/md_amber_500_50"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/label_readings"
+                    android:textColor="@color/md_white_1000"
+                    android:textSize="12sp" />
+                <View
+                    android:layout_margin="1dp"
+                    android:background="@color/md_white_1000_50"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"/>
+
+                <Button
+                    android:id="@+id/bnt_new_readings"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/md_amber_500_50"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/new_reading"
+                    android:textColor="@color/md_white_1000"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
         </LinearLayout>
 

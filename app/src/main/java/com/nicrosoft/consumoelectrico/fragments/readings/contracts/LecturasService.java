@@ -9,7 +9,7 @@ import io.realm.RealmResults;
  */
 
 public interface LecturasService {
-    RealmResults<Lectura> getReadings(String medidor_id);
+    RealmResults<Lectura> getReadings(String medidor_id, boolean get_all);
 
     void onDestroy();
 

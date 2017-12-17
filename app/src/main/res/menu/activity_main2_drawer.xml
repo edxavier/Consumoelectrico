@@ -23,6 +23,16 @@
                 android:id="@+id/nav_remove_ads"
                 android:icon="@drawable/ic_coins_on_hand"
                 android:title="@string/remove_ads" />
+
+            <item
+                android:id="@+id/nav_export"
+                android:icon="@drawable/ic_file_upload"
+                android:title="@string/export" />
+            <item
+                android:id="@+id/nav_import"
+                android:icon="@drawable/ic_file_download"
+                android:title="@string/_import" />
+
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_share_24dp"

@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Mi consumo eléctrico</string>
-    <string name="title_activity_main">Consumo eléctrico</string>
+    <string name="app_name">Consumo eléctrico hogar</string>
+    <string name="title_activity_main">Consumo eléctrico hogar</string>
 
     <string name="action_settings">Ajustes</string>
     <string name="title.activity.new.reading">Registrar lectura</string>
@@ -97,7 +97,7 @@
         \n\nPara lograr esto es necesario que sepas cuantos impulsos por kWh emite tu equipo, esta información la encuentras en frente del medidor.
         \n\n(Ej. 1600 imp / kWh. o sea, que por cada kilowatt-hora (kWh) de consumo de energía, tu contador emite 1 600 destellos de luz.)
         \n\n <b>Para un mejor calculo inicia el cronometro con el primer impulso y detenlo con el ultimo, los pulsos mínimos requeridos son dos, sin embargo para un cálculo más acertado ingresa de 5 a 10 destellos mínimo haciendo clic por cada uno en la parte consumo de la pantalla.</b></string>
-    <string name="not_show_again">Not show again</string>
+    <string name="not_show_again">No volver a mostrar</string>
     <string name="help">Help</string>
     <string name="settings.ac.price.kwh">Precio por kWh</string>
     <string name="settings.ac.discount.kwh">Descuento por kWh</string>
@@ -125,13 +125,41 @@
     <string name="calculator.title">Calculadora de consumo</string>
     <string name="calculator.menu.pulses">Pulsos por kWh</string>
 
-    <string-array name="medidor_options">
+   <!-- <string-array name="medidor_options">
         <item>Nueva lectura</item>
-        <item>Detalles</item>
-        <item>Editar</item>
-        <item>Borrar</item>
+        <item>Detalles del periodo</item>
+        <item>Editar medidor</item>
+        <item>Borrar medidor</item>
     </string-array>
+    -->
+
+    <string-array name="medidor_options">
+        <item>Editar medidor</item>
+        <item>Borrar medidor</item>
+    </string-array>
+
     <string name="detail.period">Periodo</string>
     <string name="detail.consumption">Consumo</string>
+    <string name="calculator.per_hour">Por hora</string>
+    <string name="detail.period.readings">Lecturas del periodo</string>
+    <string name="label_consumption_since_last_reading">Consumo en %1$s días</string>
+    <string name="lecturas_desde_hasta">Lecturas del %1$s al %2$s</string>
+    <string name="detail.chart1.title">Historial de consumo acumulado</string>
+    <string name="detail.chart2.title">Historial de consumo promedio</string>
+    <string name="detail.show.readings">Mostrar lecturas de período</string>
+    <string name="details">Detalles</string>
+    <string name="new_reading">Nueva lectura</string>
+    <string name="readings.show.all_reading">Todas las lecturas</string>
+    <string name="readings.show.period_reading">Lecturas del período</string>
+    <string name="date_format_save">dd_MMM_yyyy</string>
+    <string name="export_all">Exportar todas las lecturas</string>
+    <string name="export_period_readings">Exportar lecturas del período activo</string>
+    <string name="save_as">Guardar como…</string>
+    <string name="export_error">Error al tratar de exportar datos</string>
+    <string name="export_succes">Datos exportados con éxito!</string>
+    <string name="import_error">Error al tratar de importar datos</string>
+    <string name="import_succes">Datos importados con éxito!</string>
+    <string name="export">Exportar</string>
+    <string name="_import">Importar</string>
 
 </resources>

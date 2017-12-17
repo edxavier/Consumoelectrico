@@ -29,11 +29,17 @@ public class LecturasServiceImpl implements LecturasService {
     }
 
     @Override
-    public RealmResults<Lectura> getReadings(String medidor_id) {
-        return realm.where(Lectura.class)
-                .equalTo("periodo.activo", true)
-                .equalTo("periodo.medidor.id", medidor_id)
-                .findAll().sort("fecha_lectura", Sort.DESCENDING);
+    public RealmResults<Lectura> getReadings(String medidor_id, boolean get_all) {
+        if(get_all){
+            return realm.where(Lectura.class)
+                    .equalTo("periodo.medidor.id", medidor_id)
+                    .findAll().sort("fecha_lectura", Sort.DESCENDING);
+        }else {
+            return realm.where(Lectura.class)
+                    .equalTo("periodo.activo", true)
+                    .equalTo("periodo.medidor.id", medidor_id)
+                    .findAll().sort("fecha_lectura", Sort.DESCENDING);
+        }
     }
 
     @Override

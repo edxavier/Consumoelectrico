@@ -19,6 +19,11 @@ public class Medidor extends RealmObject {
         this.descripcion = "";
     }
 
+    public Medidor(String id, String name, String descripcion) {
+        this.id = id;
+        this.name = name;
+        this.descripcion = descripcion;
+    }
     public Medidor() {
     }
 }

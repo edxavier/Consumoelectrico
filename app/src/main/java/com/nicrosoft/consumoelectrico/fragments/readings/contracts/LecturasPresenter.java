@@ -8,7 +8,7 @@ import com.nicrosoft.consumoelectrico.realm.Lectura;
 
 public interface LecturasPresenter {
     void onDestroy();
-    void getReadings(String medidor_id);
+    void getReadings(String medidor_id, boolean get_all);
     void updateReading(Lectura lectura, String newReading);
     void endPeriod(Lectura lectura);
     boolean isValueOverange(Lectura lectura, String newValue);

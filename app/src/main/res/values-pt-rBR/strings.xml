@@ -88,11 +88,17 @@
     <string name="detail.period">Período</string>
     <string name="detail.consumption">Consumo</string>
 
-    <string-array name="medidor_options">
+    <!--<string-array name="medidor_options">
         <item>Nova leitura</item>
-        <item>Detalhes</item>
-        <item>Editar</item>
-        <item>Apagar</item>
+        <item>Detalhes do período</item>
+        <item>Editar medidor</item>
+        <item>Apagar medidor</item>
+    </string-array>
+    -->
+
+    <string-array name="medidor_options">
+        <item>Editar medidor</item>
+        <item>Apagar medidor</item>
     </string-array>
 
     <string-array name="readings_options">
@@ -114,6 +120,27 @@
 
         \n\n <b>Para um melhor cálculo, comece o cronômetro com o primeiro impulso e pare com o último, os impulsos mínimos necessários são dois, no entanto, para um cálculo mais preciso, entre 5 a 10 flashes mínimos, clicando em cada um na parte de consumo da tela . </b>
     </string>
+    <string name="calculator.per_hour">Por hora</string>
+    <string name="detail.period.readings">Leituras do período</string>
+    <string name="label_consumption_since_last_reading">Consumo em %1$s dias</string>
+    <string name="lecturas_desde_hasta">Leituras de  %1$s a %2$s</string>
+    <string name="detail.chart1.title">Histórico de consumo acumulado</string>
+    <string name="detail.chart2.title">Histórico médio de consumo</string>
+    <string name="detail.show.readings">Mostrar lecturas del período</string>
+    <string name="details">Detalhes</string>
+    <string name="new_reading">Nova leitura</string>
+    <string name="readings.show.all_reading">Todas as lecturas</string>
+    <string name="readings.show.period_reading">Leituras do período</string>
+    <string name="date_format_save">dd_MMM_yyyy</string>
+    <string name="export_all">Exporte todas as leituras</string>
+    <string name="export_period_readings">Exportação de leituras de período ativo</string>
+    <string name="save_as">salvar como…</string>
+    <string name="export_error">Erro ao tentar exportar dados</string>
+    <string name="export_succes">Dados exportados com sucesso!</string>
+    <string name="import_error">Erro ao tentar importar dados</string>
+    <string name="import_succes">Dados importados com sucesso!</string>
+    <string name="_import">Importar</string>
+    <string name="export">Exportar</string>
 
 
 </resources>

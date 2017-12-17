@@ -35,6 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
             <android.support.v7.widget.CardView
                 app:cardCornerRadius="3dp"
                 app:cardElevation="4dp"
@@ -42,50 +43,118 @@
                 app:cardUseCompatPadding="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-
                 <LinearLayout
-                    android:layout_margin="8dp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <com.github.lzyzsd.circleprogress.ArcProgress
+                            android:id="@+id/arc_progress_consumo"
+                            android:background="@color/md_pink_700"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            app:arc_max="150"
+                            app:arc_progress="0"
+                            app:arc_suffix_text="kWh"
+                            app:arc_suffix_text_padding="16dp"
+                            app:arc_unfinished_color="@color/md_pink_300"
+                            app:arc_suffix_text_size="12sp"
+                            app:arc_text_size="36sp"
+                            app:arc_text_color="@color/md_pink_100"
+                            app:arc_bottom_text="@string/detail.consumption"/>
+
+
+                        <com.github.lzyzsd.circleprogress.ArcProgress
+                            android:id="@+id/arc_progress_period"
+                            android:layout_marginStart="16dp"
+                            android:background="@color/md_pink_700"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            app:arc_progress="0"
+                            app:arc_suffix_text_padding="16dp"
+                            app:arc_suffix_text="@string/label_days"
+                            app:arc_unfinished_color="@color/md_pink_300"
+                            app:arc_suffix_text_size="12sp"
+                            app:arc_text_size="36sp"
+                            app:arc_max="30"
+                            app:arc_text_color="@color/md_pink_100"
+                            app:arc_bottom_text="@string/detail.period"/>
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btn_show_readings"
+                        style="@style/Base.Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/md_pink_500_50"
+                        android:fontFamily="sans-serif"
+                        android:text="@string/detail.show.readings" />
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_desc"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/md_teal_800"
+                app:cardUseCompatPadding="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+                    <TextView
+                        android:textColor="@color/md_white_1000"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/description"
+                        android:textStyle="bold" />
+                    <View
+                        android:layout_margin="4dp"
+                        android:background="@color/md_white_1000_20"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
 
-                    <com.github.lzyzsd.circleprogress.ArcProgress
-                        android:id="@+id/arc_progress_consumo"
-                        android:background="@color/md_pink_700"
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
-                        app:arc_max="150"
-                        app:arc_progress="0"
-                        app:arc_suffix_text="kWh"
-                        app:arc_suffix_text_padding="16dp"
-                        app:arc_unfinished_color="@color/md_pink_300"
-                        app:arc_suffix_text_size="12sp"
-                        app:arc_text_size="36sp"
-                        app:arc_text_color="@color/md_pink_100"
-                        app:arc_bottom_text="@string/detail.consumption"/>
-
-
-                    <com.github.lzyzsd.circleprogress.ArcProgress
-                        android:id="@+id/arc_progress_period"
-                        android:layout_marginStart="16dp"
-                        android:background="@color/md_pink_700"
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
-                        app:arc_progress="0"
-                        app:arc_suffix_text_padding="16dp"
-                        app:arc_suffix_text="@string/label_days"
-                        app:arc_unfinished_color="@color/md_pink_300"
-                        app:arc_suffix_text_size="12sp"
-                        app:arc_text_size="36sp"
-                        app:arc_max="30"
-                        app:arc_text_color="@color/md_pink_100"
-                        app:arc_bottom_text="@string/detail.period"/>
-
+                    <TextView
+                        android:textColor="@color/md_white_1000_75"
+                        android:layout_margin="8dp"
+                        android:id="@+id/description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/label_consump_avg"
+                        android:textStyle="italic" />
                 </LinearLayout>
+
             </android.support.v7.widget.CardView>
+
+            <com.google.android.gms.ads.AdView
+                android:descendantFocusability="blocksDescendants"
+                android:id="@+id/adView"
+                android:visibility="gone"
+                android:layout_margin="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                ads:adSize="SMART_BANNER"
+                ads:adUnitId="@string/admob_banner">
+            </com.google.android.gms.ads.AdView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/card_resume"
@@ -102,14 +171,15 @@
                     android:layout_height="match_parent">
 
                     <TextView
-                        android:textAlignment="center"
-                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:layout_marginBottom="8dp"
-                        android:textColor="@color/md_white_1000_75"
+                        android:fontFamily="sans-serif-condensed"
                         android:text="@string/detail.period.title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000_75"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:padding="4dp"
@@ -222,7 +292,7 @@
                             fontPath="fonts/pierRegular.otf"
                             tools:ignore="MissingPrefix"
                             android:layout_width="0dp"
-                            android:layout_weight="1"
+                            android:layout_weight="3"
                             android:layout_height="wrap_content"
                             android:text="@string/detail.period.lenght"
                             android:textSize="13sp"
@@ -283,18 +353,6 @@
 
             </android.support.v7.widget.CardView>
 
-            <com.google.android.gms.ads.AdView
-                android:descendantFocusability="blocksDescendants"
-                android:id="@+id/adView"
-                android:visibility="gone"
-                android:layout_margin="0dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                ads:adSize="BANNER"
-                ads:adUnitId="@string/admob_banner">
-            </com.google.android.gms.ads.AdView>
-
             <android.support.v7.widget.CardView
                 app:cardCornerRadius="3dp"
                 app:cardElevation="4dp"
@@ -309,14 +367,15 @@
                     android:layout_height="match_parent">
 
                     <TextView
-                        android:textAlignment="center"
-                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:layout_marginBottom="8dp"
-                        android:textColor="@color/md_white_1000_75"
+                        android:fontFamily="sans-serif-condensed"
                         android:text="@string/detail.period.title2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000_75"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:padding="4dp"
@@ -522,12 +581,23 @@
                 app:cardBackgroundColor="@color/md_cyan_800"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <TextView
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/md_white_1000"
+                    android:textAlignment="center"
+                    android:text="@string/detail.chart1.title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
                 <com.github.mikephil.charting.charts.LineChart
                     android:layout_marginTop="8dp"
                     android:id="@+id/chart"
                     android:layout_width="match_parent"
                     android:layout_height="210dp" />
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
 
@@ -539,12 +609,24 @@
                 app:cardBackgroundColor="@color/md_blue_800"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-                <com.github.mikephil.charting.charts.LineChart
-                    android:layout_marginTop="8dp"
-                    android:id="@+id/chart2"
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="210dp" />
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/detail.chart2.title"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="@color/md_white_1000"
+                        android:textAlignment="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:layout_marginTop="8dp"
+                        android:id="@+id/chart2"
+                        android:layout_width="match_parent"
+                        android:layout_height="210dp" />
+
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
 

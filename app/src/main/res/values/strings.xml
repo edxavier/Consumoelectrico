@@ -131,16 +131,46 @@
     </string>
 
 
-    <string-array name="medidor_options">
+    <!--<string-array name="medidor_options">
         <item>New reading</item>
-        <item>Details</item>
+        <item>Period details</item>
         <item>Edit</item>
         <item>Delete</item>
     </string-array>
+-->
+    <string-array name="medidor_options">
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="not_show_again">Not show again</string>
     <string name="help">Help</string>
+    <string name="calculator.per_hour">Per hour</string>
+    <string name="detail.period.readings">Period readings</string>
+    <string name="label_consumption_since_last_reading">Consumption in %1$s days</string>
+    <string name="lecturas_desde_hasta">Readings from %1$s to %2$s</string>
+    <string name="detail.chart1.title">Accumulated consumption history</string>
+    <string name="detail.chart2.title">Average consumption history</string>
+    <string name="detail.show.readings">Show period readings</string>
+    <string name="details">Details</string>
+    <string name="new_reading">New reading</string>
+    <string name="readings.show.all_reading">All readings</string>
+    <string name="readings.show.period_reading">Period readings</string>
+    <string name="date_format_save">MMM_dd_yyyy</string>
+    <string name="date_time_format" translatable="false">dd-MM-yyyy HH:mm:ss</string>
+    <string name="export_all">Export all readings</string>
+    <string name="export_period_readings">Export active period readings</string>
+    <string name="save_as">Save as…</string>
+    <string name="export_error">Error trying to export data</string>
+    <string name="export_succes">Data exported successfully!</string>
+
+    <string name="import_error">Error trying to import data</string>
+    <string name="import_succes">Data imported successfully!</string>
+    <string name="export">Export</string>
+    <string name="_import">Import</string>
+
 
 </resources>

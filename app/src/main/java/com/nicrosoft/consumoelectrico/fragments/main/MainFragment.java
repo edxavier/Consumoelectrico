@@ -326,10 +326,10 @@ public class MainFragment extends Fragment implements MainView, OnChartValueSele
         int ne =  Prefs.getInt("num_show_readings", 0);
         Prefs.putInt("num_show_readings", ne + 1);
 
-        if(Prefs.getInt("num_show_readings", 0) == Prefs.getInt("show_after", 5)) {
+        if(Prefs.getInt("num_show_readings", 0) >= Prefs.getInt("show_after", 8)) {
             Prefs.putInt("num_show_readings", 0);
             Random r = new Random();
-            int Low = 7;int High = 10;
+            int Low = 10;int High = 17;
             int rnd = r.nextInt(High-Low) + Low;
             Prefs.putInt("show_after", rnd);
 

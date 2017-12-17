@@ -1,9 +1,11 @@
 package com.nicrosoft.consumoelectrico.activities;
 
+import android.Manifest;
 import android.app.FragmentManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,23 +13,27 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v13.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.codekidlabs.storagechooser.StorageChooser;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -38,9 +44,12 @@ import com.nicrosoft.consumoelectrico.activities.reading.NewReadingActivity;
 import com.nicrosoft.consumoelectrico.fragments.AppPreference;
 import com.nicrosoft.consumoelectrico.fragments.main.MainFragment;
 import com.nicrosoft.consumoelectrico.fragments.medidor.MedidorFragment;
-import com.nicrosoft.consumoelectrico.fragments.readings.LecturasList;
+import com.nicrosoft.consumoelectrico.myUtils.CSVHelper;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -48,8 +57,10 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Main extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, BillingProcessor.IBillingHandler {
+        implements NavigationView.OnNavigationItemSelectedListener, BillingProcessor.IBillingHandler{
 
+    private static final int REQUEST_WRITE_STORAGE_PERMISSIONS = 100;
+    private static final int REQUEST_READ_STORAGE_PERMISSIONS = 200;
     @Nullable
     @BindView(R.id.fragment_container)
     FrameLayout fragmentContainer;
@@ -105,7 +116,7 @@ public class Main extends AppCompatActivity
         mainFragment.setArguments(args);
         getFragmentManager().beginTransaction().replace(R.id.fragment_container, medidorFragment).commit();
         RelativeLayout headerNav = (RelativeLayout) navView.getHeaderView(0);
-        TextView version = (TextView) headerNav.findViewById(R.id.version);
+        TextView version = headerNav.findViewById(R.id.version);
         version.setText(BuildConfig.VERSION_NAME);
     }
 
@@ -189,10 +200,30 @@ public class Main extends AppCompatActivity
         } else if (id == R.id.nav_remove_ads) {
             bp.purchase(this, PRODUCT_SKU);
         }
-
+        else if (id == R.id.nav_export) {
+            if( ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                showFolderChooseDialog();
+            }else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_WRITE_STORAGE_PERMISSIONS);
+            }
+        }else if (id == R.id.nav_import) {
+            if( ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                showFileChooseDialog();
+            }else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_WRITE_STORAGE_PERMISSIONS);
+            }
+        }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
@@ -219,8 +250,10 @@ public class Main extends AppCompatActivity
 
     @Override
     public void onBillingInitialized() {
-        if(bp.isPurchased(PRODUCT_SKU))
+        if(bp.isPurchased(PRODUCT_SKU)) {
+            Prefs.putBoolean("isPurchased", true);
             hideItem();
+        }
         if(!bp.isPurchased(PRODUCT_SKU))
             requestAds();
     }
@@ -253,10 +286,10 @@ public class Main extends AppCompatActivity
         int ne =  Prefs.getInt("num_show_readings", 0);
         Prefs.putInt("num_show_readings", ne + 1);
 
-        if(Prefs.getInt("num_show_readings", 0) == Prefs.getInt("show_after", 5)) {
+        if(Prefs.getInt("num_show_readings", 0) >= Prefs.getInt("show_after", 8)) {
             Prefs.putInt("num_show_readings", 0);
             Random r = new Random();
-            int Low = 7;int High = 10;
+            int Low = 10;int High = 17;
             int rnd = r.nextInt(High-Low) + Low;
             Prefs.putInt("show_after", rnd);
 
@@ -278,5 +311,115 @@ public class Main extends AppCompatActivity
             mInterstitialAd.loadAd(adRequest);
         }
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_WRITE_STORAGE_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    showFolderChooseDialog();
+                } else {
+                    Toast.makeText(this, "NO PERMISSIONS GRANTED", Toast.LENGTH_LONG).show();
+                }
+            }
+            case REQUEST_READ_STORAGE_PERMISSIONS:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    showFileChooseDialog();
+                } else {
+                    Toast.makeText(this, "NO PERMISSIONS GRANTED", Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+    private void showFolderChooseDialog() {
+        // Initialize Builder
+        StorageChooser chooser = new StorageChooser.Builder()
+                .withActivity(this)
+                .withFragmentManager(getFragmentManager())
+                .withMemoryBar(true)
+                .allowAddFolder(true)
+                .allowCustomPath(true)
+                .setType(StorageChooser.DIRECTORY_CHOOSER)
+                .build();
+        chooser.show();
+        // get path that the user has chosen
+        chooser.setOnSelectListener(new StorageChooser.OnSelectListener() {
+            @Override
+            public void onSelect(String path) {
+                SimpleDateFormat time_format = new SimpleDateFormat(getString(R.string.date_format_save), Locale.getDefault());
+                String name = getString(R.string.app_name) + time_format.format(new Date());
+                name = name.replace(' ', '_');
+                new MaterialDialog.Builder(Main.this)
+                        .title(R.string.save_as)
+                        .content(path)
+                        .inputType(InputType.TYPE_CLASS_TEXT)
+                        .input("", name, new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                // Do something
+                                if (!CSVHelper.saveAllToCSV(path, input.toString(), getApplicationContext())){
+                                    new MaterialDialog.Builder(Main.this)
+                                            .title("Error!")
+                                            .content(R.string.export_error)
+                                            .positiveText(R.string.agree)
+                                            .show();
+                                }else {
+                                    Prefs.putString("last_path", path);
+                                    new MaterialDialog.Builder(Main.this)
+                                            .title(R.string.export_succes)
+                                            .content(path+"/"+input.toString())
+                                            .positiveText(R.string.agree)
+                                            .show();
+                                }
+                            }
+                        }).show();
+            }
+        });
+    }
+
+
+    private void showFileChooseDialog() {
+        // Initialize Builder
+        StorageChooser chooser = new StorageChooser.Builder()
+                .withActivity(this)
+                .withFragmentManager(getFragmentManager())
+                .withMemoryBar(true)
+                .allowCustomPath(true)
+                .setType(StorageChooser.FILE_PICKER)
+                .build();
+        // Show dialog whenever you want by
+        chooser.show();
+        // get path that the user has chosen
+        chooser.setOnSelectListener(new StorageChooser.OnSelectListener() {
+            @Override
+            public void onSelect(String path) {
+
+                if (!CSVHelper.restoreAllFromCSV(path, getApplicationContext())){
+                    new MaterialDialog.Builder(Main.this)
+                            .title("Error!")
+                            .content(R.string.import_error)
+                            .positiveText(R.string.agree)
+                            .show();
+                }else {
+                    new MaterialDialog.Builder(Main.this)
+                            .title(R.string.import_succes)
+                            .content(path)
+                            .positiveText(R.string.agree)
+                            .show();
+                }
+            }
+        });
+    }
+
 
 }

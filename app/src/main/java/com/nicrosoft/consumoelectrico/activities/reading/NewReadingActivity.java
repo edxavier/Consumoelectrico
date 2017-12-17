@@ -92,6 +92,7 @@ public class NewReadingActivity extends AppCompatActivity implements DatePickerD
 
     private Observable<CharSequence> readinObservable;
     boolean validReading = false;
+    boolean show_details_after_save = false;
     Periodo periodoActivo;
 
     @Nullable
@@ -268,18 +269,18 @@ public class NewReadingActivity extends AppCompatActivity implements DatePickerD
                         end_period_sw.setChecked(false);
                     })
                     .onPositive((dialog, which) -> {
-                        if (presenter.saveReading(lectura, end_period_sw.isChecked(), medidor_id))
+                        if (presenter.saveReading(lectura, end_period_sw.isChecked(), medidor_id)) {
                             finish();
-                        else
+                        }else
                             MySnackbar.alert(coordinator,
                                     getResources().getString(R.string.activity_new_reading_snack_warning),
                                     LENGTH_LONG).show();
                     })
                     .show();
         } else {
-            if (presenter.saveReading(lectura, end_period_sw.isChecked(), medidor_id))
+            if (presenter.saveReading(lectura, end_period_sw.isChecked(), medidor_id)) {
                 finish();
-            else
+            }else
                 MySnackbar.alert(coordinator, getResources().getString(R.string.activity_new_reading_snack_warning), LENGTH_LONG).show();
         }
 

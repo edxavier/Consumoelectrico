@@ -11,39 +11,22 @@
         android:layout_height="35dp">
 
         <TextView
-            android:textColor="@color/label_text_light"
-            android:padding="8dp"
-            android:text="@string/label_date"
+            android:id="@+id/list_title"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:textColor="@color/label_text_light"
+            android:fontFamily="sans-serif-condensed"
             android:padding="8dp"
-            android:text="@string/label_reading"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content" />
+            android:text="@string/detail.period.readings"
+            android:textAlignment="center"
+            android:textColor="@color/label_text_light" />
 
-        <TextView
-            android:textColor="@color/label_text_light"
-            android:padding="8dp"
-            android:text="@string/label_avg"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:padding="8dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 
 
     <android.support.v7.widget.RecyclerView
         android:layout_marginTop="35dp"
+        tools:listitem="@layout/reading_time_line_item"
         android:id="@+id/recycler_readings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -51,6 +34,7 @@
 
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/message_body"
         android:layout_gravity="center"
         android:layout_centerInParent="true"
@@ -88,6 +72,18 @@
             tools:ignore="MissingPrefix" />
 
     </LinearLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:descendantFocusability="blocksDescendants"
+        android:id="@+id/adView"
+        android:visibility="visible"
+        android:layout_margin="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/recycler_readings"
+        app:adSize="SMART_BANNER"
+        app:adUnitId="@string/admob_banner">
+    </com.google.android.gms.ads.AdView>
 
 
 </RelativeLayout>

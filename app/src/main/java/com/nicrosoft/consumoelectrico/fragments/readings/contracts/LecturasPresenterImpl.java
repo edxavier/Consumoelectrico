@@ -26,8 +26,8 @@ public class LecturasPresenterImpl implements LecturasPresenter {
     }
 
     @Override
-    public void getReadings(String medidor) {
-        RealmResults<Lectura> results = service.getReadings(medidor);
+    public void getReadings(String medidor, boolean get_all) {
+        RealmResults<Lectura> results = service.getReadings(medidor, get_all);
         view.showEmptyMsg(results.isEmpty());
         view.setReadings(results);
     }

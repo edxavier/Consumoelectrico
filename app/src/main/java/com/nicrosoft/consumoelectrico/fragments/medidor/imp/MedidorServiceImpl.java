@@ -39,7 +39,7 @@ public class MedidorServiceImpl implements MedidorService {
     @Override
     public RealmResults<Medidor> getMedidores() {
         try {
-            return realm.where(Medidor.class).findAll();
+            return realm.where(Medidor.class).findAllSorted("name", Sort.ASCENDING);
         }catch (Exception e){
             return null;
         }

@@ -4,6 +4,9 @@
 
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
@@ -30,10 +33,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.perio_details.DetailsActivity" />
-        <activity android:name=".activities.PeriodReadingsActivity"></activity>
+        <activity android:name=".activities.PeriodReadingsActivity" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4124b2e7a8f5eb8f27a14edcb51751f9b8e26cd9" />
+
+
     </application>
 
 </manifest>

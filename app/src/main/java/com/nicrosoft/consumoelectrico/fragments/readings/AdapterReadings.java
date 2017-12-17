@@ -1,10 +1,14 @@
 package com.nicrosoft.consumoelectrico.fragments.readings;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
@@ -60,6 +64,11 @@ public class AdapterReadings extends RecyclerView.Adapter<AdapterReadings.ViewHo
         @Nullable
         @BindView(R.id.txtFecha)
         TextView txtFecha;
+        @BindView(R.id.txt_consumption)
+        TextView txt_consumption;
+        @BindView(R.id.label_consumption)
+        TextView label_consumption;
+
         @Nullable
         @BindView(R.id.txtLectura)
         TextView txtLectura;
@@ -68,7 +77,9 @@ public class AdapterReadings extends RecyclerView.Adapter<AdapterReadings.ViewHo
         TextView txtPromedio;
         @Nullable
         @BindView(R.id.txtTendencia)
-        ImageView txtTendencia;
+        AppCompatImageView txtTendencia;
+        @BindView(R.id.observacion_flag)
+        AppCompatImageView observacion_flag;
         @Nullable
         @BindView(R.id.reading_row_container)
         LinearLayout readingRowContainer;
@@ -82,7 +93,7 @@ public class AdapterReadings extends RecyclerView.Adapter<AdapterReadings.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reading_row, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reading_time_line_item, parent, false);
         return new ViewHolder(v);
     }
 
@@ -93,34 +104,50 @@ public class AdapterReadings extends RecyclerView.Adapter<AdapterReadings.ViewHo
 
         Lectura lect = list.get(position);
         if (position < list.size() - 1) {
+
             Lectura la = list.get(position + 1);
+            float dias = lect.dias_periodo - la.dias_periodo;
+            holder.label_consumption.setText(context.getString(R.string.label_consumption_since_last_reading, String.format(Locale.getDefault(), "%02.0f", dias)));
+
             if (lect.consumo_promedio > la.consumo_promedio) {
-                holder.txtTendencia.setRotation(315);
+                holder.txtTendencia.setRotation(270);
+                holder.txtTendencia.setColorFilter(context.getResources().getColor(R.color.md_red_600));
+                holder.txtPromedio.setTextColor(context.getResources().getColor(R.color.md_red_600));
             } else if (lect.consumo_promedio < la.consumo_promedio) {
-                holder.txtTendencia.setRotation(45);
+                holder.txtTendencia.setRotation(90);
+                holder.txtTendencia.setColorFilter(context.getResources().getColor(R.color.md_green_600));
+                holder.txtPromedio.setTextColor(context.getResources().getColor(R.color.md_green_600));
             } else {
                 holder.txtTendencia.setRotation(0);
+                holder.txtTendencia.setColorFilter(context.getResources().getColor(R.color.md_blue_grey_600));
+                holder.txtPromedio.setTextColor(context.getResources().getColor(R.color.md_blue_grey_600));
             }
         } else {
             holder.txtTendencia.setRotation(0);
-            DrawableCompat.setTint(holder.txtTendencia.getDrawable(), ContextCompat.getColor(context, R.color.md_black_1000_75));
+            holder.txtTendencia.setColorFilter(context.getResources().getColor(R.color.md_blue_grey_600));
+            holder.txtPromedio.setTextColor(context.getResources().getColor(R.color.md_blue_grey_600));
+            holder.label_consumption.setText(context.getString(R.string.label_consumption_since_last_reading, String.format(Locale.getDefault(), "%02.0f", 0f)));
         }
 
         if(lect.observacion !=null && !lect.observacion.isEmpty()) {
             holder.txtObservaciones.setText(lect.observacion);
             holder.txtObservaciones.setVisibility(View.VISIBLE);
+            holder.observacion_flag.setVisibility(View.VISIBLE);
         }else {
+            holder.observacion_flag.setVisibility(View.GONE);
             holder.txtObservaciones.setVisibility(View.GONE);
             holder.txtObservaciones.setText("");
         }
         if( (position + 1) % 2 !=0) {
-            holder.readingRowContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.md_green_50));
+           // holder.readingRowContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.md_green_50));
         }
         holder.txtFecha.setText(time_format.format(lect.fecha_lectura));
         String lectura = String.format(Locale.getDefault(), "%.0f kWh", lect.lectura);
         String lectura_val = String.format(Locale.getDefault(), "%.0f", lect.lectura);
         holder.txtLectura.setText(lectura);
         holder.txtPromedio.setText(String.format(Locale.getDefault(), "%.2f kWh", lect.consumo_promedio));
+        holder.txt_consumption.setText(String.format(Locale.getDefault(), "%.2f kWh", lect.consumo));
+
         RxView.clicks(holder.readingRowContainer).subscribe(click -> {
             new MaterialDialog.Builder(context)
                     .title(time_format.format(lect.fecha_lectura))
