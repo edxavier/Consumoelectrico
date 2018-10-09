@@ -18,9 +18,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.hookedonplay.decoviewlib.DecoView;
-import com.hookedonplay.decoviewlib.charts.SeriesItem;
-import com.hookedonplay.decoviewlib.events.DecoEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,45 +32,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DecoView decoView = (DecoView) findViewById(R.id.resumen_consumo_arc);
-
-        SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.decoview_color_total_color))
-                .setRange(0, 150, 150)
-                .setLineWidth(18f)
-                .build();
-        final SeriesItem seriesItem2 = new SeriesItem.Builder(getResources().getColor(R.color.decoview_color_value_color))
-                .setRange(0, 150, 0)
-                .setLineWidth(18f)
-                .build();
-
-        int backIndex = decoView.addSeries(seriesItem);
-        int series1Index = decoView.addSeries(seriesItem2);
         final TextView textPercentage = (TextView) findViewById(R.id.textPercentage);
         final TextView rem = (TextView) findViewById(R.id.txtUltimaLectura);
         rem.setText("33 kw");
-        seriesItem2.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
-            @Override
-            public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-                float percentFilled = ((currentPosition - seriesItem2.getMinValue()) / (seriesItem2.getMaxValue() - seriesItem2.getMinValue()));
-                textPercentage.setText(String.format("%.0f kw", currentPosition));
-            }
-
-            @Override
-            public void onSeriesItemDisplayProgress(float percentComplete) {
-
-            }
-        });
-
-        decoView.addEvent(new DecoEvent.Builder(150)
-                .setIndex(backIndex)
-                .setDelay(100)
-                .build());
-
-        decoView.addEvent(new DecoEvent.Builder(122)
-                .setIndex(series1Index)
-                .setDelay(400)
-                .build());
-
 
         LineChart chart = (LineChart) findViewById(R.id.chart2);
         List<Entry> entries = new ArrayList<Entry>();

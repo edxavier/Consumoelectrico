@@ -66,5 +66,14 @@
             android:singleLine="true"
             android:title="@string/settings.ac.period" />
 
+        <EditTextPreference
+            android:icon="@drawable/ic_calendar_black"
+            android:defaultValue="7"
+            android:inputType="number"
+            android:key="reminder_after"
+            android:selectAllOnFocus="true"
+            android:singleLine="false"
+            android:title="@string/settings.ac.reminder_afer" />
+
 
 </PreferenceScreen>

@@ -2,6 +2,7 @@ package com.nicrosoft.consumoelectrico.fragments.medidor;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.nicrosoft.consumoelectrico.R;
 import com.nicrosoft.consumoelectrico.activities.Main;
@@ -28,8 +28,10 @@ import com.nicrosoft.consumoelectrico.realm.Medidor;
 import com.nicrosoft.consumoelectrico.realm.Periodo;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import java.text.DecimalFormat;
 import java.util.Locale;
 
+import antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -59,10 +61,6 @@ public class AdapterMedidor extends RecyclerView.Adapter<AdapterMedidor.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         //declarar los Widgets
-        @BindView(R.id.txt_period_limit)
-        TextView txtPeriodLimit;
-        @BindView(R.id.period_bar)
-        NumberProgressBar periodBar;
         @BindView(R.id.bnt_details)
         Button bntDetails;
         @BindView(R.id.bnt_readings)
@@ -72,20 +70,29 @@ public class AdapterMedidor extends RecyclerView.Adapter<AdapterMedidor.ViewHold
 
         @BindView(R.id.txt_medidor)
         TextView txtMedidor;
-        @BindView(R.id.txt_initial_reading)
-        TextView txtInitialReading;
+        @BindView(R.id.exceso_consumo)
+        TextView exceso_consumo;
+        @BindView(R.id.exceso_periodo)
+        TextView exceso_periodo;
+
+        @BindView(R.id.txt_period_avg)
+        TextView txt_period_avg;
         @BindView(R.id.txt_last_reading)
-        TextView txtLastReading;
-        @BindView(R.id.txt_current_consumption)
-        TextView txtCurrentConsumption;
-        @BindView(R.id.txt_days_consumed)
-        TextView txtDaysConsumed;
-        @BindView(R.id.txt_consumption_limit)
-        TextView txtConsumptionLimit;
-        @BindView(R.id.consumption_bar)
-        NumberProgressBar consumptionBar;
+        TextView txt_last_reading;
+        @BindView(R.id.warning_msg)
+        TextView warning_msg;
+        @BindView(R.id.warning_icon)
+        AppCompatImageView warning_icon;
+
         @BindView(R.id.card_resume)
         CardView cardResume;
+
+        @BindView(R.id.circular_progress)
+        CircularProgressIndicator circular_progress;
+        @BindView(R.id.circular_progress2)
+        CircularProgressIndicator circular_progress2;
+
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -106,9 +113,15 @@ public class AdapterMedidor extends RecyclerView.Adapter<AdapterMedidor.ViewHold
 
         Medidor medidor = list.get(position);
         if (medidor != null) {
+            int kw_limit = 150;
+            int period_limit = 30;
+            try{
+                kw_limit = Integer.parseInt(Prefs.getString("kw_limit", "150"));
+                period_limit = Integer.parseInt(Prefs.getString("period_lenght", "30"));
+            }catch (Exception ignored){}
+            holder.circular_progress.setMaxProgress(kw_limit);
+            holder.circular_progress2.setMaxProgress(period_limit);
 
-            int kw_limit = Integer.parseInt(Prefs.getString("kw_limit", "150"));
-            int period_limit = Integer.parseInt(Prefs.getString("period_lenght", "30"));
             if (medidor.name != null && !medidor.name.isEmpty())
                 holder.txtMedidor.setText(medidor.name);
             else
@@ -117,26 +130,55 @@ public class AdapterMedidor extends RecyclerView.Adapter<AdapterMedidor.ViewHold
             if (periodo != null) {
                 Lectura lectura = presenter.getLastReading(periodo, true);
                 if (lectura != null) {
-                    holder.txtDaysConsumed.setText(context.getString(R.string.days_consumed_val, String.format(Locale.getDefault(), "%02.0f", lectura.dias_periodo)));
-                    holder.txtCurrentConsumption.setText(context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", lectura.consumo_acumulado)));
-                    holder.txtLastReading.setText(context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", lectura.lectura)));
-                    holder.consumptionBar.setProgress((int) lectura.consumo_acumulado);
-                    holder.periodBar.setProgress((int) lectura.dias_periodo);
+                    //holder.txtDaysConsumed.setText(context.getString(R.string.days_consumed_val, String.format(Locale.getDefault(), "%02.0f", lectura.dias_periodo)));
+                    //holder.txtCurrentConsumption.setText(context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", lectura.consumo_acumulado)));
+                    //holder.txtLastReading.setText(context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", lectura.lectura)));
+                    //holder.consumptionBar.setProgress((int) lectura.consumo_acumulado);
+                    //holder.periodBar.setProgress((int) lectura.dias_periodo);
+                    float avg_limit = kw_limit / period_limit;
+                    if(avg_limit < lectura.consumo_promedio){
+                        holder.warning_icon.setVisibility(View.VISIBLE);
+                        holder.warning_msg.setVisibility(View.VISIBLE);
+                    }else {
+                        holder.warning_icon.setVisibility(View.GONE);
+                        holder.warning_msg.setVisibility(View.GONE);
+                    }
+                    if(lectura.consumo_acumulado > kw_limit){
+                        String v = context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "+%02.0f", (lectura.consumo_acumulado - kw_limit)));
+                        holder.exceso_consumo.setVisibility(View.VISIBLE);
+                        holder.exceso_consumo.setText(v);
+                    }else {
+                        holder.exceso_consumo.setVisibility(View.GONE);
+                    }
+                    if(lectura.dias_periodo > period_limit){
+                        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                        float twoDigitsF = Float.valueOf(decimalFormat.format((lectura.dias_periodo - period_limit)));
+                        String v = context.getString(R.string.days_consumed_val, twoDigitsF);
+                        holder.exceso_periodo.setVisibility(View.VISIBLE);
+                        holder.exceso_periodo.setText("+" + v);
+                    }else {
+                        holder.exceso_periodo.setVisibility(View.GONE);
+                    }
+
+                    holder.circular_progress.setCurrentProgress(lectura.consumo_acumulado);
+                    holder.circular_progress2.setCurrentProgress(lectura.dias_periodo);
+                    holder.txt_period_avg.setText(context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.1f", lectura.consumo_promedio)));
+                    holder.txt_last_reading.setText(context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", lectura.lectura)));
                 }
-                lectura = presenter.getFirstReading(periodo);
-                if (lectura != null)
-                    holder.txtInitialReading.setText(context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", lectura.lectura)));
+                //lectura = presenter.getFirstReading(periodo);
+                //if (lectura != null)
+                    //holder.txtInitialReading.setText(context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", lectura.lectura)));
             } else {
-                holder.txtInitialReading.setText("-----");
-                holder.txtDaysConsumed.setText("-----");
-                holder.txtCurrentConsumption.setText("-----");
-                holder.txtLastReading.setText("-----");
-                holder.consumptionBar.setProgress(0);
+                //holder.txtInitialReading.setText("-----");
+                //holder.txtDaysConsumed.setText("-----");
+                //holder.txtCurrentConsumption.setText("-----");
+                // holder.txtLastReading.setText("-----");
+                //holder.consumptionBar.setProgress(0);
             }
-            holder.consumptionBar.setMax(kw_limit);
-            holder.periodBar.setMax(period_limit);
-            holder.txtPeriodLimit.setText(context.getString(R.string.days_consumed_val, String.format(Locale.getDefault(), "%02d", period_limit)));
-            holder.txtConsumptionLimit.setText(context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02d", kw_limit)));
+            //holder.consumptionBar.setMax(kw_limit);
+            //holder.periodBar.setMax(period_limit);
+            //holder.txtPeriodLimit.setText(context.getString(R.string.days_consumed_val, String.format(Locale.getDefault(), "%02d", period_limit)));
+            //holder.txtConsumptionLimit.setText(context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02d", kw_limit)));
             RxView.clicks(holder.bntDetails).subscribe(o -> {
                 Intent intentDetails = new Intent(context, DetailsActivity.class);
                 intentDetails.putExtra("id", medidor.id);

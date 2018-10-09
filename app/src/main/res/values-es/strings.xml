@@ -65,7 +65,8 @@
 
     <string-array name="readings_options">
         <item>Finalizar periodo</item>
-        <item>Editar lectura</item>
+        <item>Editar </item>
+        <item>Eliminar </item>
     </string-array>
 
     <string-array name="main_options">
@@ -96,7 +97,7 @@
     <string name="calculator.explanation">Esta herramienta fue diseñada para calcular el consumo eléctrico en tiempo real basado en el número de impulsos emitidos por tu medidor de energía en un periodo de tiempo específico.
         \n\nPara lograr esto es necesario que sepas cuantos impulsos por kWh emite tu equipo, esta información la encuentras en frente del medidor.
         \n\n(Ej. 1600 imp / kWh. o sea, que por cada kilowatt-hora (kWh) de consumo de energía, tu contador emite 1 600 destellos de luz.)
-        \n\n <b>Para un mejor calculo inicia el cronometro con el primer impulso y detenlo con el ultimo, los pulsos mínimos requeridos son dos, sin embargo para un cálculo más acertado ingresa de 5 a 10 destellos mínimo haciendo clic por cada uno en la parte consumo de la pantalla.</b></string>
+        \n\n <b>Para un mejor calculo inicia el cronometro con el primer impulso y detenlo con el último, los pulsos mínimos requeridos son dos, sin embargo para un cálculo más acertado ingresa de 5 a 10 destellos mínimo haciendo clic por cada uno en la parte consumo de la pantalla.</b></string>
     <string name="not_show_again">No volver a mostrar</string>
     <string name="help">Help</string>
     <string name="settings.ac.price.kwh">Precio por kWh</string>
@@ -107,13 +108,13 @@
     <string name="estimated_expense">Gasto estimado</string>
     <string name="estimated_unsubsidized_expense">Gasto sin descuento estimado</string>
     <string name="settings.ac.fixed_charges">Costos fijos</string>
-    <string name="days_consumed_val">%1$s días</string>
+    <string name="days_consumed_val">%1$.0f días</string>
     <string name="label_medidor">Nombre/ID</string>
     <string name="description">"Descripción  "</string>
     <string name="invalid_medidor_name">Se requiere un nombre o ID valido</string>
     <string name="new_medidor">Nuevo medidor</string>
     <string name="agree">Continuar</string>
-    <string name="date_format">dd MMM yyy</string>
+    <string name="date_format">dd MMMM yy</string>
     <string name="last_reading_suggest">Ultima lectura (%1$s): %2$s kWh</string>
     <string name="delete_medidor_notice">Esta acción borrará permanentemente el medidor de energía seleccionado y todos los registros asociados con él, ¿desea continuar?</string>
     <string name="detail.period.init">Inicio de periodo</string>
@@ -151,7 +152,7 @@
     <string name="new_reading">Nueva lectura</string>
     <string name="readings.show.all_reading">Todas las lecturas</string>
     <string name="readings.show.period_reading">Lecturas del período</string>
-    <string name="date_format_save">dd_MMM_yyyy</string>
+    <string name="date_format_save">dd_MMMM_yyyy</string>
     <string name="export_all">Exportar todas las lecturas</string>
     <string name="export_period_readings">Exportar lecturas del período activo</string>
     <string name="save_as">Guardar como…</string>
@@ -161,5 +162,18 @@
     <string name="import_succes">Datos importados con éxito!</string>
     <string name="export">Exportar</string>
     <string name="_import">Importar</string>
+    <string name="warning_avg">Consumo promedio por encima del límite</string>
+    <string name="period_history">Historial de consumo por período</string>
+    <string name="calculator.hint">Haz clic en esta área para contar los pulsos</string>
+    <string name="importing_data">Importando datos…</string>
+    <string name="exporting_data">Exportando datos…</string>
+    <string name="importing_msg">Esto puede tardar unos segundos</string>
+    <string name="delete_reading">¿Deseas Eliminar este registro?</string>
+    <string name="settings.ac.reminder_afer">Recordatorio de lectura (días)</string>
+    <string name="reminder_msg">Han pasado %1$s días desde el último registro de lectura</string>
+    <string name="reminder">Recordatorio</string>
+    <string name="title_choose_folder">Seleccione un folder</string>
+    <string name="choose">Seleccionar</string>
+    <string name="title_choose_file">Seleccione un archivo</string>
 
 </resources>

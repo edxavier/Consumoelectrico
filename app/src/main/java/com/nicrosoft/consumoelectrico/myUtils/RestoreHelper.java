@@ -10,6 +10,7 @@ import com.nicrosoft.consumoelectrico.realm.Periodo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -81,8 +82,8 @@ public class RestoreHelper {
         return periodo;
     }
 
-    static void guardarLectura(String _id, String _lectura, String fecha, String consumo,String consumoPromedio,
-                                  String consumoAcumulado, String dias_periodo, String observacion, Periodo periodo,  Medidor medidor, Context context){
+    static void guardarLectura(String _id, String _lectura, String fecha, String consumo, String consumoAcumulado, String consumoPromedio,
+                                   String dias_periodo, String observacion, Periodo periodo,  Medidor medidor, Context context){
         Realm realm = Realm.getDefaultInstance();
         Lectura lectura = getLectura(_id);
         if(lectura==null){
@@ -98,6 +99,22 @@ public class RestoreHelper {
             }
         }
         realm.close();
+    }
+
+    public static String getInternalStoragePath(Context context){
+        try {
+            String path = context.getExternalFilesDir(null).getAbsolutePath();
+            String[] res = Arrays.copyOfRange(path.split("/"), 0, path.split("/").length -4);
+            StringBuilder pathBuilder = new StringBuilder();
+            for (String re : res) {
+                pathBuilder.append("/").append(re);
+            }
+            path = pathBuilder.toString().substring(1);
+            return path;
+        }catch (Exception e){
+            return "/storage/emulated/0";
+        }
+
     }
 
 }

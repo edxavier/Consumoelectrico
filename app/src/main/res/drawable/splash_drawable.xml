@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:opacity="opaque">
 
-    <item android:drawable="@color/md_white_1000" />
+    <item android:drawable="@color/primary" />
 
     <item>
         <bitmap

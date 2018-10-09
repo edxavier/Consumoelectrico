@@ -38,9 +38,6 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.NativeExpressAdView;
-import com.hookedonplay.decoviewlib.DecoView;
-import com.hookedonplay.decoviewlib.charts.SeriesItem;
-import com.hookedonplay.decoviewlib.events.DecoEvent;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.nicrosoft.consumoelectrico.BuildConfig;
 import com.nicrosoft.consumoelectrico.MySnackbar;
@@ -72,9 +69,6 @@ public class MainFragment extends Fragment implements MainView, OnChartValueSele
 
 
     @Nullable
-    @BindView(R.id.resumen_consumo_arc)
-    DecoView resumenConsumoArc;
-    @Nullable
     @BindView(R.id.txtUltimaLectura)
     TextView txtUltimaLectura;
 
@@ -96,8 +90,6 @@ public class MainFragment extends Fragment implements MainView, OnChartValueSele
     @BindView(R.id.txtUltimaLecturaValor)
     TextView txtUltimaLecturaValor;
 
-    SeriesItem seriesItem2;
-    int series1Index;
     @Nullable
     @BindView(R.id.chart)
     LineChart chart;
@@ -163,7 +155,6 @@ public class MainFragment extends Fragment implements MainView, OnChartValueSele
         presenter.getResumeData(false);
         presenter.getHistoryReadings();
         setRandomBackground();
-        RxView.clicks(resumenConsumoArc).subscribe(click -> callDialog());
         RxView.clicks(cardResume).subscribe(click -> callDialog());
     }
 
@@ -218,7 +209,7 @@ public class MainFragment extends Fragment implements MainView, OnChartValueSele
 
     void initCharts() {
         int kw_limit = Integer.parseInt(Prefs.getString("kw_limit", "150"));
-        SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.decoview_color_total_color))
+/*        SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.decoview_color_total_color))
                 .setRange(0, kw_limit, kw_limit)
                 .setLineWidth(18f)
                 .build();
@@ -232,7 +223,7 @@ public class MainFragment extends Fragment implements MainView, OnChartValueSele
         chart = (LineChart) ChartStyler.setup(chart, getActivity());
         combinedChart = (CombinedChart) ChartStyler.setup(combinedChart, getActivity());
         combinedChart.setOnChartValueSelectedListener(this);
-
+*/
     }
 
 
@@ -294,7 +285,7 @@ public class MainFragment extends Fragment implements MainView, OnChartValueSele
 
 
     void showArcAnimated(@NonNull Lectura lectura) {
-        seriesItem2.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
+  /*      seriesItem2.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
             @Override
             public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
                 //float percentFilled = ((currentPosition - seriesItem2.getMinValue()) / (seriesItem2.getMaxValue() - seriesItem2.getMinValue()));
@@ -311,6 +302,7 @@ public class MainFragment extends Fragment implements MainView, OnChartValueSele
                     .setDuration(1500)
                     .build());
         }
+        */
     }
 
     @Override
@@ -334,7 +326,7 @@ public class MainFragment extends Fragment implements MainView, OnChartValueSele
             Prefs.putInt("show_after", rnd);
 
             AdRequest adRequest = new AdRequest.Builder()
-                    //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     //.addTestDevice("0B307F34E3DDAF6C6CAB28FAD4084125")
                     //.addTestDevice("B0FF48A19BF36BD2D5DCD62163C64F45")
                     .build();

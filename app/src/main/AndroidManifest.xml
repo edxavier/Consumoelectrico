@@ -37,8 +37,20 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4124b2e7a8f5eb8f27a14edcb51751f9b8e26cd9" />
-
-
+        <service
+            android:exported="false"
+            android:name=".myUtils.DumpDataService">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+        <service
+            android:exported="false"
+            android:name=".myUtils.ReminderService">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

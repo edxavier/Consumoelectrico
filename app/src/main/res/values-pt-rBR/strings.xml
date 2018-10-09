@@ -25,7 +25,7 @@
     <string name="label_billing_period">Período de pagamento</string>
     <string name="label_consump_proyection">Consumo estimado</string>
     <string name="label_consump_avg">Consumo médio</string>
-    <string name="label_consumption">Consumo</string>
+    <string name="label_consumption">Consumo kWh</string>
     <string name="label_last_reading">Última leitura</string>
     <string name="label_day">dia</string>
     <string name="label_days">dias</string>
@@ -68,7 +68,7 @@
     <string name="estimated_expense">Despesa estimada</string>
     <string name="estimated_unsubsidized_expense">Estimativa de despesa não subsidiada</string>
     <string name="settings.ac.fixed_charges">custos fixos</string>
-    <string name="days_consumed_val">%1$s dias</string>
+    <string name="days_consumed_val">%1$.0f dias</string>
     <string name="label_medidor">Nome / ID</string>
     <string name="description">Descrição</string>
     <string name="invalid_medidor_name">O nome válido ou o ID são necessários</string>
@@ -103,7 +103,8 @@
 
     <string-array name="readings_options">
         <item>Período final</item>
-        <item>Editar leitura</item>
+        <item>Editar</item>
+        <item>Excluir</item>
     </string-array>
 
     <string-array name="main_options">
@@ -131,7 +132,7 @@
     <string name="new_reading">Nova leitura</string>
     <string name="readings.show.all_reading">Todas as lecturas</string>
     <string name="readings.show.period_reading">Leituras do período</string>
-    <string name="date_format_save">dd_MMM_yyyy</string>
+    <string name="date_format_save">dd_MMMM_yyyy</string>
     <string name="export_all">Exporte todas as leituras</string>
     <string name="export_period_readings">Exportação de leituras de período ativo</string>
     <string name="save_as">salvar como…</string>
@@ -141,6 +142,19 @@
     <string name="import_succes">Dados importados com sucesso!</string>
     <string name="_import">Importar</string>
     <string name="export">Exportar</string>
+    <string name="warning_avg">Consumo médio acima do limite</string>
+    <string name="period_history">Histórico de consumo por período</string>
+    <string name="calculator.hint">Clique nesta área para contar os pulsos</string>
+    <string name="importing_data">Importando dados…</string>
+    <string name="exporting_data">Exportando dados…</string>
+    <string name="importing_msg">Isso pode demorar alguns segundos</string>
+    <string name="delete_reading">Você deseja excluir este registro?</string>
+    <string name="settings.ac.reminder_afer">Lembrete de leitura (dias)</string>
+    <string name="reminder_msg">Já se passaram %1$s dias desde a última leitura</string>
+    <string name="reminder">Lembrete</string>
+    <string name="title_choose_folder">Selecione uma pasta</string>
+    <string name="choose">Selecione</string>
+    <string name="title_choose_file">Selecione um arquivo</string>
 
 
 </resources>

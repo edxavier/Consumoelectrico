@@ -40,11 +40,11 @@ public class MainServiceImpl implements MainService {
     @Override
     public Lectura getResumeData() {
         try {
-           /* RealmResults<Lectura> res = realm.where(Lectura.class).findAllSorted("fecha_lectura");
+           /* RealmResults<Lectura> res = realm.where(Lectura.class).findAll().sort("fecha_lectura");
             for (Lectura re : res) {
                 Log.e("EDER--", String.valueOf(re.fecha_lectura));
             }*/
-            return realm.where(Lectura.class).findAllSorted("fecha_lectura").last();
+            return realm.where(Lectura.class).findAll().sort("fecha_lectura").last();
         }catch (Exception e){
             return null;
         }
@@ -62,14 +62,14 @@ public class MainServiceImpl implements MainService {
         RealmResults<Periodo> periodos = realm.where(Periodo.class).findAll();
         RealmResults<Lectura> lecturas = realm.where(Lectura.class)
                                             .equalTo("periodo.activo", true)
-                                            .findAllSorted("fecha_lectura");
+                                            .findAll().sort("fecha_lectura");
 
         //Si el ultimo periodo activp no tiene registros mostrar los del anterior
         if(periodos.size()>1 && lecturas.size()==0){
             Periodo p = periodos.get(periodos.size()-2);
             lecturas = realm.where(Lectura.class)
                     .equalTo("periodo.inicio", p.inicio)
-                    .findAllSorted("fecha_lectura");
+                    .findAll().sort("fecha_lectura");
         }
 
         return  lecturas;
@@ -80,7 +80,7 @@ public class MainServiceImpl implements MainService {
         RealmResults<Periodo> periodos = realm.where(Periodo.class).findAll();
         RealmResults<Lectura> lecturas = realm.where(Lectura.class)
                 .equalTo("periodo.activo", true)
-                .findAllSorted("fecha_lectura");
+                .findAll().sort("fecha_lectura");
         //Si el ultimo periodo activp no tiene registros mostrar los del anterior
         return periodos.size() > 1 && lecturas.size() == 0;
 
@@ -155,7 +155,7 @@ public class MainServiceImpl implements MainService {
         calendar.setTime(periodo.inicio);
         LocalDate start = new LocalDate(periodo.inicio);
         RealmResults<Lectura> after = realm.where(Lectura.class)
-                .greaterThan("fecha_lectura", periodo.inicio).findAllSorted("fecha_lectura");
+                .greaterThan("fecha_lectura", periodo.inicio).findAll().sort("fecha_lectura");
         if(!after.isEmpty()) {
             LocalDate end = null;
             realm.beginTransaction();

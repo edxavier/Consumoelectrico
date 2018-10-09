@@ -46,4 +46,9 @@ public class LecturasPresenterImpl implements LecturasPresenter {
     public boolean isValueOverange(Lectura lectura, String newValue) {
         return service.isValueOverange(lectura, newValue);
     }
+
+    @Override
+    public boolean deleteEntry(Lectura lectura) {
+        return service.deleteEntry(lectura);
+    }
 }

@@ -1,5 +1,6 @@
 package com.nicrosoft.consumoelectrico.activities.perio_details;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,13 +8,14 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -29,11 +31,11 @@ import com.nicrosoft.consumoelectrico.realm.Periodo;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -57,10 +59,6 @@ public class DetailsActivity extends AppCompatActivity {
     TextView txtLastReading;
     @BindView(R.id.txt_current_consumption)
     TextView txtCurrentConsumption;
-    @BindView(R.id.arc_progress_consumo)
-    ArcProgress arcProgressConsumo;
-    @BindView(R.id.arc_progress_period)
-    ArcProgress arcProgressPeriod;
     @BindView(R.id.txt_avg_consumption)
     TextView txtAvgConsumption;
     @BindView(R.id.txt_estimate_consumptio_kwh)
@@ -71,16 +69,20 @@ public class DetailsActivity extends AppCompatActivity {
     TextView txtEstimateExpenseNoDiscount;
     @BindView(R.id.adView)
     AdView adView;
+    @BindView(R.id.adView2)
+    AdView adView2;
     @BindView(R.id.chart)
     LineChart chart;
     @BindView(R.id.chart2)
     LineChart chart2;
+    @BindView(R.id.chart3)
+    BarChart chart3;
     @BindView(R.id.description)
     TextView description;
-    @BindView(R.id.btn_show_readings)
-    Button btnShowReadings;
+
     @BindView(R.id.card_desc)
     CardView cardDesc;
+
     private String medidor_id;
     private String medidor_name;
     private PeriodDetailsPresenter presenter;
@@ -110,29 +112,44 @@ public class DetailsActivity extends AppCompatActivity {
             showAds();
     }
 
+    @SuppressLint("StringFormatMatches")
     private void setupBillingPeriodDetails(String medidor_id) {
         Periodo period = presenter.getActivePeriod(medidor_id);
         Lectura ultima_lectura = presenter.getLastReading(period);
         Lectura primer_lectura = presenter.getFirstReading(period);
-        chart = (LineChart) ChartStyler.setup(chart, this);
-        chart2 = (LineChart) ChartStyler.setup(chart2, this);
-
-        chart = presenter.setReadingHistory(chart, period);
-        chart.invalidate();
-        chart2 = presenter.setAvgHistory(chart2, period);
-        chart2.invalidate();
+        chart = (LineChart) ChartStyler.setup(chart, this, false);
+        chart2 = (LineChart) ChartStyler.setup(chart2, this, true);
+        chart3 = (BarChart) ChartStyler.setup(chart3, this, false);
+        try {
+            chart = presenter.setReadingHistory(chart, period);
+            chart.invalidate();
+        }catch (Exception ignored){
+        }
+        try {
+            chart2 = presenter.setAvgHistory(chart2, period);
+            chart2.invalidate();
+        }catch (Exception ignored){
+        }
+        try {
+            chart3 = presenter.setPeriodHistory(chart3, medidor_id);
+            chart3.invalidate();
+        }catch (Exception ignored){
+        }
 
         try {
-            if (medidor_desc != null && medidor_desc.length()>0)
+            if (medidor_desc != null && medidor_desc.length() > 0)
                 description.setText(medidor_desc);
             else
                 cardDesc.setVisibility(View.GONE);
             txtBeginningPeriod.setText(time_format.format(period.inicio));
             txtInitialReading.setText(getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", primer_lectura.lectura)));
+
             txtLastReading.setText(getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", ultima_lectura.lectura)));
             txtCurrentConsumption.setText(getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", ultima_lectura.consumo_acumulado)));
-            txtDaysConsumed.setText(getString(R.string.days_consumed_val, String.format(Locale.getDefault(), "%02.0f", ultima_lectura.dias_periodo)));
-            txtPeriodLen.setText(getString(R.string.days_consumed_val, String.valueOf(presenter.getPeriodLength())));
+
+            txtDaysConsumed.setText(getString(R.string.days_consumed_val, ultima_lectura.dias_periodo));
+
+            txtPeriodLen.setText(getString(R.string.days_consumed_val, (float) presenter.getPeriodLength()));
             txtLastReadingDate.setText(time_format.format(ultima_lectura.fecha_lectura));
             txtAvgConsumption.setText(getString(R.string.avg_consumption_val, String.format(Locale.getDefault(), "%02.1f", ultima_lectura.consumo_promedio)));
             txtEstimateConsumptioKwh.setText(getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.1f", presenter.getEstimatedConsumption(ultima_lectura))));
@@ -147,11 +164,7 @@ public class DetailsActivity extends AppCompatActivity {
                             String.format(Locale.getDefault(), "%02.1f", presenter.getEstimatedExpenseWithNoDiscount(ultima_lectura))
                     ));
 
-            arcProgressConsumo.setProgress((int) ultima_lectura.consumo_acumulado);
-            arcProgressConsumo.setMax(presenter.getConsumptionLimit());
-            arcProgressPeriod.setMax(presenter.getPeriodLength());
-            arcProgressPeriod.setProgress((int) ultima_lectura.dias_periodo);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
     }
@@ -177,6 +190,14 @@ public class DetailsActivity extends AppCompatActivity {
             public void onAdLoaded() {
                 super.onAdLoaded();
                 adView.setVisibility(View.VISIBLE);
+            }
+        });
+        adView2.loadAd(adRequest);
+        adView2.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                adView2.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -216,10 +237,5 @@ public class DetailsActivity extends AppCompatActivity {
         setupBillingPeriodDetails(medidor_id);
     }
 
-    @OnClick(R.id.btn_show_readings)
-    public void onViewClicked() {
-        Intent intent = new Intent(this, PeriodReadingsActivity.class);
-        intent.putExtras(extras);
-        startActivityForResult(intent, 0);
-    }
+
 }

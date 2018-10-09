@@ -1,7 +1,9 @@
 package com.nicrosoft.consumoelectrico.activities.perio_details.contracts;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.nicrosoft.consumoelectrico.realm.Lectura;
+import com.nicrosoft.consumoelectrico.realm.Medidor;
 import com.nicrosoft.consumoelectrico.realm.Periodo;
 
 /**
@@ -19,6 +21,7 @@ public interface PeriodDetailsPresenter {
     float getEstimatedExpenseWithNoDiscount(Lectura last);
     LineChart setReadingHistory(LineChart chart, Periodo periodo);
     LineChart setAvgHistory(LineChart chart, Periodo periodo);
+    BarChart setPeriodHistory(BarChart chart, String medidor_id);
 
 
     void onCreate();

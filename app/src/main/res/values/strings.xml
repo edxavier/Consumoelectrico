@@ -3,7 +3,7 @@
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-
+    <string name="pattern" translatable="false">%.0f kwh</string>
 
     <string name="app_name">Home power consumption</string>
     <string name="label_avg">Average</string>
@@ -16,7 +16,7 @@
     <string name="title_activity_main">Home power consumption</string>
     <string name="label_billing_period">Billing period</string>
     <string name="label_consump_proyection">Estimated consumption</string>
-    <string name="label_consumption">Consumption</string>
+    <string name="label_consumption">Consumption kWh</string>
     <string name="label_day">Day</string>
     <string name="label_days">Days</string>
     <string name="label_days_consumption">Days consumed</string>
@@ -25,7 +25,8 @@
     <string name="label_start_consumption">Start of consumption</string>
     <string-array name="readings_options">
         <item>End period</item>
-        <item>Edit reading</item>
+        <item>Edit</item>
+        <item>Delete</item>
     </string-array>
     <string name="cancel">Cancel</string>
     <string name="edit_reading">Edit reading</string>
@@ -95,7 +96,7 @@
 
     <string name="settings.ac.fixed_charges">Fixed charges</string>
 
-    <string name="days_consumed_val">%1$s days</string>
+    <string name="days_consumed_val">%1$.0f days</string>
 
     <string name="label_medidor">Name/ID</string>
     <string name="description">Description</string>
@@ -159,7 +160,7 @@
     <string name="new_reading">New reading</string>
     <string name="readings.show.all_reading">All readings</string>
     <string name="readings.show.period_reading">Period readings</string>
-    <string name="date_format_save">MMM_dd_yyyy</string>
+    <string name="date_format_save">MMMM_dd_yyyy</string>
     <string name="date_time_format" translatable="false">dd-MM-yyyy HH:mm:ss</string>
     <string name="export_all">Export all readings</string>
     <string name="export_period_readings">Export active period readings</string>
@@ -171,6 +172,19 @@
     <string name="import_succes">Data imported successfully!</string>
     <string name="export">Export</string>
     <string name="_import">Import</string>
+    <string name="warning_avg">Average consumption above limit</string>
+    <string name="period_history">Consumption history by period</string>
+    <string name="calculator.hint">Click on this area to count the pulses</string>
+    <string name="importing_data">Importing data…</string>
+    <string name="exporting_data">Exporting data…</string>
+    <string name="importing_msg">This may take a few seconds</string>
+    <string name="delete_reading">Do you want to delete this record?</string>
+    <string name="settings.ac.reminder_afer">Reading reminder (days)</string>
+    <string name="reminder_msg">it\'s been %1$s days since last reading record</string>
+    <string name="reminder">Reminder</string>
+    <string name="title_choose_folder">Select a folder</string>
+    <string name="choose">Choose</string>
+    <string name="title_choose_file">Select a file</string>
 
 
 </resources>

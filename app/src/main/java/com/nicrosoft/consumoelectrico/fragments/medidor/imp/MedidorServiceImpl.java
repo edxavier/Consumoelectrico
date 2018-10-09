@@ -27,11 +27,11 @@ import io.realm.Sort;
 
 public class MedidorServiceImpl implements MedidorService {
 
-    Context context;
+    private Context context;
     private Realm realm;
 
 
-    public MedidorServiceImpl(Context context) {
+    MedidorServiceImpl(Context context) {
         this.context = context;
         this.realm = Realm.getDefaultInstance();
     }
@@ -39,7 +39,7 @@ public class MedidorServiceImpl implements MedidorService {
     @Override
     public RealmResults<Medidor> getMedidores() {
         try {
-            return realm.where(Medidor.class).findAllSorted("name", Sort.ASCENDING);
+            return realm.where(Medidor.class).findAll().sort("name", Sort.ASCENDING);
         }catch (Exception e){
             return null;
         }
@@ -58,18 +58,18 @@ public class MedidorServiceImpl implements MedidorService {
         if(periodo!=null) {
             RealmResults<Lectura> res = realm.where(Lectura.class)
                     .equalTo("periodo.id", periodo.id)
-                    .findAllSorted("fecha_lectura", Sort.DESCENDING);
+                    .findAll().sort("fecha_lectura", Sort.DESCENDING);
             //Si el ultimo periodo activp no tiene registros mostrar los del anterior
             if(res.size()==0 && old_readings_if_more_than_a_period){
                 RealmResults<Periodo> periodos = realm.where(Periodo.class)
                         .equalTo("medidor.id", periodo.medidor.id)
                         .equalTo("activo", false)
                         .findAll();
-                //.findAllSorted("inicio", Sort.DESCENDING);
+                //.findAll().sort("inicio", Sort.DESCENDING);
                 Periodo p = periodos.get(periodos.size()-1);
                 res = realm.where(Lectura.class)
                         .equalTo("periodo.id", p.id)
-                        .findAllSorted("fecha_lectura", Sort.DESCENDING);
+                        .findAll().sort("fecha_lectura", Sort.DESCENDING);
             }
             return (res.size()>0)? res.first(): null;
         }else
@@ -82,7 +82,7 @@ public class MedidorServiceImpl implements MedidorService {
             periodo = getActivePeriod(periodo.medidor);
             RealmResults<Lectura> res = realm.where(Lectura.class)
                     .equalTo("periodo.id", periodo.id)
-                    .findAllSorted("fecha_lectura", Sort.DESCENDING);
+                    .findAll().sort("fecha_lectura", Sort.DESCENDING);
             
             return (res.size()>0)? res.last(): null;
         }else
@@ -135,7 +135,7 @@ public class MedidorServiceImpl implements MedidorService {
         calendar.setTime(periodo.inicio);
         LocalDate start = new LocalDate(periodo.inicio);
         RealmResults<Lectura> after = realm.where(Lectura.class)
-                .greaterThan("fecha_lectura", periodo.inicio).findAllSorted("fecha_lectura");
+                .greaterThan("fecha_lectura", periodo.inicio).findAll().sort("fecha_lectura");
         if(!after.isEmpty()) {
             LocalDate end = null;
             realm.beginTransaction();

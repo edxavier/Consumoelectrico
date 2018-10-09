@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.25.1'
+        classpath 'io.fabric.tools:gradle:1.25.4'
     }
 }
 apply plugin: 'com.android.application'
@@ -20,8 +20,8 @@ apply plugin: 'realm-android'
 def dbflow_version = "4.0.0-beta5"
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -31,9 +31,9 @@ android {
     defaultConfig {
         applicationId "com.nicrosoft.consumoelectrico"
         minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 6
-        versionName "2.1.0.1712"
+        targetSdkVersion 28
+        versionCode 10
+        versionName "2.2.3.1810"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -51,6 +51,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "APP_BILLING_PUB_KEY", project.property('APP_BILLING_PUB_KEY')
             buildConfigField "String", "MERCHANT_ID", project.property('MERCHANT_ID')
+            lintOptions {
+                disable 'MissingTranslation'
+            }
         }
         debug {
             buildConfigField "String", "APP_BILLING_PUB_KEY", project.property('APP_BILLING_PUB_KEY')
@@ -79,59 +82,54 @@ android.applicationVariants.all { variant ->
     // assign different version code for each output
     variant.outputs.each { output ->
         output.versionCodeOverride =
-                project.ext.versionCodes.get(output.getFilter(OutputFile.ABI)) * 10 + android.defaultConfig.versionCode
+                project.ext.versionCodes.get(output.getFilter(OutputFile.ABI)) * 100 + android.defaultConfig.versionCode
     }
 }
 
 dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.google.code.findbugs'
-    })
-    compile 'com.android.support:multidex:1.0.2'
-    /*
-            annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
-            compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
-            compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
-        */
-    //compile 'com.trello.rxlifecycle2:rxlifecycle:2.0.1'
-    //compile 'com.trello.rxlifecycle2:rxlifecycle-android:2.0.1'
-    //compile 'com.trello.rxlifecycle2:rxlifecycle-components:2.0.1'
-    compile 'com.anjlab.android.iab.v3:library:1.0.44'
-    //compile 'com.android.support:support-vector-drawable:27.0.1'
-    compile 'com.android.support:recyclerview-v7:27.0.2'
-    compile 'com.android.support:appcompat-v7:27.0.2'
-    compile 'com.android.support:cardview-v7:27.0.2'
-    compile 'com.android.support:support-v4:27.0.2'
-    compile 'com.android.support:design:27.0.2'
-    compile 'com.jakewharton:butterknife:8.8.1'
-    compile 'com.github.bmarrdev:android-DecoView-charting:v1.2'
-    compile 'com.pixplicity.easyprefs:library:1.9.0@aar'
-    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
-    compile 'com.github.PhilJay:MPAndroidChart-Realm:v2.0.2@aar'
-    compile 'joda-time:joda-time:2.9.9'
-    compile 'com.afollestad.material-dialogs:core:0.9.6.0'
-    compile 'com.afollestad.material-dialogs:commons:0.9.6.0'
-    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
-    compile 'com.wdullaer:materialdatetimepicker:3.4.0'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.6'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
-    //compile 'com.github.erickok:NotRxBinding:master-SNAPSHOT'
-    testCompile 'junit:junit:4.12'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
+    //implementation 'com.android.support:support-vector-drawable:27.0.1'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+
+    implementation 'com.jakewharton:butterknife:8.8.1'
+
+    implementation 'com.pixplicity.easyprefs:library:1.9.0@aar'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.github.PhilJay:MPAndroidChart-Realm:v3.0.3@aar'
+    implementation 'joda-time:joda-time:2.10'
+    implementation ('com.afollestad.material-dialogs:core:0.9.6.0'){
+        exclude group: 'com.android.support', module: 'support-v13'
+    }
+    implementation ('com.afollestad.material-dialogs:commons:0.9.6.0'){
+        exclude group: 'com.android.support', module: 'support-v13'
+    }
+    implementation 'com.wdullaer:materialdatetimepicker:3.6.3'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
+    implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.1.1'
+    //implementation 'com.github.erickok:NotRxBinding:master-SNAPSHOT'
+    testImplementation 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    compile 'com.google.firebase:firebase-core:11.6.2'
-    compile 'com.google.firebase:firebase-ads:11.6.2'
-    compile 'com.google.firebase:firebase-crash:11.6.2'
-    compile 'com.daimajia.numberprogressbar:library:1.4@aar'
-    compile 'com.github.lzyzsd:circleprogress:1.2.1'
-    compile 'com.github.codekidX:storage-chooser:2.0.3'
-    compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+    implementation 'com.google.firebase:firebase-core:16.0.3'
+    implementation 'com.google.firebase:firebase-ads:15.0.1'
+    implementation 'com.google.firebase:firebase-crash:16.2.0'
+
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true;
     }
     implementation files('libs/opencsv-4.1.jar')
+    // progreso circular que se muestra en la lista
+    implementation 'com.github.antonKozyriatskyi:CircularProgressIndicator:1.1.3'
+    implementation 'com.obsez.android.lib.filechooser:filechooser:1.1.10'
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 }
 apply plugin: 'com.google.gms.google-services'

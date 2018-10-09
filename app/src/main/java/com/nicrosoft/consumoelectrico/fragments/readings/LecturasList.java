@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.codekidlabs.storagechooser.StorageChooser;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -182,7 +181,7 @@ public class LecturasList extends Fragment implements LecturasView {
 
     private void showFolderChooseDialog(boolean all) {
         // Initialize Builder
-        StorageChooser chooser = new StorageChooser.Builder()
+        /*StorageChooser chooser = new StorageChooser.Builder()
                 .withActivity(getActivity())
                 .withFragmentManager(getFragmentManager())
                 .withMemoryBar(true)
@@ -191,8 +190,9 @@ public class LecturasList extends Fragment implements LecturasView {
                 .setType(StorageChooser.DIRECTORY_CHOOSER)
                 .build();
         chooser.show();
+        */
         // get path that the user has chosen
-        chooser.setOnSelectListener(new StorageChooser.OnSelectListener() {
+        /* chooser.setOnSelectListener(new StorageChooser.OnSelectListener() {
             @Override
             public void onSelect(String path) {
                 SimpleDateFormat time_format = new SimpleDateFormat(getString(R.string.date_format_save), Locale.getDefault());
@@ -223,6 +223,7 @@ public class LecturasList extends Fragment implements LecturasView {
                         }).show();
             }
         });
+        */
     }
 
 }

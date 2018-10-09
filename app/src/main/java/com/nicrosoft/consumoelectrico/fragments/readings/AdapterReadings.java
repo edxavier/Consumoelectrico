@@ -183,6 +183,22 @@ public class AdapterReadings extends RecyclerView.Adapter<AdapterReadings.ViewHo
                                         .negativeText(R.string.cancel)
                                         .show();
                                 break;
+                            case 2:
+                                new MaterialDialog.Builder(context)
+                                        //.icon(ContextCompat.getDrawable(context, R.drawable.ic_mode_edit))
+                                        .title(time_format.format(lect.fecha_lectura))
+                                        .content(R.string.delete_reading)
+                                        .positiveText(R.string.ok)
+                                        .negativeText(R.string.cancel)
+                                        .onPositive((dialog1, which) -> {
+                                            if(!presenter.deleteEntry(lect)){
+                                                Toast.makeText(context, "No fue posible elimiar el registro", Toast.LENGTH_LONG).show();
+                                            }else {
+                                                Toast.makeText(context, "Registro Elminiado" , Toast.LENGTH_LONG).show();
+                                            }
+                                        })
+                                        .show();
+                                break;
                         }
                     })
                     .show();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.Chart;
@@ -35,9 +36,14 @@ import io.realm.RealmResults;
 public class ChartStyler {
 
     @NonNull
-    public static Chart<?> setup(@NonNull Chart<?> chart, @NonNull Context context) {
-        float period_days = Float.parseFloat(Prefs.getString("period_lenght", "30"));
-        float kw_limit = Float.parseFloat(Prefs.getString("kw_limit", "150"));
+    public static Chart<?> setup(@NonNull Chart<?> chart, @NonNull Context context, Boolean drawAvgLimit) {
+
+        float kw_limit = 150;
+        float period_days = 30;
+        try{
+            kw_limit =  Float.parseFloat(Prefs.getString("kw_limit", "150"));
+            period_days = Float.parseFloat(Prefs.getString("period_lenght", "30"));
+        }catch (Exception ignored){}
 
         float avg_limit = kw_limit / period_days;
 
@@ -49,15 +55,15 @@ public class ChartStyler {
         chart.setTouchEnabled(true);
         chart.getXAxis().setDrawGridLines(false);
         chart.getXAxis().setPosition(XAxis.XAxisPosition.TOP);
-        chart.getXAxis().setTextColor(context.getResources().getColor(R.color.md_cyan_200));
+        chart.getXAxis().setTextColor(context.getResources().getColor(R.color.md_white_1000));
 
         chart.getXAxis().setDrawLabels(true);
-        chart.getXAxis().setAxisLineColor(context.getResources().getColor(R.color.md_cyan_800));
-        chart.getLegend().setTextColor(context.getResources().getColor(R.color.md_cyan_200));
+        chart.getXAxis().setAxisLineColor(context.getResources().getColor(R.color.md_white_1000));
+        chart.getLegend().setTextColor(context.getResources().getColor(R.color.md_white_1000));
         chart.getLegend().setWordWrapEnabled(true);
         chart.getXAxis().setDrawLabels(true);
         chart.setExtraOffsets(5f, 15f, 0f, 0f);
-        chart.getXAxis().setAxisLineColor(context.getResources().getColor(R.color.md_cyan_600));
+        chart.getXAxis().setAxisLineColor(context.getResources().getColor(R.color.md_white_1000));
         chart.animateXY(500, 0);
 
         if (chart instanceof LineChart) {
@@ -76,79 +82,57 @@ public class ChartStyler {
             // if disabled, scaling can be done on x- and y-axis separately
             mChart.setPinchZoom(false);
             mChart.getAxisRight().setEnabled(false);
-            LimitLine upper_limit2 = new LimitLine(kw_limit, "");
-            upper_limit2.setLineWidth(1.3f);
-            upper_limit2.setTextColor(context.getResources().getColor(R.color.label_text_light));
-            upper_limit2.enableDashedLine(15f, 15f, 0f);
-            upper_limit2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-            upper_limit2.setTextSize(9f);
-            upper_limit2.setLineColor(context.getResources().getColor(R.color.md_amber_500));
-
             YAxis leftAxis = mChart.getAxisLeft();
-
-            //reset all limit lines to avoid overlapping lines
-            leftAxis.removeAllLimitLines();
-            leftAxis.addLimitLine(upper_limit2);
-            leftAxis.setGridColor(context.getResources().getColor(R.color.md_cyan_A200));
+            leftAxis.setGridColor(context.getResources().getColor(R.color.md_white_1000));
             leftAxis.setDrawZeroLine(false);
-            leftAxis.setDrawLimitLinesBehindData(true);
             leftAxis.setValueFormatter(new MyYAxisValueFormatter());
             leftAxis.setAxisMinimum(0f);
             leftAxis.setDrawGridLines(false);
 
+            //Esta linea se vera luego de pasar el limite perido
+            if(!drawAvgLimit) {
+                LimitLine upper_limit2 = new LimitLine(kw_limit, "");
+                upper_limit2.setLineWidth(1.3f);
+                upper_limit2.setTextColor(context.getResources().getColor(R.color.label_text_light));
+                upper_limit2.enableDashedLine(15f, 15f, 0f);
+                upper_limit2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                upper_limit2.setTextSize(9f);
+                upper_limit2.setLineColor(context.getResources().getColor(R.color.md_amber_500));
+                //reset all limit lines to avoid overlapping lines
+                leftAxis.removeAllLimitLines();
+                leftAxis.addLimitLine(upper_limit2);
+            }else {
+                LimitLine avg_upper_limit = new LimitLine(avg_limit, "");
+                avg_upper_limit.setLineWidth(0.9f);
+                avg_upper_limit.setTextColor(context.getResources().getColor(R.color.label_text_light));
+                avg_upper_limit.enableDashedLine(15f, 15f, 0f);
+                avg_upper_limit.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                avg_upper_limit.setTextSize(9f);
+                avg_upper_limit.setLineColor(context.getResources().getColor(R.color.md_amber_500));
+                leftAxis.removeAllLimitLines();
+                leftAxis.addLimitLine(avg_upper_limit);
+            }
+
             return mChart;
-        }else if (chart instanceof CombinedChart) {
-            CombinedChart combinedChart = (CombinedChart) chart;
-
-            combinedChart.getAxisRight().setAxisMinimum(0f);
-            combinedChart.getAxisRight().setDrawGridLines(false);
-
-            combinedChart.setDrawBorders(false);
-            combinedChart.setBorderColor(context.getResources().getColor(R.color.md_green_500_25));
-            combinedChart.getAxisLeft().setAxisLineColor(context.getResources().getColor(R.color.md_green_800));
-            combinedChart.getAxisRight().setAxisLineColor(context.getResources().getColor(R.color.md_green_800));
-            combinedChart.getAxisRight().setDrawLabels(false);
-            combinedChart.getLegend().setTextColor(context.getResources().getColor(R.color.primary_light));
-            combinedChart.getAxisLeft().setTextColor(context.getResources().getColor(R.color.primary_light));
-            //combinedChart.setData(lineData);
-            combinedChart.setDrawOrder(new CombinedChart.DrawOrder[]{
-                    CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE,
-            });
-            LimitLine avg_upper_limit = new LimitLine(avg_limit, "");
-            avg_upper_limit.setLineWidth(0.9f);
-            avg_upper_limit.setTextColor(context.getResources().getColor(R.color.label_text_light));
-            avg_upper_limit.enableDashedLine(15f, 15f, 0f);
-            avg_upper_limit.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-            avg_upper_limit.setTextSize(9f);
-            avg_upper_limit.setLineColor(context.getResources().getColor(R.color.md_amber_500));
-
-            YAxis leftAxis2 = combinedChart.getAxisLeft();
-            leftAxis2.removeAllLimitLines();
-            leftAxis2.addLimitLine(avg_upper_limit);
-            leftAxis2.setGridColor(context.getResources().getColor(R.color.md_light_blue_100));
-            leftAxis2.setDrawZeroLine(false);
-            leftAxis2.setDrawLimitLinesBehindData(true);
-            leftAxis2.setValueFormatter(new MyYAxisValueFormatter());
-            leftAxis2.setAxisMinimum(0f);
-            leftAxis2.setDrawGridLines(false);
-            YAxis rightAxis = combinedChart.getAxisRight();
-            rightAxis.setDrawGridLines(false);
-            rightAxis.setAxisMinimum(0f);
-            return combinedChart;
         }
-        else
+        else {
             return chart;
+        }
 
     }
 
     @NonNull
     public static LineDataSet drawAvgLimitLine(@NonNull Context context){
         List<Entry> avg_limit_dataset = new ArrayList<Entry>();
-        float period_lenght = Float.parseFloat(Prefs.getString("period_lenght", "30"));
-        float kw_limit = Float.parseFloat(Prefs.getString("kw_limit", "150"));
+        float kw_limit = 150;
+        float period_days = 30;
+        try{
+            kw_limit =  Float.parseFloat(Prefs.getString("kw_limit", "150"));
+            period_days = Float.parseFloat(Prefs.getString("period_lenght", "30"));
+        }catch (Exception ignored){}
 
-        for (int i = 0; i<= period_lenght; i++ ) {
-            float limit = kw_limit/period_lenght;
+        for (int i = 0; i<= period_days; i++ ) {
+            float limit = kw_limit/period_days;
             avg_limit_dataset.add(new Entry(i, limit));
         }
         String title = context.getResources().getString(R.string.chart_legend_avg_limit);
@@ -163,10 +147,14 @@ public class ChartStyler {
     @NonNull
     public static LineDataSet drawPeriodLimitLine(@NonNull Context context){
         List<Entry> limit_dataset = new ArrayList<Entry>();
-        int period_lenght = Integer.parseInt(Prefs.getString("period_lenght", "30"));
-        int kw_limit = Integer.parseInt(Prefs.getString("kw_limit", "150"));
+        float kw_limit = 150;
+        float period_days = 30;
+        try{
+            kw_limit =  Float.parseFloat(Prefs.getString("kw_limit", "150"));
+            period_days = Float.parseFloat(Prefs.getString("period_lenght", "30"));
+        }catch (Exception ignored){}
 
-        for (int i = 0; i<= period_lenght; i++ ) {
+        for (int i = 0; i<= period_days; i++ ) {
             limit_dataset.add(new Entry(i, kw_limit));
         }
         String title = context.getResources().getString(R.string.chart_legend_period_limit);
@@ -223,7 +211,7 @@ public class ChartStyler {
         acumuladoDataSet.setDrawCircleHole(false);
         acumuladoDataSet.setLineWidth(1.2f);
         //acumuladoDataSet.enableDashedLine(10f, 10f, 0f);
-        acumuladoDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        acumuladoDataSet.setMode(LineDataSet.Mode.LINEAR);
         //acumuladoDataSet.setCubicIntensity(0.1f);
         acumuladoDataSet.setValueTextSize(8f);
         acumuladoDataSet.setCircleColor(context.getResources().getColor(R.color.label_text_light));
@@ -243,13 +231,14 @@ public class ChartStyler {
         acumuladoDataSet.setDrawCircleHole(false);
         acumuladoDataSet.setLineWidth(1.2f);
         //acumuladoDataSet.enableDashedLine(10f, 10f, 0f);
-        acumuladoDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        acumuladoDataSet.setMode(LineDataSet.Mode.LINEAR);
         //acumuladoDataSet.setCubicIntensity(0.1f);
         acumuladoDataSet.setValueTextSize(9f);
         acumuladoDataSet.setCircleColor(context.getResources().getColor(R.color.label_text_light));
         acumuladoDataSet.setValueTextColor(context.getResources().getColor(R.color.label_text_light));
         acumuladoDataSet.setColor(context.getResources().getColor(R.color.md_grey_100));
         acumuladoDataSet.setFillColor(context.getResources().getColor(R.color.chart_consumo_line_fill));
+        //acumuladoDataSet.setDrawValues(false);
 
         return acumuladoDataSet;
     }
@@ -258,24 +247,16 @@ public class ChartStyler {
     public static LineDataSet setProyectionPeriodLine(@NonNull RealmResults<Lectura> lecturas, @NonNull Context context){
 
         Lectura lectura = lecturas.last();
-        /*acumuladoDataSet.setLabel("Proyeccion Consumo kWh");
-        acumuladoDataSet.setValueFormatter(new MyValueFormatter());
-        acumuladoDataSet.setDrawFilled(false);
-        acumuladoDataSet.setDrawCircleHole(false);
-        acumuladoDataSet.setDrawCircles(false);
-        acumuladoDataSet.setLineWidth(1.2f);
-        acumuladoDataSet.enableDashedLine(10f, 10f, 0f);
-        //acumuladoDataSet.setMode(LineDataSet.Mode.LINEAR);
-        //acumuladoDataSet.setCubicIntensity(0.1f);
-        acumuladoDataSet.setValueTextSize(8f);
-
-*/
         List<Entry> proyection_dataset = new ArrayList<Entry>();
-        int period_lenght = Integer.parseInt(Prefs.getString("period_lenght", "30"));
-        int kw_limit = Integer.parseInt(Prefs.getString("kw_limit", "150"));
+        float kw_limit = 150;
+        float period_days = 30;
+        try{
+            kw_limit =  Float.parseFloat(Prefs.getString("kw_limit", "150"));
+            period_days = Float.parseFloat(Prefs.getString("period_lenght", "30"));
+        }catch (Exception ignored){}
         float cp = lectura.consumo_acumulado;
 
-        for (int i = (int) lectura.dias_periodo; i<= period_lenght; i++ ) {
+        for (int i = (int) lectura.dias_periodo; i<= period_days; i++ ) {
             proyection_dataset.add(new Entry(i, cp));
             cp = (cp + lectura.consumo_promedio);
         }
@@ -289,6 +270,5 @@ public class ChartStyler {
         periodDataSet.setColor(context.getResources().getColor(R.color.md_lime_600));
         periodDataSet.enableDashedLine(10f, 10f, 0f);
         return periodDataSet;
-
     }
 }

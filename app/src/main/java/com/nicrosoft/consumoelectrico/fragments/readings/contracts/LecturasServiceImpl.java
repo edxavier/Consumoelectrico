@@ -53,12 +53,12 @@ public class LecturasServiceImpl implements LecturasService {
         lectura.lectura = Float.valueOf(newReading);
         RealmResults<Lectura> results = realm.where(Lectura.class)
                 .equalTo("periodo.id", lectura.periodo.id)
-                .findAllSorted("fecha_lectura");
+                .findAll().sort("fecha_lectura");
 
         RealmResults<Lectura> before = results.where()
-                .lessThan("fecha_lectura", lectura.fecha_lectura).findAllSorted("fecha_lectura", Sort.DESCENDING);
+                .lessThan("fecha_lectura", lectura.fecha_lectura).findAll().sort("fecha_lectura", Sort.DESCENDING);
         RealmResults<Lectura> after = results.where()
-                .greaterThan("fecha_lectura", lectura.fecha_lectura).findAllSorted("fecha_lectura");
+                .greaterThan("fecha_lectura", lectura.fecha_lectura).findAll().sort("fecha_lectura");
         //Si existe registro posterior recalcular los valores para ese registro
         if(!before.isEmpty()){
             Lectura preRead = before.first();
@@ -107,16 +107,55 @@ public class LecturasServiceImpl implements LecturasService {
     }
 
     @Override
+    public boolean deleteEntry(Lectura lectura) {
+        try {
+            final boolean[] success = {true};
+            realm.executeTransaction(realm1 -> {
+                //obtener las lecturas del periodo activo
+                RealmResults<Lectura> results = realm.where(Lectura.class)
+                        .equalTo("periodo.id", lectura.periodo.id)
+                        .findAll().sort("fecha_lectura");
+
+                RealmResults<Lectura> before = results.where()
+                        .lessThan("fecha_lectura", lectura.fecha_lectura).findAll().sort("fecha_lectura", Sort.DESCENDING);
+
+                // obtener las lecturas posteriores a la que se va a eliminar
+                RealmResults<Lectura> after = results.where()
+                        .greaterThan("fecha_lectura", lectura.fecha_lectura).findAll().sort("fecha_lectura");
+                //Si existe registro posterior recalcular los valores para ese registro
+                Lectura preRead = null;
+                if (!before.isEmpty()) {
+                    preRead = before.first();
+                    lectura.deleteFromRealm();
+                }else {
+                    success[0] = false;
+                    return;
+                }
+
+                if (!after.isEmpty()) {
+                    Lectura postRead = after.first();
+                    postRead.consumo = postRead.lectura - preRead.lectura;
+                    postRead.consumo_acumulado = preRead.consumo_acumulado + postRead.consumo;
+                    postRead.consumo_promedio = postRead.consumo_acumulado / postRead.dias_periodo;
+                }
+            });
+            return success[0];
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    @Override
     public boolean isValueOverange(@NonNull Lectura lectura, String newValue){
         try {
             float value = Float.valueOf(newValue);
             RealmResults<Lectura> results = realm.where(Lectura.class)
                     .equalTo("periodo.id", lectura.periodo.id)
-                    .findAllSorted("fecha_lectura");
+                    .findAll().sort("fecha_lectura");
             RealmResults<Lectura> before = results.where()
-                    .lessThan("fecha_lectura", lectura.fecha_lectura).findAllSorted("fecha_lectura", Sort.DESCENDING);
+                    .lessThan("fecha_lectura", lectura.fecha_lectura).findAll().sort("fecha_lectura", Sort.DESCENDING);
             RealmResults<Lectura> after = results.where()
-                    .greaterThan("fecha_lectura", lectura.fecha_lectura).findAllSorted("fecha_lectura");
+                    .greaterThan("fecha_lectura", lectura.fecha_lectura).findAll().sort("fecha_lectura");
             boolean beforeOverRange = false;
             boolean afterOverRange = false;
 
@@ -133,7 +172,7 @@ public class LecturasServiceImpl implements LecturasService {
         }
     }
 
-    Periodo getActivePeriod(String medidor_id) {
+    private Periodo getActivePeriod(String medidor_id) {
         return realm.where(Periodo.class)
                 .equalTo("medidor.id", medidor_id)
                 .equalTo("activo", true)
@@ -147,7 +186,7 @@ public class LecturasServiceImpl implements LecturasService {
         RealmResults<Lectura> after = realm.where(Lectura.class)
                 .equalTo("periodo.medidor.id", periodo.medidor.id)
                 .greaterThan("fecha_lectura", periodo.inicio)
-                .findAllSorted("fecha_lectura");
+                .findAll().sort("fecha_lectura");
         if(!after.isEmpty()) {
             LocalDate end = null;
             realm.beginTransaction();

@@ -255,7 +255,7 @@ public class NewReadingActivity extends AppCompatActivity implements DatePickerD
         }
         Lectura lectura = new Lectura();
         lectura.fecha_lectura = fecha_lectura;
-        lectura.lectura = Integer.valueOf(txtLectura.getText().toString().trim());
+        lectura.lectura = Float.valueOf(txtLectura.getText().toString().trim());
         lectura.observacion = txtObservacion.getText().toString();
 
         if (end_period_sw.isChecked()) {

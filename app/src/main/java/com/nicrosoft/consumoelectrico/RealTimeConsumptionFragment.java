@@ -59,6 +59,8 @@ public class RealTimeConsumptionFragment extends Fragment {
     TextView txtResume;
     @BindView(R.id.adView)
     AdView adView;
+    @BindView(R.id.txt_hint)
+    TextView txtHint;
 
     private EditText pulses_per_kwh;
 
@@ -92,7 +94,9 @@ public class RealTimeConsumptionFragment extends Fragment {
                 playIcon.setImageResource(R.drawable.ic_stop);
                 consumptionArea.setAlpha(1f);
                 consumptionIcon.setImageResource(R.drawable.ic_pulse_line);
+                txtHint.setVisibility(View.VISIBLE);
             } else {
+                txtHint.setVisibility(View.GONE);
                 calculateConsumption();
                 consumptionArea.setAlpha(0.8f);
                 playing = false;
@@ -111,16 +115,16 @@ public class RealTimeConsumptionFragment extends Fragment {
             }
         }, throwable -> {
         });
-        if(!Prefs.getBoolean("isPurchased", false))
+        if (!Prefs.getBoolean("isPurchased", false))
             showAds();
 
-        if(Prefs.getBoolean("firstTimeCalculator", true))
+        if (Prefs.getBoolean("firstTimeCalculator", true))
             showExplanation();
 
     }
 
 
-    void showExplanation(){
+    void showExplanation() {
         //
         MaterialDialog dlg = new MaterialDialog.Builder(getActivity())
                 .title(R.string.notice)
@@ -148,7 +152,7 @@ public class RealTimeConsumptionFragment extends Fragment {
         float dayly_expenses = (dayly_kwh * (price_kwh - discount_kwh)) + fixed_charges;
         String dayly_expenses_str = Prefs.getString("price_simbol", "$") + String.valueOf(dayly_expenses);*/
         String r = getString(R.string.calculator_resume, String.format(Locale.getDefault(), "%02.2f", dayly_kwh));
-        txtResume.setText(r );
+        txtResume.setText(r);
     }
 
     @Override
@@ -158,18 +162,20 @@ public class RealTimeConsumptionFragment extends Fragment {
     }
 
     private void showAds() {
-        AdRequest adRequest = new AdRequest.Builder()
+        try {
+            AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
-        adView.loadAd(adRequest);
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                adView.setVisibility(View.VISIBLE);
-            }
-        });
-
+            adView.loadAd(adRequest);
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                    if(adView!=null)
+                        adView.setVisibility(View.VISIBLE);
+                }
+            });
+        }catch (Exception ignored){}
     }
 
     @Override
@@ -180,7 +186,7 @@ public class RealTimeConsumptionFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_pulses_set){
+        if (item.getItemId() == R.id.action_pulses_set) {
             MaterialDialog dlg = new MaterialDialog.Builder(getActivity())
                     .title(R.string.calculator_title)
                     .customView(R.layout.dlg_pulses_per_kwh, true)
@@ -190,10 +196,10 @@ public class RealTimeConsumptionFragment extends Fragment {
                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                if (pulses_per_kwh != null && !pulses_per_kwh.getText().toString().isEmpty()) {
-                                    Prefs.putString("pulses_per_kwh", pulses_per_kwh.getText().toString());
-                                } else
-                                    Toast.makeText(getActivity(), getString(R.string.activity_new_reading_snack_warning), Toast.LENGTH_LONG).show();
+                            if (pulses_per_kwh != null && !pulses_per_kwh.getText().toString().isEmpty()) {
+                                Prefs.putString("pulses_per_kwh", pulses_per_kwh.getText().toString());
+                            } else
+                                Toast.makeText(getActivity(), getString(R.string.activity_new_reading_snack_warning), Toast.LENGTH_LONG).show();
                         }
                     }).build();
             try {
@@ -203,7 +209,7 @@ public class RealTimeConsumptionFragment extends Fragment {
             }
             dlg.show();
         }
-        if(item.getItemId() == R.id.ac_calculator_help){
+        if (item.getItemId() == R.id.ac_calculator_help) {
             showExplanation();
         }
         return super.onOptionsItemSelected(item);

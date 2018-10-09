@@ -42,7 +42,7 @@ public class ReadingServiceImpl implements ReadingService {
             //obtener todas las lecturas para el periodo actual
             RealmResults<Lectura> results = realm.where(Lectura.class)
                     .equalTo("periodo.id", periodo_id)
-                    .findAllSorted("fecha_lectura");
+                    .findAll().sort("fecha_lectura");
 
             if(results.size()==0 && periodo != null) {
                 RealmResults<Periodo> periodos = realm.where(Periodo.class)
@@ -52,15 +52,15 @@ public class ReadingServiceImpl implements ReadingService {
                 Periodo p = periodos.get(periodos.size()-1);
                 results = realm.where(Lectura.class)
                         .equalTo("periodo.id", p.id)
-                        .findAllSorted("fecha_lectura");
+                        .findAll().sort("fecha_lectura");
             }
 
             //Obtener las lecturas anterior a la fecha especificada
             RealmResults<Lectura> before = results.where()
-                    .lessThan("fecha_lectura", date).findAllSorted("fecha_lectura", Sort.DESCENDING);
+                    .lessThan("fecha_lectura", date).findAll().sort("fecha_lectura", Sort.DESCENDING);
             //Obtener las lecturas posterior a la fecha especificada
             RealmResults<Lectura> after = results.where()
-                    .greaterThan("fecha_lectura", date).findAllSorted("fecha_lectura");
+                    .greaterThan("fecha_lectura", date).findAll().sort("fecha_lectura");
             boolean beforeOverRange = false;
             boolean afterOverRange = false;
             //berificar que la lectura sea mayor que la ultima anterior y menor quenla primera posterior
@@ -135,11 +135,11 @@ public class ReadingServiceImpl implements ReadingService {
             try {
                 RealmResults<Lectura> results = realm.where(Lectura.class)
                         .equalTo("periodo.id", activePeriod.id)
-                        .findAllSorted("fecha_lectura");
+                        .findAll().sort("fecha_lectura");
                 RealmResults<Lectura> readingsBefore = results.where()
-                        .lessThan("fecha_lectura", lectura.fecha_lectura).findAllSorted("fecha_lectura", Sort.DESCENDING);
+                        .lessThan("fecha_lectura", lectura.fecha_lectura).findAll().sort("fecha_lectura", Sort.DESCENDING);
                 RealmResults<Lectura> readingsAfter = results.where()
-                        .greaterThan("fecha_lectura", lectura.fecha_lectura).findAllSorted("fecha_lectura");
+                        .greaterThan("fecha_lectura", lectura.fecha_lectura).findAll().sort("fecha_lectura");
 
 
                 realm.executeTransaction(realm1 -> {
@@ -257,19 +257,19 @@ public class ReadingServiceImpl implements ReadingService {
         if(periodo!=null) {
             RealmResults<Lectura> res = realm.where(Lectura.class)
                     .equalTo("periodo.id", periodo.id)
-                    .findAllSorted("fecha_lectura", Sort.DESCENDING);
+                    .findAll().sort("fecha_lectura", Sort.DESCENDING);
             //Si el ultimo periodo activp no tiene registros mostrar los del anterior
             if(res.size()==0 && old_readings_if_more_than_a_period){
                 RealmResults<Periodo> periodos = realm.where(Periodo.class)
                         .equalTo("medidor.id", periodo.medidor.id)
                         .equalTo("activo", false)
                         .findAll();
-                //.findAllSorted("inicio", Sort.DESCENDING);
+                //.findAll().sort("inicio", Sort.DESCENDING);
 
                 Periodo p = periodos.get(periodos.size()-1);
                 res = realm.where(Lectura.class)
                         .equalTo("periodo.id", p.id)
-                        .findAllSorted("fecha_lectura", Sort.DESCENDING);
+                        .findAll().sort("fecha_lectura", Sort.DESCENDING);
             }
             return (res.size()>0) ? res.first(): null;
         }else

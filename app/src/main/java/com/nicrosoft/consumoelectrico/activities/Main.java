@@ -3,7 +3,6 @@ package com.nicrosoft.consumoelectrico.activities;
 import android.Manifest;
 import android.app.FragmentManager;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -20,7 +19,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +31,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.codekidlabs.storagechooser.StorageChooser;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -45,8 +42,11 @@ import com.nicrosoft.consumoelectrico.fragments.AppPreference;
 import com.nicrosoft.consumoelectrico.fragments.main.MainFragment;
 import com.nicrosoft.consumoelectrico.fragments.medidor.MedidorFragment;
 import com.nicrosoft.consumoelectrico.myUtils.CSVHelper;
+import com.nicrosoft.consumoelectrico.myUtils.RestoreHelper;
+import com.obsez.android.lib.filechooser.ChooserDialog;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -54,7 +54,11 @@ import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+import io.reactivex.Single;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, BillingProcessor.IBillingHandler{
@@ -76,13 +80,11 @@ public class Main extends AppCompatActivity
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
+    CompositeDisposable mDisposable = new CompositeDisposable();
+
     String PRODUCT_SKU = "remove_ads";
     InterstitialAd mInterstitialAd;
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +120,9 @@ public class Main extends AppCompatActivity
         RelativeLayout headerNav = (RelativeLayout) navView.getHeaderView(0);
         TextView version = headerNav.findViewById(R.id.version);
         version.setText(BuildConfig.VERSION_NAME);
+        //StringBuilder path = new StringBuilder(getFilesDir().getAbsolutePath());
+        RestoreHelper.getInternalStoragePath(this);
+
     }
 
 
@@ -155,8 +160,10 @@ public class Main extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_consumption) {
-            if(!bp.isPurchased(PRODUCT_SKU))
-                requestAds();
+            if(!bp.isPurchased(PRODUCT_SKU) && mInterstitialAd!=null && timeToShowInterstial()) {
+                if(mInterstitialAd.isLoaded())
+                    mInterstitialAd.show();
+            }
             getSupportActionBar().setTitle(R.string.title_activity_main);
             MedidorFragment mainFragment = new MedidorFragment();
             Bundle args = new Bundle();
@@ -164,11 +171,17 @@ public class Main extends AppCompatActivity
             mainFragment.setArguments(args);
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, mainFragment).commit();
         } else if (id == R.id.nav_readings) {
+            if(!bp.isPurchased(PRODUCT_SKU) && mInterstitialAd!=null && timeToShowInterstial()) {
+                if(mInterstitialAd.isLoaded())
+                    mInterstitialAd.show();
+            }
             getSupportActionBar().setTitle(R.string.calculator_title);
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, new RealTimeConsumptionFragment()).commit();
         } else if (id == R.id.nav_settings) {
-            if(!bp.isPurchased(PRODUCT_SKU))
-                requestAds();
+            if(!bp.isPurchased(PRODUCT_SKU) && mInterstitialAd!=null && timeToShowInterstial()) {
+                if(mInterstitialAd.isLoaded())
+                    mInterstitialAd.show();
+            }
             getSupportActionBar().setTitle(R.string.action_settings);
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new AppPreference())
@@ -255,7 +268,7 @@ public class Main extends AppCompatActivity
             hideItem();
         }
         if(!bp.isPurchased(PRODUCT_SKU))
-            requestAds();
+            requestInterstialAds();
     }
 
     @Override
@@ -274,6 +287,8 @@ public class Main extends AppCompatActivity
     public void onDestroy() {
         if (bp != null)
             bp.release();
+        if(!mDisposable.isDisposed())
+            mDisposable.dispose();
         super.onDestroy();
     }
 
@@ -282,19 +297,25 @@ public class Main extends AppCompatActivity
         Menu nav_Menu = navView.getMenu();
         nav_Menu.findItem(R.id.nav_remove_ads).setVisible(false);
     }
-    private void requestAds() {
+
+    private boolean timeToShowInterstial(){
         int ne =  Prefs.getInt("num_show_readings", 0);
         Prefs.putInt("num_show_readings", ne + 1);
 
-        if(Prefs.getInt("num_show_readings", 0) >= Prefs.getInt("show_after", 8)) {
+        if(Prefs.getInt("num_show_readings", 0) >= Prefs.getInt("show_after", 10)) {
             Prefs.putInt("num_show_readings", 0);
             Random r = new Random();
-            int Low = 10;int High = 17;
+            int Low = 15;int High = 20;
             int rnd = r.nextInt(High-Low) + Low;
             Prefs.putInt("show_after", rnd);
-
+            return true;
+        }else {
+            return false;
+        }
+    }
+    private void requestInterstialAds() {
             AdRequest adRequest = new AdRequest.Builder()
-                    //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     //.addTestDevice("0B307F34E3DDAF6C6CAB28FAD4084125")
                     //.addTestDevice("B0FF48A19BF36BD2D5DCD62163C64F45")
                     .build();
@@ -302,14 +323,14 @@ public class Main extends AppCompatActivity
             mInterstitialAd = new InterstitialAd(this);
             mInterstitialAd.setAdUnitId(getResources().getString(R.string.admob_interstical));
             mInterstitialAd.setAdListener(new AdListener() {
+
                 @Override
-                public void onAdLoaded() {
-                    super.onAdLoaded();
-                    mInterstitialAd.show();
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    requestInterstialAds();
                 }
             });
             mInterstitialAd.loadAd(adRequest);
-        }
     }
 
 
@@ -342,8 +363,71 @@ public class Main extends AppCompatActivity
         }
     }
     private void showFolderChooseDialog() {
+
+        MaterialDialog dialog = new MaterialDialog.Builder(Main.this)
+                .title(R.string.exporting_data)
+                .content(R.string.importing_msg)
+                .progressIndeterminateStyle(true)
+                .progress(true, 0).build();
+
+        new ChooserDialog().with(this)
+                .withFilter(true, false)
+                .withStartFile(RestoreHelper.getInternalStoragePath(this))
+                .withDateFormat("dd/MM/yy HH:mm")
+                .withResources(R.string.title_choose_folder, R.string.choose, R.string.cancel)
+                .withNavigateUpTo(new ChooserDialog.CanNavigateUp() {
+                    @Override
+                    public boolean canUpTo(File dir) {
+                        return true;
+                    }
+                })
+                .withChosenListener(new ChooserDialog.Result() {
+                    @Override
+                    public void onChoosePath(String path, File pathFile) {
+                        SimpleDateFormat time_format = new SimpleDateFormat(getString(R.string.date_format_save), Locale.getDefault());
+                        String name = getString(R.string.app_name) + time_format.format(new Date());
+                        name = name.replace(' ', '_').replace('.', '_');
+
+
+                        String finalName = name;
+                        mDisposable.add(
+                                Single.create((SingleOnSubscribe<Boolean>) e -> e.onSuccess(CSVHelper.saveAllToCSV(path, finalName, Main.this)))
+                                        .subscribeOn(Schedulers.io()) //Run on IO Thread
+                                        .observeOn(AndroidSchedulers.mainThread()) //Run on UI Thread
+                                        .doOnSubscribe(__ -> {
+                                            dialog.show();
+                                        })
+                                        .doFinally(dialog::dismiss)
+                                        .subscribe(res -> {
+                                            if (!res){
+                                                new MaterialDialog.Builder(Main.this)
+                                                        .title("Error!")
+                                                        .content(R.string.export_error)
+                                                        .positiveText(R.string.agree)
+                                                        .show();
+                                            }else {
+                                                Prefs.putString("last_path", path);
+                                                new MaterialDialog.Builder(Main.this)
+                                                        .title(R.string.export_succes)
+                                                        .content(path+"/"+finalName)
+                                                        .positiveText(R.string.agree)
+                                                        .show();
+                                            }
+                                        },throwable -> {
+                                            new MaterialDialog.Builder(Main.this)
+                                                    .title("Error!")
+                                                    .content(R.string.export_error)
+                                                    .positiveText(R.string.agree)
+                                                    .show();
+                                        })
+                        );
+                    }
+                })
+                .build()
+                .show();
+
         // Initialize Builder
-        StorageChooser chooser = new StorageChooser.Builder()
+        /*StorageChooser chooser = new StorageChooser.Builder()
                 .withActivity(this)
                 .withFragmentManager(getFragmentManager())
                 .withMemoryBar(true)
@@ -351,14 +435,15 @@ public class Main extends AppCompatActivity
                 .allowCustomPath(true)
                 .setType(StorageChooser.DIRECTORY_CHOOSER)
                 .build();
-        chooser.show();
+        chooser.show();*/
         // get path that the user has chosen
-        chooser.setOnSelectListener(new StorageChooser.OnSelectListener() {
+        /* chooser.setOnSelectListener(new StorageChooser.OnSelectListener() {
             @Override
             public void onSelect(String path) {
                 SimpleDateFormat time_format = new SimpleDateFormat(getString(R.string.date_format_save), Locale.getDefault());
                 String name = getString(R.string.app_name) + time_format.format(new Date());
                 name = name.replace(' ', '_');
+
                 new MaterialDialog.Builder(Main.this)
                         .title(R.string.save_as)
                         .content(path)
@@ -384,42 +469,65 @@ public class Main extends AppCompatActivity
                             }
                         }).show();
             }
-        });
+        }); */
     }
 
 
     private void showFileChooseDialog() {
-        // Initialize Builder
-        StorageChooser chooser = new StorageChooser.Builder()
-                .withActivity(this)
-                .withFragmentManager(getFragmentManager())
-                .withMemoryBar(true)
-                .allowCustomPath(true)
-                .setType(StorageChooser.FILE_PICKER)
-                .build();
-        // Show dialog whenever you want by
-        chooser.show();
-        // get path that the user has chosen
-        chooser.setOnSelectListener(new StorageChooser.OnSelectListener() {
-            @Override
-            public void onSelect(String path) {
+        MaterialDialog dialog = new MaterialDialog.Builder(Main.this)
+                .title(R.string.importing_data)
+                .content(R.string.importing_msg)
+                .progressIndeterminateStyle(true)
+                .progress(true, 0).build();
 
-                if (!CSVHelper.restoreAllFromCSV(path, getApplicationContext())){
-                    new MaterialDialog.Builder(Main.this)
-                            .title("Error!")
-                            .content(R.string.import_error)
-                            .positiveText(R.string.agree)
-                            .show();
-                }else {
-                    new MaterialDialog.Builder(Main.this)
-                            .title(R.string.import_succes)
-                            .content(path)
-                            .positiveText(R.string.agree)
-                            .show();
-                }
-            }
-        });
+        new ChooserDialog().with(this)
+                .withStartFile(RestoreHelper.getInternalStoragePath(this))
+                .withResources(R.string.title_choose_file, R.string.choose, R.string.cancel)
+                .withDateFormat("dd/MM/yy HH:mm")
+                .withNavigateUpTo(new ChooserDialog.CanNavigateUp() {
+                    @Override
+                    public boolean canUpTo(File dir) {
+                        return true;
+                    }
+                })
+                .withChosenListener(new ChooserDialog.Result() {
+                    @Override
+                    public void onChoosePath(String path, File pathFile) {
+
+                        mDisposable.add(
+                            Single.create((SingleOnSubscribe<Boolean>) e -> e.onSuccess(CSVHelper.restoreAllFromCSV(path, getApplicationContext())))
+                                .subscribeOn(Schedulers.io()) //Run on IO Thread
+                                .observeOn(AndroidSchedulers.mainThread()) //Run on UI Thread
+                                .doOnSubscribe(__ -> {
+                                    dialog.show();
+                                })
+                                .doFinally(dialog::dismiss)
+                                .subscribe(res -> {
+                                    if (!res){
+                                        new MaterialDialog.Builder(Main.this)
+                                                .title("Error!")
+                                                .content(R.string.import_error)
+                                                .positiveText(R.string.agree)
+                                                .show();
+                                    }else {
+                                        new MaterialDialog.Builder(Main.this)
+                                                .title(R.string.import_succes)
+                                                .content(path)
+                                                .positiveText(R.string.agree)
+                                                .show();
+                                    }
+                                },throwable -> {
+                                    new MaterialDialog.Builder(Main.this)
+                                            .title("Error!")
+                                            .content(R.string.import_error)
+                                            .positiveText(R.string.agree)
+                                            .show();
+                                })
+                        );
+                    }
+                })
+                .build()
+                .show();
     }
-
 
 }

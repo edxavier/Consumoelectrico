@@ -4,7 +4,9 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.nicrosoft.consumoelectrico.R;
+import com.nicrosoft.consumoelectrico.activities.Main;
 import com.nicrosoft.consumoelectrico.realm.Lectura;
 import com.nicrosoft.consumoelectrico.realm.Medidor;
 import com.nicrosoft.consumoelectrico.realm.Periodo;
@@ -35,29 +37,31 @@ public class CSVHelper {
         try {
             Realm realm = Realm.getDefaultInstance();
             RealmResults<Lectura> res = realm.where(Lectura.class)
-                    .findAllSorted("fecha_lectura", Sort.DESCENDING);
-            List<String[]> data = new ArrayList<String[]>();
-            String [] country ={ "Medidor_id", "Medidor", "Descripcion",
-                    "ID_periodo" ,"Inicio_periodo", "Fin_periodo", "Dias_periodo", "Activo",
-                    "ID_lectura", "Lectura", "Fecha_lectura", "Consumo", "Consumo_acumulado", "Consumo_promedio", "Dias_periodo",
-                    "Observacion"
-            };
-            data.add(country);
-            for (Lectura re : res) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat(context.getString(R.string.date_time_format), Locale.getDefault());
-                String fin_p = "";
-                if(re.periodo.fin!=null)
-                    fin_p = dateFormat.format(re.periodo.fin);
-                data.add(new String[] { re.medidor.id, re.medidor.name, re.medidor.descripcion,
-                    re.periodo.id, dateFormat.format(re.periodo.inicio), fin_p, String.valueOf(re.periodo.dias_periodo), String.valueOf(re.periodo.activo),
-                        re.id, String.valueOf(re.lectura), dateFormat.format(re.fecha_lectura), String.valueOf(re.consumo), String.valueOf(re.consumo_acumulado),
-                        String.valueOf(re.consumo_promedio), String.valueOf(re.dias_periodo), re.observacion
-                });
+                    .findAll().sort("fecha_lectura", Sort.DESCENDING);
+            if(res.size()>0) {
+                List<String[]> data = new ArrayList<String[]>();
+                String[] country = {"Medidor_id", "Medidor", "Descripcion",
+                        "ID_periodo", "Inicio_periodo", "Fin_periodo", "Dias_periodo", "Activo",
+                        "ID_lectura", "Lectura", "Fecha_lectura", "Consumo", "Consumo_acumulado", "Consumo_promedio", "Dias_periodo",
+                        "Observacion"
+                };
+                data.add(country);
+                for (Lectura re : res) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat(context.getString(R.string.date_time_format), Locale.getDefault());
+                    String fin_p = "";
+                    if (re.periodo.fin != null)
+                        fin_p = dateFormat.format(re.periodo.fin);
+                    data.add(new String[]{re.medidor.id, re.medidor.name, re.medidor.descripcion,
+                            re.periodo.id, dateFormat.format(re.periodo.inicio), fin_p, String.valueOf(re.periodo.dias_periodo), String.valueOf(re.periodo.activo),
+                            re.id, String.valueOf(re.lectura), dateFormat.format(re.fecha_lectura), String.valueOf(re.consumo), String.valueOf(re.consumo_acumulado),
+                            String.valueOf(re.consumo_promedio), String.valueOf(re.dias_periodo), re.observacion
+                    });
+                }
+                writer = new CSVWriter(new FileWriter(fullPath + "/" + name + ".csv"));
+                writer.writeAll(data);
+                writer.close();
+                realm.close();
             }
-            writer = new CSVWriter(new FileWriter(fullPath+"/"+name+".csv"));
-            writer.writeAll(data);
-            writer.close();
-            realm.close();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,19 +78,23 @@ public class CSVHelper {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String csvLine;
             reader.readLine();
-            while ((csvLine = reader.readLine()) != null) {
+             while ((csvLine = reader.readLine()) != null) {
                 csvLine = csvLine.replace('"', ' ');
-                Log.e("EDER", csvLine);
+                //Log.e("EDER", csvLine);
                 String[] row = csvLine.split(",");
                 realm.executeTransaction(realm1 -> {
+                    String observ = "";
+                    if(row.length>15)
+                        observ = row[15].trim();
                     Medidor medidor = RestoreHelper.guardarMedidor(row[0].trim(),row[1].trim(), row[2].trim());
                     Periodo periodo = RestoreHelper.guardarPeriodo(row[3].trim(),row[4].trim(), row[5].trim(),row[6].trim(),row[7].trim(), medidor, context);
                     RestoreHelper.guardarLectura(row[8].trim(),row[9].trim(), row[10].trim(),row[11].trim(),
-                            row[12].trim(),row[13].trim(),row[14].trim(),row[15].trim(), periodo, medidor, context);
+                            row[12].trim(),row[13].trim(),row[14].trim(),observ, periodo, medidor, context);
                 });
             }
             inputStream.close();
             realm.close();
+
             return true;
         }
         catch (Exception ex) {
@@ -106,12 +114,12 @@ public class CSVHelper {
             if(all) {
                 res = realm.where(Lectura.class)
                         .equalTo("medidor.id", medidor_id)
-                        .findAllSorted("fecha_lectura", Sort.DESCENDING);
+                        .findAll().sort("fecha_lectura", Sort.DESCENDING);
             }else {
                 res = realm.where(Lectura.class)
                         .equalTo("medidor.id", medidor_id)
                         .equalTo("periodo.activo", true)
-                        .findAllSorted("fecha_lectura", Sort.DESCENDING);
+                        .findAll().sort("fecha_lectura", Sort.DESCENDING);
             }
             List<String[]> data = new ArrayList<String[]>();
             String [] titulos ={ "Fecha_lectura", "Lectura",  "Consumo", "Consumo_acumulado", "Consumo_promedio", "Dias_periodo",

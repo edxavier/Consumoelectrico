@@ -2,9 +2,11 @@ package com.nicrosoft.consumoelectrico.activities.perio_details.contracts;
 
 import android.content.Context;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.nicrosoft.consumoelectrico.activities.perio_details.contracts.PeriodDetailsPresenter;
 import com.nicrosoft.consumoelectrico.realm.Lectura;
+import com.nicrosoft.consumoelectrico.realm.Medidor;
 import com.nicrosoft.consumoelectrico.realm.Periodo;
 
 /**
@@ -68,6 +70,11 @@ public class PeriodDetailPresenterImpl implements PeriodDetailsPresenter {
     @Override
     public LineChart setAvgHistory(LineChart chart, Periodo periodo) {
         return service.setAvgHistory(chart, periodo);
+    }
+
+    @Override
+    public BarChart setPeriodHistory(BarChart chart, String medidor) {
+        return service.setPeriodHistory(chart, medidor);
     }
 
     @Override

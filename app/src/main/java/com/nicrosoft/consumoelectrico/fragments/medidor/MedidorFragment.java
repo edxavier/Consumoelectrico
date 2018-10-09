@@ -69,6 +69,7 @@ public class MedidorFragment extends Fragment implements MedidorView, BillingPro
     private EditText med;
     private EditText desc;
     private AdapterMedidor adapter;
+    private InterstitialAd mInterstitialAd;
 
     public MedidorFragment() {
         // Required empty public constructor
@@ -92,6 +93,8 @@ public class MedidorFragment extends Fragment implements MedidorView, BillingPro
         presenter = new MedidorPresenterImpl(getActivity(), this);
         presenter.getMedidores();
         setFabListener();
+        if (!purchased)
+            requestInterstialAds();
     }
 
 
@@ -139,13 +142,13 @@ public class MedidorFragment extends Fragment implements MedidorView, BillingPro
         presenter.getMedidores();
         medidoreList.scrollToPosition(requestCode);
         if (!purchased)
-            requestAds();
+            showInterstial();
     }
 
-    private void requestAds() {
+    private void showInterstial(){
+
         int ne = Prefs.getInt("num_show_readings", 0);
         Prefs.putInt("num_show_readings", ne + 1);
-
         if (Prefs.getInt("num_show_readings", 0) == Prefs.getInt("show_after", 5)) {
             Prefs.putInt("num_show_readings", 0);
             Random r = new Random();
@@ -153,31 +156,36 @@ public class MedidorFragment extends Fragment implements MedidorView, BillingPro
             int High = 10;
             int rnd = r.nextInt(High - Low) + Low;
             Prefs.putInt("show_after", rnd);
+            if(mInterstitialAd!=null && mInterstitialAd.isLoaded()){
+                mInterstitialAd.show();
+            }
+        }
 
+    }
+
+    private void requestInterstialAds() {
             AdRequest adRequest = new AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     //.addTestDevice("0B307F34E3DDAF6C6CAB28FAD4084125")
                     //.addTestDevice("B0FF48A19BF36BD2D5DCD62163C64F45")
                     .build();
-
-            InterstitialAd mInterstitialAd;
             mInterstitialAd = new InterstitialAd(getActivity());
             mInterstitialAd.setAdUnitId(getResources().getString(R.string.admob_interstical));
+            mInterstitialAd.loadAd(adRequest);
             mInterstitialAd.setAdListener(new AdListener() {
+
                 @Override
-                public void onAdLoaded() {
-                    super.onAdLoaded();
-                    mInterstitialAd.show();
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    requestInterstialAds();
                 }
             });
-            mInterstitialAd.loadAd(adRequest);
-        }
     }
 
 
     private void showAds() {
         AdRequest adRequest = new AdRequest.Builder()
-                //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 //.addTestDevice("0B307F34E3DDAF6C6CAB28FAD4084125")
                 //.addTestDevice("B0FF48A19BF36BD2D5DCD62163C64F45")
                 .build();

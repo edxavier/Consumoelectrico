@@ -1,17 +1,33 @@
 package com.nicrosoft.consumoelectrico.activities.perio_details.contracts;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.CombinedData;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.realm.implementation.RealmBarDataSet;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.realm.implementation.RealmLineDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.nicrosoft.consumoelectrico.R;
 import com.nicrosoft.consumoelectrico.fragments.main.chart_helpers.ChartStyler;
-import com.nicrosoft.consumoelectrico.fragments.main.chart_helpers.MyYAxisValueFormatter;
 import com.nicrosoft.consumoelectrico.realm.Lectura;
+import com.nicrosoft.consumoelectrico.realm.Medidor;
 import com.nicrosoft.consumoelectrico.realm.Periodo;
 import com.pixplicity.easyprefs.library.Prefs;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -42,7 +58,7 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
         if(periodo!=null) {
             RealmResults<Lectura> res = realm.where(Lectura.class)
                     .equalTo("periodo.id", periodo.id)
-                    .findAllSorted("fecha_lectura", Sort.DESCENDING);
+                    .findAll().sort("fecha_lectura", Sort.DESCENDING);
             return (res.size()>0) ? res.last(): null;
         }else
             return null;
@@ -53,7 +69,7 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
         if(periodo!=null) {
             RealmResults<Lectura> res = realm.where(Lectura.class)
                     .equalTo("periodo.id", periodo.id)
-                    .findAllSorted("fecha_lectura", Sort.DESCENDING);
+                    .findAll().sort("fecha_lectura", Sort.DESCENDING);
             return (res.size()>0) ? res.first(): null;
         }else
             return null;
@@ -98,7 +114,7 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
             p_id = periodo.id;
         return realm.where(Lectura.class)
                 .equalTo("periodo.id", p_id)
-                .findAllSorted("fecha_lectura", Sort.ASCENDING);
+                .findAll().sort("fecha_lectura", Sort.ASCENDING);
     }
 
     @Override
@@ -107,19 +123,18 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
         try {
             LineData period_limit_lineData;
             period_limit_lineData = new LineData(ChartStyler.drawPeriodLimitLine(this.context));
-
             if (lecturas.size() > 0) {
                 RealmLineDataSet<Lectura> acumuladoDataSet = new RealmLineDataSet<>(lecturas, "dias_periodo", "consumo_acumulado");
-
                 period_limit_lineData.addDataSet(ChartStyler.setAcumuladoPeriodLine(acumuladoDataSet, this.context));
-                period_limit_lineData.addDataSet(ChartStyler.setProyectionPeriodLine(lecturas, this.context));
+                LineDataSet pds = ChartStyler.setProyectionPeriodLine(lecturas, this.context);
+                if(!pds.getValues().isEmpty()) {
+                    period_limit_lineData.addDataSet(ChartStyler.setProyectionPeriodLine(lecturas, this.context));
+                }
                 chart.setData(period_limit_lineData);
             } else {
                 chart.setData(period_limit_lineData);
             }
-        } catch (Exception e) {
-            //Log.e("EDER_Exception", e.getMessage());
-        }
+        } catch (Exception ignored) {}
         return chart;
     }
 
@@ -132,11 +147,58 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
 
             if (lecturas.size() > 0) {
                 RealmLineDataSet<Lectura> acumuladoDataSet = new RealmLineDataSet<>(lecturas, "dias_periodo", "consumo_promedio");
-
                 period_limit_lineData.addDataSet(ChartStyler.setAvgPeriodLine(acumuladoDataSet, this.context));
                 chart.setData(period_limit_lineData);
             } else {
                 chart.setData(period_limit_lineData);
+            }
+        } catch (Exception e) {
+            //Log.e("EDER_Exception", e.getMessage());
+        }
+        return chart;
+    }
+
+    @Override
+    public BarChart setPeriodHistory(BarChart chart, String medidor_id) {
+        RealmResults<Periodo> results = realm.where(Periodo.class)
+                .equalTo("medidor.id", medidor_id)
+                .findAll().sort("inicio", Sort.ASCENDING);
+        try {
+            SimpleDateFormat time_format = new SimpleDateFormat("MMM", Locale.getDefault());
+            ArrayList<BarEntry> BarEntry = new ArrayList<>();
+            ArrayList<String> labels = new ArrayList<>();
+            int x = 0;
+            Calendar c = Calendar.getInstance();
+            for (Periodo result : results) {
+                Lectura last = realm.where(Lectura.class)
+                        .equalTo("periodo.id", result.id).findAll().sort("fecha_lectura", Sort.ASCENDING).last();
+                if(last!=null) {
+                    c.setTime(result.inicio);
+                    c.add(Calendar.DATE, 3);
+                    labels.add(time_format.format(c.getTime()));
+                    BarEntry.add(new BarEntry(x, last.consumo_acumulado));
+                    x = x + 1;
+                }
+            }
+            if(BarEntry.size()>0) {
+                BarDataSet dataSet = new BarDataSet(BarEntry, context.getString(R.string.label_consumption));
+                dataSet.setColor(this.context.getResources().getColor(R.color.md_pink_700));
+                dataSet.setValueTextColor(this.context.getResources().getColor(R.color.md_pink_50));
+                BarData data = new BarData(dataSet);
+                data.setBarWidth(0.8f);
+                data.setValueFormatter(new IValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                        return String.format(Locale.getDefault(), "%.0f", value);
+                    }
+                });
+                chart.setData(data);
+                chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+                chart.getXAxis().setGranularity(1.0f);
+                chart.getAxisLeft().setTextColor(this.context.getResources().getColor(R.color.md_pink_50));
+                chart.getAxisRight().setTextColor(this.context.getResources().getColor(R.color.md_pink_50));
+                chart.getAxisRight().setAxisMinimum(0);
+                chart.getAxisLeft().setAxisMinimum(0);
             }
         } catch (Exception e) {
             //Log.e("EDER_Exception", e.getMessage());

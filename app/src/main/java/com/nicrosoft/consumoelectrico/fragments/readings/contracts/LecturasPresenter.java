@@ -12,5 +12,7 @@ public interface LecturasPresenter {
     void updateReading(Lectura lectura, String newReading);
     void endPeriod(Lectura lectura);
     boolean isValueOverange(Lectura lectura, String newValue);
+    boolean deleteEntry(Lectura lectura);
+
 
 }
