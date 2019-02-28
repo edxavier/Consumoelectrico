@@ -1,9 +1,8 @@
 package com.nicrosoft.consumoelectrico.fragments.medidor.imp;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.nicrosoft.consumoelectrico.fragments.medidor.contracts.MedidorService;
 import com.nicrosoft.consumoelectrico.realm.Lectura;

@@ -1,11 +1,10 @@
 package com.nicrosoft.consumoelectrico.activities.reading.contracts;
 
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.nicrosoft.consumoelectrico.realm.Lectura;
-import com.nicrosoft.consumoelectrico.realm.Medidor;
 import com.nicrosoft.consumoelectrico.realm.Periodo;
 
 import java.util.Date;

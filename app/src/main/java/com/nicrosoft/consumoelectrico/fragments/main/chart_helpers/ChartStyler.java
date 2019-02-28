@@ -1,14 +1,10 @@
 package com.nicrosoft.consumoelectrico.fragments.main.chart_helpers;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.github.mikephil.charting.charts.BarLineChartBase;
+import androidx.annotation.NonNull;
+
 import com.github.mikephil.charting.charts.Chart;
-import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -18,7 +14,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.realm.implementation.RealmBarDataSet;
 import com.github.mikephil.charting.data.realm.implementation.RealmLineDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.nicrosoft.consumoelectrico.R;
 import com.nicrosoft.consumoelectrico.realm.Lectura;

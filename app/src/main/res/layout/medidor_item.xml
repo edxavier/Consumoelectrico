@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
-
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_resume"
-        app:cardCornerRadius="3dp"
+<com.google.android.material.card.MaterialCardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        app:cardBackgroundColor="@color/md_grey_50"
+        style="@style/Widget.MaterialComponents.CardView"
         app:cardElevation="4dp"
-        app:cardBackgroundColor="@color/md_amber_700"
-        app:cardUseCompatPadding="true"
+        app:cardPreventCornerOverlap="true"
+        app:strokeWidth="0dp"
+        app:cardCornerRadius="4dp"
+        android:id="@+id/card_resume"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:minHeight="200dp">
 
         <LinearLayout
             android:orientation="vertical"
@@ -22,32 +23,31 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:background="@color/secondaryDarkColor"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:paddingTop="8dp"
-                    android:textAlignment="center"
-                    android:background="@color/md_yellow_900"
-                    android:textStyle="bold"
                     android:id="@+id/txt_medidor"
-                    android:textColor="@color/label_text_light"
-                    fontPath="fonts/pierRegular.otf"
-                    tools:ignore="MissingPrefix"
                     android:layout_width="match_parent"
-                    android:textSize="20sp"
                     android:layout_height="wrap_content"
-                    android:text="Casa Coonsuelo" />
+                    android:fontFamily="@font/share_tech"
+                    android:paddingTop="8dp"
+                    android:text="Casa Coonsuelo"
+                    android:textAlignment="center"
+                    android:textColor="@color/md_white_1000"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:ignore="MissingPrefix" />
 
                 <TextView
+                    android:fontFamily="@font/coda"
                     android:id="@+id/txt_last_reading"
                     android:paddingBottom="8dp"
-                    android:background="@color/md_yellow_900"
                     android:textAlignment="center"
-                    android:textColor="@color/label_text_light"
-                    fontPath="fonts/pierRegular.otf"
+                    android:textColor="@color/md_white_1000"
                     tools:ignore="MissingPrefix"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -79,18 +79,17 @@
                         android:layout_gravity="center"
                         android:layout_marginBottom="8dp"
                         android:layout_marginTop="8dp"
-                        app:progressColor="@color/md_white_1000"
-                        app:progressBackgroundColor="@color/md_amber_500"
+                        app:progressColor="@color/secondaryColor"
+                        app:progressBackgroundColor="@color/md_grey_300"
                         app:progressStrokeWidth="5dp"
                         app:textSize="12sp"
                         app:drawDot="true"
                         app:dotWidth="7dp"
                         app:dotColor="@color/md_yellow_900"
-                        app:textColor="@color/md_white_1000_75" />
+                        app:textColor="@color/md_black_1000_75" />
                     <TextView
                         android:layout_marginBottom="2dp"
-                        android:textColor="@color/label_text_light"
-                        fontPath="fonts/pierRegular.otf"
+                        android:fontFamily="@font/share_tech"
                         tools:ignore="MissingPrefix"
                         android:gravity="center"
                         android:layout_width="match_parent"
@@ -100,14 +99,14 @@
                         />
 
                     <TextView
+                        android:fontFamily="@font/share_tech"
+                        android:textColor="@color/md_red_500_75"
                         android:id="@+id/exceso_consumo"
-                        fontPath="fonts/pierRegular.otf"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:gravity="center"
                         android:text="+5 kwh"
-                        android:textColor="@color/md_orange_100"
                         android:textSize="12sp"
                         android:visibility="gone"
                         tools:ignore="MissingPrefix" />
@@ -120,30 +119,28 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content">
+
                     <TextView
-                        android:textColor="@color/label_text_light"
                         fontPath="fonts/pierRegular.otf"
-                        tools:ignore="MissingPrefix"
-                        android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/share_tech"
+                        android:gravity="center"
                         android:text="@string/label_consump_avg"
                         android:textSize="13sp"
-                        />
+                        tools:ignore="MissingPrefix" />
 
                     <TextView
                         android:id="@+id/txt_period_avg"
-                        android:textColor="@color/label_text_light"
-                        fontPath="fonts/pierRegular.otf"
-                        tools:ignore="MissingPrefix"
-                        android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/share_tech"
+                        android:gravity="center"
                         android:text="0 kwh"
                         android:textSize="22sp"
-                        />
+                        tools:ignore="MissingPrefix" />
 
-                    <android.support.v7.widget.AppCompatImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:visibility="gone"
                         android:id="@+id/warning_icon"
                         android:layout_gravity="center"
@@ -154,7 +151,8 @@
                         android:visibility="gone"
                         android:id="@+id/warning_msg"
                         android:layout_marginBottom="8dp"
-                        android:textColor="@color/md_amber_50"
+                        android:textColor="@color/md_red_500"
+                        android:fontFamily="@font/share_tech"
                         android:textAlignment="center"
                         android:textSize="12sp"
                         android:text="@string/warning_avg"
@@ -178,18 +176,17 @@
                         android:layout_gravity="center"
                         android:layout_marginBottom="8dp"
                         android:layout_marginTop="8dp"
-                        app:progressColor="@color/md_white_1000"
-                        app:progressBackgroundColor="@color/md_amber_500"
+                        app:progressColor="@color/secondaryColor"
+                        app:progressBackgroundColor="@color/md_grey_300"
                         app:progressStrokeWidth="5dp"
                         app:textSize="12sp"
                         app:drawDot="true"
                         app:dotWidth="7dp"
                         app:dotColor="@color/md_yellow_900"
-                        app:textColor="@color/md_white_1000_75" />
+                        app:textColor="@color/md_black_1000_75" />
                     <TextView
                         android:layout_marginBottom="2dp"
-                        android:textColor="@color/label_text_light"
-                        fontPath="fonts/pierRegular.otf"
+                        android:fontFamily="@font/share_tech"
                         tools:ignore="MissingPrefix"
                         android:gravity="center"
                         android:layout_width="match_parent"
@@ -200,13 +197,13 @@
 
                     <TextView
                         android:id="@+id/exceso_periodo"
-                        fontPath="fonts/pierRegular.otf"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:gravity="center"
                         android:text="+5 days"
-                        android:textColor="@color/md_orange_100"
+                        android:fontFamily="@font/share_tech"
+                        android:textColor="@color/md_red_500_75"
                         android:textSize="12sp"
                         android:visibility="gone"
                         tools:ignore="MissingPrefix" />
@@ -223,47 +220,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:textColor="@color/secondaryColor"
+                    android:layout_margin="1dp"
                     android:id="@+id/bnt_details"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/md_amber_500_50"
-                    android:fontFamily="sans-serif"
                     android:text="@string/details"
-                    android:textColor="@color/md_white_1000"
                     android:textSize="12sp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_margin="1dp"
+                    android:textColor="@color/secondaryColor"
                     android:id="@+id/bnt_readings"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/md_amber_500_50"
                     android:fontFamily="sans-serif"
                     android:text="@string/label_readings"
-                    android:textColor="@color/md_white_1000"
                     android:textSize="12sp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:textColor="@color/secondaryColor"
+                    android:layout_margin="1dp"
                     android:id="@+id/bnt_new_readings"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/md_amber_500_50"
-                    android:fontFamily="sans-serif"
                     android:text="@string/new_reading"
-                    android:textColor="@color/md_white_1000"
                     android:textSize="12sp" />
             </LinearLayout>
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 
 
-</LinearLayout>

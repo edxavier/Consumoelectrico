@@ -1,7 +1,6 @@
 package com.nicrosoft.consumoelectrico.myUtils;
 
-import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;

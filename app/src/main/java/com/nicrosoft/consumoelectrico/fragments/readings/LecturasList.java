@@ -4,11 +4,11 @@ package com.nicrosoft.consumoelectrico.fragments.readings;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,26 +17,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.nicrosoft.consumoelectrico.R;
-import com.nicrosoft.consumoelectrico.activities.Main;
-import com.nicrosoft.consumoelectrico.activities.PeriodReadingsActivity;
 import com.nicrosoft.consumoelectrico.activities.reading.NewReadingActivity;
 import com.nicrosoft.consumoelectrico.fragments.readings.contracts.LecturasPresenter;
 import com.nicrosoft.consumoelectrico.fragments.readings.contracts.LecturasPresenterImpl;
 import com.nicrosoft.consumoelectrico.fragments.readings.contracts.LecturasView;
-import com.nicrosoft.consumoelectrico.myUtils.CSVHelper;
 import com.nicrosoft.consumoelectrico.realm.Lectura;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import butterknife.BindView;

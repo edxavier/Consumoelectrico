@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView app:cardElevation="4dp"
+<com.google.android.material.card.MaterialCardView
+    app:cardElevation="4dp"
+    style="@style/Widget.MaterialComponents.CardView"
     app:cardUseCompatPadding="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:cardPreventCornerOverlap="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
@@ -15,20 +18,20 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_centerInParent="true"
-                android:background="@color/md_amber_800"
+                android:background="@color/secondaryDarkColor"
                 android:layout_width="10dp"
                 android:layout_height="match_parent" />
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:visibility="gone"
                 android:id="@+id/observacion_flag"
                 android:layout_width="10dp"
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
-                android:background="@color/md_amber_500" />
+                android:background="@color/secondaryLightColor" />
 
 
         </RelativeLayout>
@@ -41,35 +44,39 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:layout_marginTop="4dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     app:srcCompat="@drawable/ic_calendar_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                <TextView
-                    android:layout_gravity="center"
-                    android:textSize="16sp"
-                    android:gravity="center_vertical"
-                    android:id="@+id/txtFecha"
-                    android:textStyle="bold"
-                    android:text="22 dic 17"
-                    android:layout_width="0dp"
-                    android:layout_weight="3"
-                    android:layout_height="wrap_content" />
 
-                <android.support.v7.widget.AppCompatImageView
+                <TextView
+                    android:textColor="@color/md_black_1000_75"
+                    android:id="@+id/txtFecha"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="3"
+                    android:fontFamily="@font/coda"
+                    android:gravity="center_vertical"
+                    android:text="22 dic 17"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatImageView
                     app:srcCompat="@drawable/ic_flash"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:gravity="center"
                     android:id="@+id/txtLectura"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed"
+                    android:fontFamily="@font/play"
+                    android:gravity="center"
                     android:text="7013 kWh"
                     android:textAllCaps="false"
                     android:textSize="16sp"
@@ -88,13 +95,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="0dp"
+                    style="@style/TextAppearance.AppCompat.Body2"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:text="@string/label_consump_avg" />
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/txtTendencia"
                     android:layout_gravity="center_vertical"
                     app:srcCompat="@drawable/ic_play_arrow"
@@ -102,11 +110,11 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:layout_gravity="center"
                     android:id="@+id/txtPromedio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/share_tech"
                     android:gravity="center_vertical"
                     android:text="4.83 kWh"
                     android:textStyle="bold" />
@@ -119,45 +127,44 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    style="@style/TextAppearance.MaterialComponents.Body2"
                     android:id="@+id/label_consumption"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:text="@string/label_consumption_since_last_reading" />
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     app:srcCompat="@drawable/ic_bulb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
                 <TextView
-                    android:layout_gravity="center"
                     android:id="@+id/txt_consumption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/share_tech"
                     android:gravity="center_vertical"
                     android:text="4.83 kWh"
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <View
-                android:layout_margin="8dp"
-                android:background="@color/md_divider_black"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-
 
             <TextView
-                android:padding="8dp"
-                android:layout_below="@id/reading_row_container"
-                android:text="Observaciones"
+                android:layout_marginTop="8dp"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:id="@+id/txtObservaciones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txtObservaciones" />
+                android:layout_below="@id/reading_row_container"
+                android:padding="8dp"
+                android:text="Observaciones"
+                android:textStyle="italic" />
 
         </LinearLayout>
 
     </LinearLayout>
 
 
-</android.support.v7.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

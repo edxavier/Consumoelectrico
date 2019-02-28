@@ -1,6 +1,6 @@
 package com.nicrosoft.consumoelectrico.fragments.readings.contracts;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.nicrosoft.consumoelectrico.realm.Lectura;
 import com.nicrosoft.consumoelectrico.realm.Medidor;

@@ -81,7 +81,7 @@
     <string name="energy_meter_name">Energy meter:</string>
     <string name="initial_reading">Initial reading</string>
     <string name="ok" translatable="false">OK</string>
-    <string name="admob_app_pub" translatable="false">ca-app-pub-9964109306515647~6674066211</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-9964109306515647~6674066211</string>
     <string name="admob_banner" translatable="false">ca-app-pub-9964109306515647/6534465419</string>
     <string name="admob_nativeS002" translatable="false">ca-app-pub-9964109306515647/3801325019</string>
     <string name="admob_interstical" translatable="false">ca-app-pub-9964109306515647/4998856614</string>

@@ -1,13 +1,11 @@
 package com.nicrosoft.consumoelectrico.fragments.medidor.contracts;
 
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.nicrosoft.consumoelectrico.realm.Lectura;
 import com.nicrosoft.consumoelectrico.realm.Medidor;
 import com.nicrosoft.consumoelectrico.realm.Periodo;
-
-import java.util.Date;
 
 import io.realm.RealmResults;
 

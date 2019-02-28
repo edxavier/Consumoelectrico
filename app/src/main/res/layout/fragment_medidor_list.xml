@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,7 +16,7 @@
         tools:listitem="@layout/medidor_item" />
 
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:visibility="gone"
         android:scaleType="centerCrop"
         android:id="@+id/empty_bacground"
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:visibility="gone"
         android:scaleType="centerCrop"
         android:id="@+id/scrim_bacground"
@@ -68,14 +68,15 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/list"
         android:layout_alignEnd="@id/list"
-        android:layout_alignRight="@id/list"
         android:layout_margin="@dimen/fab_margin"
+        app:tint="@color/md_white_1000"
         app:srcCompat="@drawable/ic_gauge" />
 
 

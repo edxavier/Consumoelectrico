@@ -2,15 +2,15 @@ package com.nicrosoft.consumoelectrico.activities.reading;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,13 +41,15 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-import static android.support.design.widget.Snackbar.LENGTH_LONG;
+import static com.google.android.material.snackbar.Snackbar.LENGTH_LONG;
 import static android.text.TextUtils.isEmpty;
 
 public class NewReadingActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, ReadingView {
@@ -176,12 +178,14 @@ public class NewReadingActivity extends AppCompatActivity implements DatePickerD
                         now.get(Calendar.DAY_OF_MONTH)
                 );
                 dpd.setMaxDate(now);
+                dpd.setOkColor(ContextCompat.getColor(this, R.color.md_white_1000));
+                dpd.setCancelColor(ContextCompat.getColor(this, R.color.md_white_1000));
                 if (periodoActivo != null) {
                     ago.setTime(periodoActivo.inicio);
                     dpd.setMinDate(ago);
                 }
 
-                dpd.show(getFragmentManager(), "Datepickerdialog");
+                dpd.show(getSupportFragmentManager(), "Datepickerdialog");
                 return true;
         }
         return super.onOptionsItemSelected(item);

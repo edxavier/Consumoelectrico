@@ -1,8 +1,8 @@
 package com.nicrosoft.consumoelectrico;
 
 import android.content.ContextWrapper;
-import android.support.multidex.MultiDexApplication;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.multidex.MultiDexApplication;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.crashlytics.android.Crashlytics;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
@@ -11,6 +11,7 @@ import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
+import com.google.android.gms.ads.MobileAds;
 import com.nicrosoft.consumoelectrico.myUtils.DumpDataService;
 import com.nicrosoft.consumoelectrico.myUtils.ReminderService;
 import com.nicrosoft.consumoelectrico.realm.Migration;
@@ -31,6 +32,8 @@ public class BaseApp extends MultiDexApplication {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        MobileAds.initialize(this, getString(R.string.admob_app_id));
+
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .schemaVersion(1) // Must be bumped when the schema changes

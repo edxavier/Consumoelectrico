@@ -4,11 +4,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
-import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.nicrosoft.consumoelectrico.R;
 import com.pixplicity.easyprefs.library.Prefs;

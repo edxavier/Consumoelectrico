@@ -1,7 +1,7 @@
 package com.nicrosoft.consumoelectrico;
 
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,7 +18,7 @@ public class MySnackbar {
         Snackbar snack = Snackbar.make(container, message,length);
         View view = snack.getView();
         view.setBackgroundColor(background);
-        TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+        TextView tv =  view.findViewById(R.id.snackbar_text);
         tv.setTextColor(textColor);
         return snack;
     }

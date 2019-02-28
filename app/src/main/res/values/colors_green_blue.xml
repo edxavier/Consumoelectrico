@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="primary">#ffc107</color>
+ <!-- -->
     <color name="primary_dark">#ffa000</color>
   <color name="primary_light">#C8E6C9</color>
-  <color name="accent">@color/md_blue_grey_500</color>
+  <color name="accent">#795548</color>
     <color name="divider">#BDBDBD</color>
 
 
@@ -14,5 +14,17 @@
   <color name="decoview_color_total_color">#FFE2E2E2</color>
   <color name="decoview_color_value_color">#FFFF8800</color>
   <color name="label_text_light" >@color/md_white_1000_75</color>
+  <color name="primary">#ffc107</color>
+
+ <color name="primaryColor">#ffc107</color>
+ <color name="primaryLightColor">#fff350</color>
+ <color name="primaryDarkColor">#c79100</color>
+ <color name="secondaryColor">#ff9100</color>
+ <color name="secondaryLightColor">#ffc246</color>
+ <color name="secondaryDarkColor">#c67c00</color>
+ <color name="primaryTextColor">#000000</color>
+ <color name="secondaryTextColor">#000000</color>
+
+ <color name="mdtp_accent_color">#fff350</color>
 
 </resources>

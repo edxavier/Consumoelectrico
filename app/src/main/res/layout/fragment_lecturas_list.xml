@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         android:orientation="horizontal"
-        android:background="@color/md_blue_grey_600"
+        android:background="@color/secondaryLightColor"
         android:layout_width="match_parent"
         android:layout_height="35dp">
 
@@ -19,12 +19,12 @@
             android:padding="8dp"
             android:text="@string/detail.period.readings"
             android:textAlignment="center"
-            android:textColor="@color/label_text_light" />
+            android:textColor="@color/md_black_1000_75" />
 
     </LinearLayout>
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="35dp"
         tools:listitem="@layout/reading_time_line_item"
         android:id="@+id/recycler_readings"

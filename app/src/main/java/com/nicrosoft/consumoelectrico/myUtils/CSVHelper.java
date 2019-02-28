@@ -1,12 +1,10 @@
 package com.nicrosoft.consumoelectrico.myUtils;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.nicrosoft.consumoelectrico.R;
-import com.nicrosoft.consumoelectrico.activities.Main;
 import com.nicrosoft.consumoelectrico.realm.Lectura;
 import com.nicrosoft.consumoelectrico.realm.Medidor;
 import com.nicrosoft.consumoelectrico.realm.Periodo;
@@ -19,7 +17,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 

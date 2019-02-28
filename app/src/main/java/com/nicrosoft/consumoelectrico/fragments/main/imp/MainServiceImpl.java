@@ -1,9 +1,8 @@
 package com.nicrosoft.consumoelectrico.fragments.main.imp;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.nicrosoft.consumoelectrico.fragments.main.contracts.MainService;
 import com.nicrosoft.consumoelectrico.realm.Lectura;
@@ -15,11 +14,9 @@ import org.joda.time.PeriodType;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 /**
  * Created by Eder Xavier Rojas on 11/01/2017.

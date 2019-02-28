@@ -1,8 +1,7 @@
 package com.nicrosoft.consumoelectrico.activities.reading.impl;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.nicrosoft.consumoelectrico.activities.reading.contracts.ReadingService;
 import com.nicrosoft.consumoelectrico.realm.Lectura;
