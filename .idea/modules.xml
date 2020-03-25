@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Consumoelectrico.iml" filepath="$PROJECT_DIR$/Consumoelectrico.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Consumoelectrico.iml" filepath="$PROJECT_DIR$/Consumoelectrico.iml" group="Consumoelectrico" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Consumoelectrico/app" />
     </modules>
   </component>
 </project>

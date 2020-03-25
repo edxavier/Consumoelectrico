@@ -1,9 +1,7 @@
 package com.nicrosoft.consumoelectrico.fragments.main.imp;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.nicrosoft.consumoelectrico.fragments.main.MainFragment;
 import com.nicrosoft.consumoelectrico.fragments.main.contracts.MainPresenter;
 import com.nicrosoft.consumoelectrico.fragments.main.contracts.MainService;
 import com.nicrosoft.consumoelectrico.fragments.main.contracts.MainView;

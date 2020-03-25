@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <compartir_app  android:id="@+id/nav_share"/>
+    <valorar_app  android:id="@+id/nav_rate"/>
+    <import_ac  android:id="@+id/nav_import"/>
+    <export_ac  android:id="@+id/nav_export"/>
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.nicrosoft.consumoelectrico.ui.home.MedidorFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_nav_home_to_nuevaLecturaFragment"
+            app:destination="@id/nav_nueva_lectura" />
+        <action
+            android:id="@+id/action_nav_home_to_listaLecturasFragment"
+            app:destination="@id/listaLecturasFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_detallesFragment"
+            app:destination="@id/detallesFragment" />
+    </fragment>
+    <!--
+    <fragment
+        android:id="@+id/nav_home_second"
+        android:name="com.nicrosoft.consumoelectrico.ui.home.MedidorFragment"
+        android:label="@string/home_second"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
+            app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_nav_home_to_nuevaLecturaFragment"
+            app:destination="@id/nav_nueva_lectura" />
+        <argument
+            android:name="myArg"
+            app:argType="string" />
+    </fragment>
+    -->
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.nicrosoft.consumoelectrico.ui.calculator.PulseCalculatorFragment"
+        android:label="@string/calculator.title"
+        tools:layout="@layout/fragment_real_time_consumption" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.nicrosoft.consumoelectrico.fragments.AppPreference"
+        android:label="@string/action_settings"
+        tools:layout="@layout/fragment_settings" />
+
+
+    <fragment
+        android:id="@+id/nav_nueva_lectura"
+        android:name="com.nicrosoft.consumoelectrico.ui.nueva_lectura.NuevaLecturaFragment"
+        android:label="@string/new_reading"
+        tools:layout="@layout/fragment_nueva_lectura2" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="name"
+            app:argType="string"
+            android:defaultValue="----" />
+    </fragment>
+    <fragment
+        android:id="@+id/listaLecturasFragment"
+        android:name="com.nicrosoft.consumoelectrico.ui.lecturas.ListaLecturasFragment"
+        android:label="@string/label_readings"
+        tools:layout="@layout/fragment_lista_lecturas">
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="name"
+            app:argType="string"
+            android:defaultValue="----" />
+        <argument
+            android:name="desc"
+            app:argType="string"
+            android:defaultValue="----" />
+        <action
+            android:id="@+id/action_listaLecturasFragment_to_nav_nueva_lectura"
+            app:destination="@id/nav_nueva_lectura" />
+    </fragment>
+    <fragment
+        android:id="@+id/detallesFragment"
+        android:name="com.nicrosoft.consumoelectrico.DetallesFragment"
+        android:label="@string/details"
+        tools:layout="@layout/fragment_detalles" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="name"
+            app:argType="string"
+            android:defaultValue="----" />
+        <argument
+            android:name="desc"
+            app:argType="string"
+            android:defaultValue="----" />
+        <action
+            android:id="@+id/action_detallesFragment_to_listaLecturasFragment"
+            app:destination="@id/listaLecturasFragment" />
+        <action
+            android:id="@+id/action_detallesFragment_to_nav_nueva_lectura"
+            app:destination="@id/nav_nueva_lectura" />
+    </fragment>
+</navigation>

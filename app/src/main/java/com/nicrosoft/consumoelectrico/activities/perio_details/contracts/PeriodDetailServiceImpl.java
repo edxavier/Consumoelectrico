@@ -117,6 +117,16 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
                 .findAll().sort("fecha_lectura", Sort.ASCENDING);
     }
 
+    private RealmResults<Lectura> getReadingsAVG(Periodo periodo){
+        String p_id = "";
+        if(periodo!=null)
+            p_id = periodo.id;
+        return realm.where(Lectura.class)
+                .equalTo("periodo.id", p_id)
+                .greaterThanOrEqualTo("consumo_promedio", 1f)
+                .findAll().sort("fecha_lectura", Sort.ASCENDING);
+    }
+
     @Override
     public LineChart setReadingHistory(LineChart chart, Periodo periodo) {
         RealmResults<Lectura> lecturas = getReadings(periodo);
@@ -140,7 +150,7 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
 
     @Override
     public LineChart setAvgHistory(LineChart chart, Periodo periodo) {
-        RealmResults<Lectura> lecturas = getReadings(periodo);
+        RealmResults<Lectura> lecturas = getReadingsAVG(periodo);
         try {
             LineData period_limit_lineData;
             period_limit_lineData = new LineData(ChartStyler.drawAvgLimitLine(this.context));
@@ -183,7 +193,7 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
             if(BarEntry.size()>0) {
                 BarDataSet dataSet = new BarDataSet(BarEntry, context.getString(R.string.label_consumption));
                 dataSet.setColor(this.context.getResources().getColor(R.color.md_pink_700));
-                dataSet.setValueTextColor(this.context.getResources().getColor(R.color.md_pink_50));
+                dataSet.setValueTextColor(this.context.getResources().getColor(R.color.md_black_1000_75));
                 BarData data = new BarData(dataSet);
                 data.setBarWidth(0.8f);
                 data.setValueFormatter(new IValueFormatter() {
@@ -195,8 +205,8 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
                 chart.setData(data);
                 chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
                 chart.getXAxis().setGranularity(1.0f);
-                chart.getAxisLeft().setTextColor(this.context.getResources().getColor(R.color.md_pink_50));
-                chart.getAxisRight().setTextColor(this.context.getResources().getColor(R.color.md_pink_50));
+                chart.getAxisLeft().setTextColor(this.context.getResources().getColor(R.color.md_black_1000_50));
+                chart.getAxisRight().setTextColor(this.context.getResources().getColor(R.color.md_black_1000_50));
                 chart.getAxisRight().setAxisMinimum(0);
                 chart.getAxisLeft().setAxisMinimum(0);
             }

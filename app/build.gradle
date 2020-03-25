@@ -1,28 +1,41 @@
-buildscript {
+/*buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.27.1'
+        classpath 'io.fabric.tools:gradle:1.31.2'
     }
 }
-apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 
+ */
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: "androidx.navigation.safeargs.kotlin"
+// Apply the Crashlytics Gradle plugin
+apply plugin: 'com.google.firebase.crashlytics'
+
+//apply plugin: 'io.fabric'
+/*
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    mavenCentral()
 }
+
+ */
 
 //apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
 
-def dbflow_version = "4.0.0-beta5"
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
-
+    compileSdkVersion 29
+    buildToolsVersion '29.0.2'
+    androidExtensions {
+        experimental = true
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -30,10 +43,10 @@ android {
 
     defaultConfig {
         applicationId "com.nicrosoft.consumoelectrico"
-        minSdkVersion 19
-        targetSdkVersion 28
-        versionCode 1001
-        versionName "19.02.1"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1003
+        versionName "20.03.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -61,30 +74,16 @@ android {
         }
     }
     sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/xml'] } }
-    /*splits {
-        // Split apks on build target ABI, view all options for the splits here:
-        // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-        abi {
-            enable true
-            reset()
-            include 'armeabi-v7a', 'arm64-v8a', 'mips', 'x86', 'x86_64'
-        }
-    }*/
-}
 
-// map for the version code that gives each ABI a value. make sure to list all ABIs mentioned in splits block, an keep the order.
-/*ext.versionCodes = ['armeabi-v7a': 4, 'arm64-v8a': 5, mips: 6, 'x86': 7, 'x86_64': 8]
-import com.android.build.OutputFile
+// To inline the bytecode built with JVM target 1.8 into
+// bytecode that is being built with JVM target 1.6. (e.g. navArgs)
 
-// For each APK output variant, override versionCode with a combination of
-// ABI APK value * 1000 + defaultConfig.versionCode
-android.applicationVariants.all { variant ->
-    // assign different version code for each output
-    variant.outputs.each { output ->
-        output.versionCodeOverride =
-                project.ext.versionCodes.get(output.getFilter(OutputFile.ABI)) * 100 + android.defaultConfig.versionCode
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
-}*/
+
+}
 
 dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -97,39 +96,70 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha02'
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
 
-    implementation 'com.jakewharton:butterknife:10.0.0'
 
     implementation 'com.pixplicity.easyprefs:library:1.9.0@aar'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation 'com.github.PhilJay:MPAndroidChart-Realm:v3.0.3@aar'
-    implementation 'joda-time:joda-time:2.10.1'
-    implementation ('com.afollestad.material-dialogs:core:0.9.6.0'){
-        exclude group: 'com.android.support', module: 'support-v13'
-    }
-    implementation ('com.afollestad.material-dialogs:commons:0.9.6.0'){
-        exclude group: 'com.android.support', module: 'support-v13'
-    }
-    implementation 'com.wdullaer:materialdatetimepicker:4.1.2'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.5'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
-    implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.1.1'
-    //implementation 'com.github.erickok:NotRxBinding:master-SNAPSHOT'
-    testImplementation 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
-    implementation 'com.google.firebase:firebase-core:17.2.1'
-    implementation 'com.google.firebase:firebase-ads:18.3.0'
-    implementation 'com.google.firebase:firebase-crash:16.2.1'
+    implementation 'joda-time:joda-time:2.10.5'
+    //implementation('com.afollestad.material-dialogs:commons:0.9.6.0')
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
-        transitive = true;
+
+    //implementation 'com.wdullaer:materialdatetimepicker:4.1.2'
+    //implementation 'io.reactivex.rxjava2:rxjava:2.2.5'
+    //implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    //implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
+    //implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.1.1'
+    //implementation 'com.github.erickok:NotRxBinding:master-SNAPSHOT'
+    implementation 'androidx.navigation:navigation-fragment:2.2.1'
+    implementation 'androidx.navigation:navigation-ui:2.2.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.2.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.2.1'
+    testImplementation 'junit:junit:4.13'
+    //annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+
+    implementation 'com.google.firebase:firebase-core:17.2.3'
+    implementation 'com.google.firebase:firebase-ads:19.0.1'
+    implementation 'com.google.firebase:firebase-crash:16.2.1'
+    // Recommended: Add the Firebase SDK for Google Analytics.
+    implementation 'com.google.firebase:firebase-analytics:17.2.3'
+    // Add the Firebase SDK for Crashlytics.
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta02'
+
+    /*
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
+        transitive = true
     }
+    */
     implementation files('libs/opencsv-4.1.jar')
     // progreso circular que se muestra en la lista
-    implementation 'com.github.antonKozyriatskyi:CircularProgressIndicator:1.1.3'
-    implementation 'com.obsez.android.lib.filechooser:filechooser:1.1.10'
-    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
+    implementation 'com.github.antonKozyriatskyi:CircularProgressIndicator:1.3.0'
+    //implementation 'com.obsez.android.lib.filechooser:filechooser:1.2.0'
+
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.6'
+
+    implementation "androidx.core:core-ktx:1.2.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+
+    implementation "com.xwray:groupie:2.7.0"
+    implementation "com.xwray:groupie-kotlin-android-extensions:2.7.0"
+
+    implementation 'com.afollestad.material-dialogs:core:3.3.0'
+    implementation 'com.afollestad.material-dialogs:bottomsheets:3.3.0'
+    implementation 'com.afollestad.material-dialogs:datetime:3.3.0'
+
+    // Preference
+    implementation "androidx.preference:preference-ktx:1.1.0"
+    implementation 'com.afollestad.material-dialogs:files:3.2.1'
+
+// Kotlin Android Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.4'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4"
+
+
+
 }
 apply plugin: 'com.google.gms.google-services'

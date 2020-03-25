@@ -95,7 +95,7 @@ public class ReadingServiceImpl implements ReadingService {
                 .equalTo("periodo.id", periodo_id)
                 .between("fecha_lectura", from.getTime(), to.getTime())
                 .findAll();
-
+        Log.e("EDER", String.valueOf(lecturas.size()));
         return lecturas.size() > 0;
     }
 
@@ -190,6 +190,7 @@ public class ReadingServiceImpl implements ReadingService {
                         }
                         lectura.periodo = activePeriod;
                     }
+
                     realm.copyToRealm(lectura);
 
                     // ---------------------------------------------------------------

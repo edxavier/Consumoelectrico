@@ -63,7 +63,7 @@
         android:id="@+id/txtObservaciones" />
 
     <View
-        android:background="@color/md_divider_black"
+        android:background="@color/md_divider_light_theme"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
 </RelativeLayout>

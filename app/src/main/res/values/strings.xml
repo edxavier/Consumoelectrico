@@ -185,6 +185,18 @@
     <string name="title_choose_folder">Select a folder</string>
     <string name="choose">Choose</string>
     <string name="title_choose_file">Select a file</string>
+    <string name="title_activity_mainkt">Mainkt</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string name="home_second">Home Second</string>
+    <string name="folder_choose">Clic accept to choose current folder</string>
+    <string name="lectura_editar_hint">If you have the wrong date, please delete and re-enter the record with the correct date</string>
 
 
 </resources>

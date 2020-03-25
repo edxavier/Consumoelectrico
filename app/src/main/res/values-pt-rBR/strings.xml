@@ -155,6 +155,8 @@
     <string name="title_choose_folder">Selecione uma pasta</string>
     <string name="choose">Selecione</string>
     <string name="title_choose_file">Selecione um arquivo</string>
+    <string name="folder_choose">Clic accept to choose current folder</string>
+    <string name="lectura_editar_hint">Se você tiver a data errada, exclua e insira novamente o registro com a data correta</string>
 
 
 </resources>

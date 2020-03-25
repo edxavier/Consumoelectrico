@@ -50,23 +50,23 @@ public class ChartStyler {
         chart.setTouchEnabled(true);
         chart.getXAxis().setDrawGridLines(false);
         chart.getXAxis().setPosition(XAxis.XAxisPosition.TOP);
-        chart.getXAxis().setTextColor(context.getResources().getColor(R.color.md_white_1000));
+        chart.getXAxis().setTextColor(context.getResources().getColor(R.color.md_black_1000_75));
 
         chart.getXAxis().setDrawLabels(true);
-        chart.getXAxis().setAxisLineColor(context.getResources().getColor(R.color.md_white_1000));
-        chart.getLegend().setTextColor(context.getResources().getColor(R.color.md_white_1000));
+        chart.getXAxis().setAxisLineColor(context.getResources().getColor(R.color.md_black_1000_75));
+        chart.getLegend().setTextColor(context.getResources().getColor(R.color.md_black_1000_75));
         chart.getLegend().setWordWrapEnabled(true);
         chart.getXAxis().setDrawLabels(true);
         chart.setExtraOffsets(5f, 15f, 0f, 0f);
-        chart.getXAxis().setAxisLineColor(context.getResources().getColor(R.color.md_white_1000));
+        chart.getXAxis().setAxisLineColor(context.getResources().getColor(R.color.md_black_1000_75));
         chart.animateXY(500, 0);
 
         if (chart instanceof LineChart) {
             LineChart mChart = (LineChart) chart;
             mChart.setGridBackgroundColor(context.getResources().getColor(R.color.md_cyan_800));
-            mChart.getAxisLeft().setTextColor(context.getResources().getColor(R.color.md_cyan_200));
+            mChart.getAxisLeft().setTextColor(context.getResources().getColor(R.color.md_black_1000_75));
             mChart.setDrawBorders(false);
-            mChart.setBorderColor(context.getResources().getColor(R.color.md_cyan_500_25));
+            mChart.setBorderColor(context.getResources().getColor(R.color.md_black_1000_50));
             mChart.getAxisLeft().setAxisLineColor(context.getResources().getColor(R.color.md_cyan_800));
             mChart.getAxisRight().setAxisLineColor(context.getResources().getColor(R.color.md_cyan_800));
             mChart.getAxisRight().setDrawLabels(false);
@@ -78,7 +78,7 @@ public class ChartStyler {
             mChart.setPinchZoom(false);
             mChart.getAxisRight().setEnabled(false);
             YAxis leftAxis = mChart.getAxisLeft();
-            leftAxis.setGridColor(context.getResources().getColor(R.color.md_white_1000));
+            leftAxis.setGridColor(context.getResources().getColor(R.color.md_black_1000));
             leftAxis.setDrawZeroLine(false);
             leftAxis.setValueFormatter(new MyYAxisValueFormatter());
             leftAxis.setAxisMinimum(0f);
@@ -88,22 +88,22 @@ public class ChartStyler {
             if(!drawAvgLimit) {
                 LimitLine upper_limit2 = new LimitLine(kw_limit, "");
                 upper_limit2.setLineWidth(1.3f);
-                upper_limit2.setTextColor(context.getResources().getColor(R.color.label_text_light));
+                upper_limit2.setTextColor(context.getResources().getColor(R.color.md_black_1000_75));
                 upper_limit2.enableDashedLine(15f, 15f, 0f);
                 upper_limit2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
                 upper_limit2.setTextSize(9f);
-                upper_limit2.setLineColor(context.getResources().getColor(R.color.md_amber_500));
+                upper_limit2.setLineColor(context.getResources().getColor(R.color.md_amber_700));
                 //reset all limit lines to avoid overlapping lines
                 leftAxis.removeAllLimitLines();
                 leftAxis.addLimitLine(upper_limit2);
             }else {
                 LimitLine avg_upper_limit = new LimitLine(avg_limit, "");
                 avg_upper_limit.setLineWidth(0.9f);
-                avg_upper_limit.setTextColor(context.getResources().getColor(R.color.label_text_light));
+                avg_upper_limit.setTextColor(context.getResources().getColor(R.color.md_black_1000_75));
                 avg_upper_limit.enableDashedLine(15f, 15f, 0f);
                 avg_upper_limit.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
                 avg_upper_limit.setTextSize(9f);
-                avg_upper_limit.setLineColor(context.getResources().getColor(R.color.md_amber_500));
+                avg_upper_limit.setLineColor(context.getResources().getColor(R.color.md_amber_700));
                 leftAxis.removeAllLimitLines();
                 leftAxis.addLimitLine(avg_upper_limit);
             }
@@ -136,7 +136,7 @@ public class ChartStyler {
         avgLimitDataSet.setLineWidth(1.2f);
         avgLimitDataSet.setDrawValues(false);
         avgLimitDataSet.setHighlightEnabled(false);
-        avgLimitDataSet.setColor(context.getResources().getColor(R.color.md_yellow_500));
+        avgLimitDataSet.setColor(context.getResources().getColor(R.color.md_yellow_700));
         return avgLimitDataSet;
     }
     @NonNull
@@ -159,7 +159,7 @@ public class ChartStyler {
         periodDataSet.setLineWidth(1.2f);
         periodDataSet.setDrawValues(false);
         periodDataSet.setHighlightEnabled(false);
-        periodDataSet.setColor(context.getResources().getColor(R.color.md_amber_500));
+        periodDataSet.setColor(context.getResources().getColor(R.color.md_amber_700));
         return periodDataSet;
     }
 
@@ -167,7 +167,7 @@ public class ChartStyler {
     public static BarData setBardata(@NonNull RealmBarDataSet barDataset, @NonNull Context context){
         String title = context.getResources().getString(R.string.chart_legend_bar);
         barDataset.setLabel(title);
-        barDataset.setValueTextColor(context.getResources().getColor(R.color.label_text_light));
+        barDataset.setValueTextColor(context.getResources().getColor(R.color.md_black_1000_75));
         barDataset.setColor(context.getResources().getColor(R.color.md_blue_grey_400));
         barDataset.setValueFormatter(new MyValueFormatter());
         barDataset.setDrawValues(false);
@@ -186,14 +186,14 @@ public class ChartStyler {
         combinedLineDataSet.setHighlightEnabled(false);
         combinedLineDataSet.setLineWidth(1.2f);
         combinedLineDataSet.setDrawCircleHole(false);
-        combinedLineDataSet.setCircleColor(context.getResources().getColor(R.color.label_text_light));
+        combinedLineDataSet.setCircleColor(context.getResources().getColor(R.color.md_black_1000_75));
         //combinedLineDataSet.enableDashedLine(10f, 10f, 0f);
         //combinedLineDataSet.setMode(LineDataSet.Mode.STEPPED);
         //combinedLineDataSet.setCubicIntensity(0.1f);
         combinedLineDataSet.setValueTextSize(8f);
-        combinedLineDataSet.setValueTextColor(context.getResources().getColor(R.color.label_text_light));
-        combinedLineDataSet.setColor(context.getResources().getColor(R.color.md_grey_100));
-        combinedLineDataSet.setFillColor(context.getResources().getColor(R.color.chart_consumo_line_fill));
+        combinedLineDataSet.setValueTextColor(context.getResources().getColor(R.color.md_black_1000_75));
+        combinedLineDataSet.setColor(context.getResources().getColor(R.color.md_pink_500));
+        combinedLineDataSet.setFillColor(context.getResources().getColor(R.color.md_pink_500));
         return combinedLineDataSet;
     }
 
@@ -209,10 +209,10 @@ public class ChartStyler {
         acumuladoDataSet.setMode(LineDataSet.Mode.LINEAR);
         //acumuladoDataSet.setCubicIntensity(0.1f);
         acumuladoDataSet.setValueTextSize(8f);
-        acumuladoDataSet.setCircleColor(context.getResources().getColor(R.color.label_text_light));
-        acumuladoDataSet.setValueTextColor(context.getResources().getColor(R.color.label_text_light));
-        acumuladoDataSet.setColor(context.getResources().getColor(R.color.md_grey_100));
-        acumuladoDataSet.setFillColor(context.getResources().getColor(R.color.chart_consumo_line_fill));
+        acumuladoDataSet.setCircleColor(context.getResources().getColor(R.color.md_pink_500));
+        acumuladoDataSet.setValueTextColor(context.getResources().getColor(R.color.md_black_1000_75));
+        acumuladoDataSet.setColor(context.getResources().getColor(R.color.md_pink_500));
+        acumuladoDataSet.setFillColor(context.getResources().getColor(R.color.md_pink_500));
 
         return acumuladoDataSet;
     }
@@ -229,10 +229,10 @@ public class ChartStyler {
         acumuladoDataSet.setMode(LineDataSet.Mode.LINEAR);
         //acumuladoDataSet.setCubicIntensity(0.1f);
         acumuladoDataSet.setValueTextSize(9f);
-        acumuladoDataSet.setCircleColor(context.getResources().getColor(R.color.label_text_light));
-        acumuladoDataSet.setValueTextColor(context.getResources().getColor(R.color.label_text_light));
-        acumuladoDataSet.setColor(context.getResources().getColor(R.color.md_grey_100));
-        acumuladoDataSet.setFillColor(context.getResources().getColor(R.color.chart_consumo_line_fill));
+        acumuladoDataSet.setCircleColor(context.getResources().getColor(R.color.md_pink_500));
+        acumuladoDataSet.setValueTextColor(context.getResources().getColor(R.color.md_black_1000_75));
+        acumuladoDataSet.setColor(context.getResources().getColor(R.color.md_pink_500));
+        acumuladoDataSet.setFillColor(context.getResources().getColor(R.color.md_pink_500));
         //acumuladoDataSet.setDrawValues(false);
 
         return acumuladoDataSet;
@@ -262,7 +262,7 @@ public class ChartStyler {
         //periodDataSet.setLineWidth(0.8f);
         periodDataSet.setDrawValues(false);
         periodDataSet.setHighlightEnabled(false);
-        periodDataSet.setColor(context.getResources().getColor(R.color.md_lime_600));
+        periodDataSet.setColor(context.getResources().getColor(R.color.md_lime_800));
         periodDataSet.enableDashedLine(10f, 10f, 0f);
         return periodDataSet;
     }

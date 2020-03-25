@@ -28,9 +28,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="e3b302" />
-                            <entry key="outputName" value="ic_warning" />
-                            <entry key="sourceFile" value="C:\Users\Eder Xavier Rojas" />
+                            <entry key="outputName" value="ic_electric_meter" />
+                            <entry key="sourceFile" value="C:\Users\Eder Xavier Rojas\Downloads\electric-meter.svg" />
                           </map>
                         </option>
                       </PersistentState>

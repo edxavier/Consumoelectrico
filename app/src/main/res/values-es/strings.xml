@@ -175,5 +175,7 @@
     <string name="title_choose_folder">Seleccione un folder</string>
     <string name="choose">Seleccionar</string>
     <string name="title_choose_file">Seleccione un archivo</string>
+    <string name="folder_choose">Clic accept to choose current folder</string>
+    <string name="lectura_editar_hint">Si se ha equivocado de fecha, por favor elimina y vuelve a ingresar el registro con la fecha correcta</string>
 
 </resources>

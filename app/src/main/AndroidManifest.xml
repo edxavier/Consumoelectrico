@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
@@ -16,29 +15,24 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admob_app_id"/>
-
-        <activity android:name=".MainActivity" />
         <activity
-            android:name=".activities.Main"
-            android:label="@string/title_activity_main" />
-        <activity
-            android:name=".activities.reading.NewReadingActivity"
-            android:label="@string/title.activity.new.reading" />
-        <activity
-            android:name=".SplashActivity"
+            android:name=".Mainkt"
+            android:label="@string/app_name"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.perio_details.DetailsActivity" />
-        <activity android:name=".activities.PeriodReadingsActivity" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admob_app_id" />
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true" />
+
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4124b2e7a8f5eb8f27a14edcb51751f9b8e26cd9" />
@@ -47,17 +41,17 @@
             android:resource="@array/preloaded_fonts" />
 
         <service
-            android:exported="false"
-            android:name=".myUtils.DumpDataService">
+            android:name=".myUtils.DumpDataService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
         <service
-            android:exported="false"
-            android:name=".myUtils.ReminderService">
+            android:name=".myUtils.ReminderService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
     </application>
