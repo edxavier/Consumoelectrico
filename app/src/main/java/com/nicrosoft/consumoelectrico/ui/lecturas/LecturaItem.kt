@@ -32,9 +32,9 @@ class LecturaItem(
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.apply {
             if (position < results!!.size - 1) {
-                val dias: Float = lectura.dias_periodo - lectura.dias_periodo
-                label_consumption.text = ctxt.getString(R.string.label_consumption_since_last_reading, dias.toTwoDecimalPlace())
                 val la: Lectura = results[position + 1]!!
+                val dias: Float = lectura.dias_periodo - la.dias_periodo
+                label_consumption.text = ctxt.getString(R.string.label_consumption_since_last_reading, dias.toTwoDecimalPlace())
                 when {
                     lectura.consumo_promedio > la.consumo_promedio -> {
                         txtTendencia.rotation = 270f
