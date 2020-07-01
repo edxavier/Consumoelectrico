@@ -13,11 +13,13 @@ import androidx.navigation.Navigator
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.FileFilter
 import com.afollestad.materialdialogs.files.fileChooser
+import com.developer.filepicker.model.DialogProperties
+import com.developer.filepicker.view.FilePickerDialog
 import com.nicrosoft.consumoelectrico.Mainkt
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.myUtils.CSVHelper
-import com.pixplicity.easyprefs.library.Prefs
 import java.io.File
+
 
 @Navigator.Name("import_ac")
 class DestinoImport (var context: Context, var main:Mainkt): ActivityNavigator(context) {
@@ -29,7 +31,7 @@ class DestinoImport (var context: Context, var main:Mainkt): ActivityNavigator(c
             else
                 null
             val myFilter: FileFilter = { it.isDirectory || it.name.endsWith(".csv", true) }
-            MaterialDialog(context!!).show {
+            MaterialDialog(context).show {
                 fileChooser(context,
                         initialDirectory = initialPath,
                         filter = myFilter,
