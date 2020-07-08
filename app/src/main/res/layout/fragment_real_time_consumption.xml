@@ -2,21 +2,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.nicrosoft.consumoelectrico.RealTimeConsumptionFragment">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/timer_area"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/md_pink_900"
+        android:background="@color/md_amber_800"
         android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            app:tint="@color/md_pink_700"
+            app:tint="@color/md_amber_700"
             android:id="@+id/play_icon"
             app:srcCompat="@drawable/ic_play_arrow"
             android:layout_width="match_parent"
@@ -41,7 +40,7 @@
         android:id="@+id/consumption_area"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/md_pink_700"
+        android:background="@color/md_amber_700"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -50,7 +49,7 @@
         app:layout_constraintTop_toBottomOf="@+id/timer_area">
 
         <androidx.appcompat.widget.AppCompatImageView
-            app:tint="@color/md_pink_400"
+            app:tint="@color/md_amber_400"
             android:layout_margin="60dp"
             android:id="@+id/consumption_icon"
             app:srcCompat="@drawable/ic_gauge"

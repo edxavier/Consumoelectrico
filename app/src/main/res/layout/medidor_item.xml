@@ -8,7 +8,7 @@
         app:cardElevation="4dp"
         app:cardPreventCornerOverlap="true"
         app:strokeWidth="0dp"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="16dp"
         android:id="@+id/card_resume"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,8 +31,10 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:drawableTop="@drawable/ic_house"
+                    android:drawablePadding="8dp"
                     android:id="@+id/txt_medidor"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/share_tech"
                     android:paddingTop="8dp"
@@ -224,7 +226,7 @@
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:fontFamily="sans-serif"
-                    android:textColor="@color/secondaryColor"
+                    android:textColor="@color/md_pink_A400"
                     android:layout_margin="1dp"
                     android:id="@+id/bnt_details"
                     android:layout_width="0dp"
@@ -236,7 +238,7 @@
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_margin="1dp"
-                    android:textColor="@color/secondaryColor"
+                    android:textColor="@color/md_pink_A400"
                     android:id="@+id/bnt_readings"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -248,7 +250,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:fontFamily="sans-serif"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:textColor="@color/secondaryColor"
+                    android:textColor="@color/md_pink_A400"
                     android:layout_margin="1dp"
                     android:id="@+id/bnt_new_readings"
                     android:layout_width="wrap_content"

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
@@ -111,7 +112,9 @@ public class ChartStyler {
             return mChart;
         }
         else {
-            return chart;
+            BarChart mChart = (BarChart) chart;
+            mChart.setVisibleXRangeMaximum(6);
+            return mChart;
         }
 
     }

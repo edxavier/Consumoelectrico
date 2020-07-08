@@ -17,12 +17,24 @@
         tools:layout="@layout/fragment_home">
 
         <action
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_nav_home_to_nuevaLecturaFragment"
             app:destination="@id/nav_nueva_lectura" />
         <action
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_nav_home_to_listaLecturasFragment"
             app:destination="@id/listaLecturasFragment" />
         <action
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_nav_home_to_detallesFragment"
             app:destination="@id/detallesFragment" />
     </fragment>
@@ -50,8 +62,8 @@
         tools:layout="@layout/fragment_real_time_consumption" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.nicrosoft.consumoelectrico.fragments.AppPreference"
+        android:id="@+id/nav_settings"
+        android:name="com.nicrosoft.consumoelectrico.ui.SettingsFragment"
         android:label="@string/action_settings"
         tools:layout="@layout/fragment_settings" />
 
@@ -86,6 +98,10 @@
             app:argType="string"
             android:defaultValue="----" />
         <action
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_listaLecturasFragment_to_nav_nueva_lectura"
             app:destination="@id/nav_nueva_lectura" />
     </fragment>
@@ -106,9 +122,17 @@
             app:argType="string"
             android:defaultValue="----" />
         <action
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_detallesFragment_to_listaLecturasFragment"
             app:destination="@id/listaLecturasFragment" />
         <action
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_detallesFragment_to_nav_nueva_lectura"
             app:destination="@id/nav_nueva_lectura" />
     </fragment>

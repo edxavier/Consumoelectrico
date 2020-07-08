@@ -37,10 +37,10 @@ class DetallesFragment : ScopeFragment() {
         if(!Prefs.getBoolean("isPurchased", false))
             requestInterstialAds()
         setHasOptionsMenu(true)
-        navController = Navigation.findNavController(activity!!, R.id.nav_host_fragment)
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
 
-        params = DetallesFragmentArgs.fromBundle(arguments!!)
+        params = DetallesFragmentArgs.fromBundle(requireArguments())
         presenter = PeriodDetailPresenterImpl(context)
         presenter.onCreate()
         setupBillingPeriodDetails(params.id)
@@ -69,9 +69,10 @@ class DetallesFragment : ScopeFragment() {
         val period = presenter.getActivePeriod(medidor_id)
         val ultimaLectura = presenter.getLastReading(period)
         val primerLectura = presenter.getFirstReading(period)
-        var chartVar = ChartStyler.setup(chart, context!!, false) as LineChart
-        var chart2Var = ChartStyler.setup(chart2, context!!, true) as LineChart
-        var chart3Var = ChartStyler.setup(chart3, context!!, false) as BarChart
+        var chartVar = ChartStyler.setup(chart, requireContext(), false) as LineChart
+        var chart2Var = ChartStyler.setup(chart2, requireContext(), true) as LineChart
+        var chart3Var = ChartStyler.setup(chart3, requireContext(), false) as BarChart
+
         try {
             chartVar = presenter.setReadingHistory(chartVar, period)
             chartVar.invalidate()
@@ -90,13 +91,13 @@ class DetallesFragment : ScopeFragment() {
         try {
             if (params.desc.isNotEmpty()) description.text = params.desc else card_desc.setHidden()
 
-            txt_beginning_period.text = period.inicio.formatDate(context!!)
+            txt_beginning_period.text = period.inicio.formatDate(requireContext())
             txt_initial_reading.text = getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", primerLectura.lectura))
             txt_last_reading.text = getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", ultimaLectura.lectura))
             txt_current_consumption.text = getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", ultimaLectura.consumo_acumulado))
             txt_days_consumed.text = getString(R.string.days_consumed_val, ultimaLectura.dias_periodo)
             txt_period_len.text = getString(R.string.days_consumed_val, presenter.periodLength.toFloat())
-            txt_last_reading_date.text = (ultimaLectura.fecha_lectura.formatDate(context!!))
+            txt_last_reading_date.text = (ultimaLectura.fecha_lectura.formatDate(requireContext()))
             txt_avg_consumption.text = getString(R.string.avg_consumption_val, String.format(Locale.getDefault(), "%02.1f", ultimaLectura.consumo_promedio))
             txt_estimate_consumptio_kwh.text = getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.1f", presenter.getEstimatedConsumption(ultimaLectura)))
             txt_estimate_expense.text = getString(R.string.estimated_expense_val,

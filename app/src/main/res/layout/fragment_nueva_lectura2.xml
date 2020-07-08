@@ -31,6 +31,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_home"
+                android:layout_width="64dp"
+                android:layout_height="64dp"/>
+
             <TextView
                 android:textAllCaps="true"
                 android:id="@+id/txt_medidor_name"

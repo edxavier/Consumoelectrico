@@ -197,6 +197,8 @@
     <string name="home_second">Home Second</string>
     <string name="folder_choose">Clic accept to choose current folder</string>
     <string name="lectura_editar_hint">If you have the wrong date, please delete and re-enter the record with the correct date</string>
+    <string name="fix_charges_help">Indicates the sum of all fixed costs reflected in the invoice such as public lighting</string>
+    <string name="limit_help">Indicate which is the maximum consumption you want at the end of a billing period, either by self-control or by discounts benefits</string>
 
 
 </resources>

@@ -1,11 +1,8 @@
 package com.nicrosoft.consumoelectrico
 
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -29,7 +26,6 @@ import com.nicrosoft.consumoelectrico.ui.destinos.DestinoExport
 import com.nicrosoft.consumoelectrico.ui.destinos.DestinoImport
 import com.nicrosoft.consumoelectrico.ui.destinos.DestinoValorarApp
 import com.pixplicity.easyprefs.library.Prefs
-import kotlinx.android.synthetic.main.activity_mainkt.*
 import kotlinx.android.synthetic.main.content_mainkt.*
 
 class Mainkt : ScopeActivity(), BillingProcessor.IBillingHandler {
@@ -63,7 +59,7 @@ class Mainkt : ScopeActivity(), BillingProcessor.IBillingHandler {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow), drawerLayout)
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_settings), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
