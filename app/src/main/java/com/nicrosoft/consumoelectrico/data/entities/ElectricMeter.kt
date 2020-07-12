@@ -1,4 +1,4 @@
-package com.nicrosoft.consumoelectrico.data
+package com.nicrosoft.consumoelectrico.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

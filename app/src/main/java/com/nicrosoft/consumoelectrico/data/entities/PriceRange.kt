@@ -1,9 +1,10 @@
-package com.nicrosoft.consumoelectrico.data
+package com.nicrosoft.consumoelectrico.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import java.util.*
 
 

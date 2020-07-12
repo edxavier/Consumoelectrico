@@ -1,7 +1,8 @@
-package com.nicrosoft.consumoelectrico.data
+package com.nicrosoft.consumoelectrico.data.daos
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
+import com.nicrosoft.consumoelectrico.data.entities.PriceRange
 
 @Dao
 interface ElectricBillPeriodDAO {

@@ -3,9 +3,15 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/changa</item>
         <item>@font/coda</item>
+        <item>@font/lato</item>
         <item>@font/maven_pro</item>
+        <item>@font/montserrat</item>
+        <item>@font/nunito</item>
+        <item>@font/open_sans</item>
         <item>@font/play</item>
         <item>@font/quantico</item>
+        <item>@font/roboto_condensed_regular</item>
         <item>@font/share_tech</item>
+        <item>@font/source_sans_pro</item>
     </array>
 </resources>
