@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_bulb"
             android:title="@string/title_activity_main" />
         <item
+            android:id="@+id/nav_emater_list"
+            android:icon="@drawable/ic_flash"
+            android:title="@string/electric_meters" />
+        <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_calculator"
             android:title="@string/calculator.title" />

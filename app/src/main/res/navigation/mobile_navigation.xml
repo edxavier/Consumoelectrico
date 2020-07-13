@@ -136,4 +136,9 @@
             android:id="@+id/action_detallesFragment_to_nav_nueva_lectura"
             app:destination="@id/nav_nueva_lectura" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_emater_list"
+        android:name="com.nicrosoft.consumoelectrico.EmeterListFragment"
+        android:label="Medidores"
+        tools:layout="@layout/emeter_list_fragment" />
 </navigation>

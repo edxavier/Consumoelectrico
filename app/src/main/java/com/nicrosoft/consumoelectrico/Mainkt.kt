@@ -59,7 +59,7 @@ class Mainkt : ScopeActivity(), BillingProcessor.IBillingHandler {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_settings), drawerLayout)
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_settings, R.id.nav_emater_list), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 

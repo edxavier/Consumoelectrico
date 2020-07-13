@@ -13,12 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!--YA que al navegar el drawer pierde el fontfamily, se setea explicitamente con itemtextApparience-->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:itemTextAppearance="@style/drawerTextStyle"
         app:headerLayout="@layout/nav_header_mainkt"
         app:menu="@menu/activity_mainkt_drawer" />
 

@@ -16,15 +16,15 @@
   <color name="label_text_light" >@color/md_white_1000_75</color>
   <color name="primary">#ffc107</color>
 
- <color name="primaryColor">#ffc107</color>
- <color name="primaryLightColor">#fff350</color>
- <color name="primaryDarkColor">#c79100</color>
- <color name="secondaryColor">#ff9100</color>
- <color name="secondaryLightColor">#ffc246</color>
- <color name="secondaryDarkColor">#c67c00</color>
+ <color name="primaryColor">#d17500</color>
+ <color name="primaryLightColor">#ffa43e</color>
+ <color name="primaryDarkColor">#9a4800</color>
+ <color name="secondaryColor">#c1085b</color>
+ <color name="secondaryLightColor">#f95188</color>
+ <color name="secondaryDarkColor">#8a0032</color>
  <color name="primaryTextColor">#000000</color>
- <color name="secondaryTextColor">#000000</color>
+ <color name="secondaryTextColor">#ffffff</color>
 
- <color name="mdtp_accent_color">#fff350</color>
+ <color name="mdtp_accent_color">?attr/colorSecondaryVariant</color>
 
 </resources>
