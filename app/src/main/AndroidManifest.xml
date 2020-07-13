@@ -44,14 +44,14 @@
             android:resource="@array/preloaded_fonts" />
 
         <service
-            android:name=".myUtils.DumpDataService"
+            android:name=".utils.DumpDataService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
         <service
-            android:name=".myUtils.ReminderService"
+            android:name=".utils.ReminderService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />

@@ -19,9 +19,9 @@ import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.fragments.medidor.contracts.MedidorPresenter
 import com.nicrosoft.consumoelectrico.fragments.medidor.contracts.MedidorView
 import com.nicrosoft.consumoelectrico.fragments.medidor.imp.MedidorPresenterImpl
-import com.nicrosoft.consumoelectrico.myUtils.hideFabButtonOnScroll
-import com.nicrosoft.consumoelectrico.myUtils.setHidden
-import com.nicrosoft.consumoelectrico.myUtils.setVisible
+import com.nicrosoft.consumoelectrico.utils.hideFabButtonOnScroll
+import com.nicrosoft.consumoelectrico.utils.setHidden
+import com.nicrosoft.consumoelectrico.utils.setVisible
 import com.nicrosoft.consumoelectrico.realm.Medidor
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder

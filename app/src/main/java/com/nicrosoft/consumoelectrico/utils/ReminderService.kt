@@ -1,4 +1,4 @@
-package com.nicrosoft.consumoelectrico.myUtils
+package com.nicrosoft.consumoelectrico.utils
 
 import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService

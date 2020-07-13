@@ -6,17 +6,37 @@ import androidx.multidex.MultiDexApplication
 import com.firebase.jobdispatcher.*
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
-import com.nicrosoft.consumoelectrico.myUtils.DumpDataService
-import com.nicrosoft.consumoelectrico.myUtils.ReminderService
+import com.nicrosoft.consumoelectrico.data.AppDataBase
+import com.nicrosoft.consumoelectrico.utils.DumpDataService
+import com.nicrosoft.consumoelectrico.utils.ReminderService
 import com.nicrosoft.consumoelectrico.realm.Migration
+import com.nicrosoft.consumoelectrico.ui2.ElectricMeterVMFactory
 import com.pixplicity.easyprefs.library.Prefs
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.androidXModule
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.instance
+import org.kodein.di.generic.provider
+import org.kodein.di.generic.singleton
 
 /**
  * Created by Eder Xavier Rojas on 06/12/2016.
  */
-class BaseApp : MultiDexApplication() {
+class BaseApp : MultiDexApplication(), KodeinAware {
+    override val kodein = Kodein.lazy {
+        import(androidXModule(this@BaseApp))
+        // BasedeDatos
+        bind() from singleton { AppDataBase(instance()) }
+        //Daos
+        bind() from singleton { instance<AppDataBase>().ElectricMeterDao() }
+
+        // ViewModelFactory
+        bind() from provider { ElectricMeterVMFactory(instance(), instance()) }
+    }
+
     override fun onCreate() {
         super.onCreate()
         //Fabric.with(this, Crashlytics())

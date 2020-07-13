@@ -1,4 +1,4 @@
-package com.nicrosoft.consumoelectrico.myUtils
+package com.nicrosoft.consumoelectrico.utils
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

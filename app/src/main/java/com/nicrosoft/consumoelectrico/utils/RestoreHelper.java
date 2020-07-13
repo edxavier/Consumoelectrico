@@ -1,7 +1,6 @@
-package com.nicrosoft.consumoelectrico.myUtils;
+package com.nicrosoft.consumoelectrico.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.nicrosoft.consumoelectrico.R;
 import com.nicrosoft.consumoelectrico.realm.Lectura;

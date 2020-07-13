@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@id/nav_emater_list">
 
     <compartir_app  android:id="@+id/nav_share"/>
     <valorar_app  android:id="@+id/nav_rate"/>
@@ -107,7 +107,7 @@
     </fragment>
     <fragment
         android:id="@+id/detallesFragment"
-        android:name="com.nicrosoft.consumoelectrico.DetallesFragment"
+        android:name="com.nicrosoft.consumoelectrico.ui.DetallesFragment"
         android:label="@string/details"
         tools:layout="@layout/fragment_detalles" >
         <argument
@@ -136,9 +136,36 @@
             android:id="@+id/action_detallesFragment_to_nav_nueva_lectura"
             app:destination="@id/nav_nueva_lectura" />
     </fragment>
+
     <fragment
         android:id="@+id/nav_emater_list"
-        android:name="com.nicrosoft.consumoelectrico.EmeterListFragment"
-        android:label="Medidores"
-        tools:layout="@layout/emeter_list_fragment" />
+        android:name="com.nicrosoft.consumoelectrico.ui2.EmeterListFragment"
+        android:label="@string/electric_meters"
+        tools:layout="@layout/emeter_list_fragment" >
+        <action
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
+            android:id="@+id/action_nav_emater_list_to_newElectricMeterFragment"
+            app:destination="@id/newElectricMeterFragment" />
+        <action
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
+            android:id="@+id/action_nav_emater_list_to_newEmeterReadingFragment"
+            app:destination="@id/newEmeterReadingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/newElectricMeterFragment"
+        android:name="com.nicrosoft.consumoelectrico.ui2.NewElectricMeterFragment"
+        android:label="@string/new_emeter"
+        tools:layout="@layout/fragment_new_electric_meter" />
+    <fragment
+        android:id="@+id/newEmeterReadingFragment"
+        android:name="com.nicrosoft.consumoelectrico.ui2.NewEmeterReadingFragment"
+        android:label="@string/new_reading"
+        tools:layout="@layout/fragment_new_emeter_reading" />
 </navigation>

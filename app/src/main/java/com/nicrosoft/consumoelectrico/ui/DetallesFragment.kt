@@ -1,9 +1,8 @@
-package com.nicrosoft.consumoelectrico
+package com.nicrosoft.consumoelectrico.ui
 
 import android.os.Bundle
 import android.view.*
 import androidx.activity.addCallback
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.github.mikephil.charting.charts.BarChart
@@ -11,11 +10,13 @@ import com.github.mikephil.charting.charts.LineChart
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
+import com.nicrosoft.consumoelectrico.R
+import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.activities.perio_details.contracts.PeriodDetailPresenterImpl
 import com.nicrosoft.consumoelectrico.activities.perio_details.contracts.PeriodDetailsPresenter
 import com.nicrosoft.consumoelectrico.fragments.main.chart_helpers.ChartStyler
-import com.nicrosoft.consumoelectrico.myUtils.formatDate
-import com.nicrosoft.consumoelectrico.myUtils.setHidden
+import com.nicrosoft.consumoelectrico.utils.formatDate
+import com.nicrosoft.consumoelectrico.utils.setHidden
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.fragment_detalles.*
 import java.util.*

@@ -3,13 +3,9 @@ package com.nicrosoft.consumoelectrico.ui.lecturas
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.FileUtils
-import android.provider.MediaStore
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.activity.addCallback
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -22,7 +18,7 @@ import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.fragments.readings.contracts.LecturasPresenter
 import com.nicrosoft.consumoelectrico.fragments.readings.contracts.LecturasPresenterImpl
 import com.nicrosoft.consumoelectrico.fragments.readings.contracts.LecturasView
-import com.nicrosoft.consumoelectrico.myUtils.*
+import com.nicrosoft.consumoelectrico.utils.*
 import com.nicrosoft.consumoelectrico.realm.Lectura
 import com.pixplicity.easyprefs.library.Prefs
 import com.xwray.groupie.GroupAdapter
@@ -32,7 +28,6 @@ import io.realm.RealmChangeListener
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.fragment_lista_lecturas.*
 import java.io.File
-import java.nio.file.Files
 import java.util.*
 import kotlin.collections.ArrayList
 

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:tint="@color/md_white_1000"
+        app:srcCompat="@drawable/ic_check" />
+
+    <ScrollView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fitsSystemWindows="true" android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui2.NewElectricMeterFragment">
+
+
+        <LinearLayout
+            android:id="@+id/form_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_home"
+                android:layout_width="64dp"
+                android:layout_height="64dp"/>
+
+            <TextView
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:id="@+id/txt_medidor_name"
+                android:textSize="22sp"
+                android:text="Casa"
+                android:textColor="@color/md_black_1000_75"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:textAlignment="center"
+                style="@style/TextAppearance.MaterialComponents.Overline"
+                android:padding="2dp"
+                android:minWidth="100dp" android:background="@drawable/borders"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:textSize="16sp"
+                android:text="5258"
+                android:id="@+id/txt_last_reading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txt_ilayout_fecha"
+                app:startIconDrawable="@drawable/ic_calendar"
+                android:layout_marginBottom="8dp"
+                style="@style/filledTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:focusable="false"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:id="@+id/txt_fecha"
+                    android:hint="@string/activity.new.reading.date"
+                    android:inputType="number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:startIconDrawable="@drawable/ic_electric_meter2"
+                style="@style/filledTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txt_emeter_kw_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/label_reading"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:startIconDrawable="@drawable/ic_eye"
+                style="@style/filledTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txt_emeter_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/activity.new.reading.observation"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:textColor="@color/md_black_1000_75"
+                android:drawableStart="@drawable/ic_calendar"
+                android:drawableTint="@color/md_black_1000_75"
+                android:drawablePadding="8dp"
+                android:text="@string/end_period"
+                android:id="@+id/end_period_sw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

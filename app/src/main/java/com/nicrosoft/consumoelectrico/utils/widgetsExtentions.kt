@@ -1,12 +1,15 @@
-package com.nicrosoft.consumoelectrico.myUtils
+package com.nicrosoft.consumoelectrico.utils
 
 import android.content.Context
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicrosoft.consumoelectrico.R
+import kotlinx.android.synthetic.main.emeter_list_fragment.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,7 +36,24 @@ fun RecyclerView.hideFabButtonOnScroll(fab:FloatingActionButton){
 }
 
 fun View.setHidden(){this.visibility = View.GONE}
+
 fun View.setVisible(){this.visibility = View.VISIBLE}
+
+fun View.fadeIn(){
+    val animation: Animation = AnimationUtils.loadAnimation(context, R.anim.fade_in)
+    this.startAnimation(animation)
+}
+
+fun View.fadeZoomIn(){
+    val animation: Animation = AnimationUtils.loadAnimation(context, R.anim.fade_zoom_in)
+    this.startAnimation(animation)
+}
+
+fun View.slideIn(){
+    val animation: Animation = AnimationUtils.loadAnimation(context, R.anim.slide_in)
+    this.startAnimation(animation)
+}
+
 
 fun Date.formatDate(context: Context): String{
     val myFormat = context.getString(R.string.date_format)

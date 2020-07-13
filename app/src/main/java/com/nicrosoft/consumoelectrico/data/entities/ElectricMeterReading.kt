@@ -21,5 +21,8 @@ data class ElectricMeterReading(
         @ColumnInfo(name = "code") val code:String = UUID.randomUUID().toString(),
         @ColumnInfo(name = "period_id") val periodId:Int,
         @ColumnInfo(name = "reading_date") val readingDate:Date,
-        @ColumnInfo(name = "reading_value") val totalBill:Float = 0f
+        @ColumnInfo(name = "reading_value") val totalBill:Float = 0f,
+        @ColumnInfo(name = "kw_consumption") val kwConsumption:Float = 0f,
+        @ColumnInfo(name = "kw_avg_consumption") val kwAvgConsumption:Float = 0f,
+        @ColumnInfo(name = "kw_agg_consumption") val kwAggConsumption:Float = 0f
 )

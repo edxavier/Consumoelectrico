@@ -156,10 +156,11 @@
                         android:text="kwh"/>
 
                     <androidx.appcompat.widget.AppCompatImageView
+                        app:tint="@color/md_red_500"
                         android:visibility="visible"
                         android:id="@+id/warning_icon"
                         android:layout_gravity="center"
-                        app:srcCompat="@drawable/ic_warning"
+                        app:srcCompat="@drawable/ic_notification"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <TextView

@@ -3,20 +3,7 @@
     <alpha
         android:duration="500"
         android:fromAlpha="0.0"
-        android:interpolator="@android:anim/accelerate_interpolator"
+        android:interpolator="@android:anim/bounce_interpolator"
         android:toAlpha="1.0" />
-
-    <!-- Move -->
-    <scale
-        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
-        android:duration="500"
-        android:fromXScale="0"
-        android:fromYScale="0"
-        android:pivotX="50%"
-        android:pivotY="50%"
-        android:toXScale="1"
-        android:toYScale="1" >
-    </scale>
-
 
 </set>

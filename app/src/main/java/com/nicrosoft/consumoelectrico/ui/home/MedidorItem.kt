@@ -14,8 +14,8 @@ import com.afollestad.materialdialogs.list.listItems
 import com.nicrosoft.consumoelectrico.Mainkt
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.fragments.medidor.contracts.MedidorPresenter
-import com.nicrosoft.consumoelectrico.myUtils.setHidden
-import com.nicrosoft.consumoelectrico.myUtils.setVisible
+import com.nicrosoft.consumoelectrico.utils.setHidden
+import com.nicrosoft.consumoelectrico.utils.setVisible
 import com.nicrosoft.consumoelectrico.realm.Lectura
 import com.nicrosoft.consumoelectrico.realm.Medidor
 import com.nicrosoft.consumoelectrico.realm.Periodo

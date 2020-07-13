@@ -3,7 +3,6 @@ package com.nicrosoft.consumoelectrico.ui.lecturas
 import android.annotation.SuppressLint
 import android.content.Context
 import android.text.InputType
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
@@ -11,8 +10,8 @@ import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.listItems
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.fragments.readings.contracts.LecturasPresenter
-import com.nicrosoft.consumoelectrico.myUtils.formatDate
-import com.nicrosoft.consumoelectrico.myUtils.toTwoDecimalPlace
+import com.nicrosoft.consumoelectrico.utils.formatDate
+import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
 import com.nicrosoft.consumoelectrico.realm.Lectura
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item

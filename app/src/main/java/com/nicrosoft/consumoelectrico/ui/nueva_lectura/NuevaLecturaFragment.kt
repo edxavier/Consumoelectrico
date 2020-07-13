@@ -21,8 +21,8 @@ import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.activities.reading.contracts.ReadingPresenter
 import com.nicrosoft.consumoelectrico.activities.reading.contracts.ReadingView
 import com.nicrosoft.consumoelectrico.activities.reading.impl.ReadingPresenterImpl
-import com.nicrosoft.consumoelectrico.myUtils.formatDate
-import com.nicrosoft.consumoelectrico.myUtils.toTwoDecimalPlace
+import com.nicrosoft.consumoelectrico.utils.formatDate
+import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
 import com.nicrosoft.consumoelectrico.realm.Lectura
 import com.nicrosoft.consumoelectrico.realm.Periodo
 import com.pixplicity.easyprefs.library.Prefs

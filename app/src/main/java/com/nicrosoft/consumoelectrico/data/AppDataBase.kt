@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.nicrosoft.consumoelectrico.data.daos.ElectricMeterDAO
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeterReading
@@ -15,6 +16,7 @@ import com.nicrosoft.consumoelectrico.data.entities.PriceRange
     ElectricMeter::class, ElectricBillPeriod::class, PriceRange::class, ElectricMeterReading::class
 ], version = 1)
 abstract class AppDataBase:RoomDatabase() {
+    abstract fun ElectricMeterDao(): ElectricMeterDAO
 
     companion object {
         // For Singleton instantiation

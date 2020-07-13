@@ -24,6 +24,7 @@
         <item name="fontFamily">@font/source_sans_pro</item>
         <item name="materialButtonStyle">@style/AppButton</item>
 
+
     </style>
 
     <style name="drawerTextStyle" parent="android:Widget.TextView">
@@ -44,6 +45,13 @@
 
     <style name="AppButton" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">?attr/colorSecondary</item>
+        <item name="android:radius">16dp</item>
+    </style>
+
+    <style name="filledTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <item name="boxBackgroundColor">@color/md_blue_grey_50</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
     </style>
 
 

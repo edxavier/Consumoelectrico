@@ -1,6 +1,5 @@
-package com.nicrosoft.consumoelectrico.myUtils
+package com.nicrosoft.consumoelectrico.utils
 
-import android.util.Log
 import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
 import kotlinx.coroutines.CoroutineScope

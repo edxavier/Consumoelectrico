@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
 import androidx.navigation.ActivityNavigator
@@ -16,8 +15,8 @@ import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.input.input
 import com.nicrosoft.consumoelectrico.Mainkt
 import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.myUtils.CSVHelper
-import com.nicrosoft.consumoelectrico.myUtils.formatDate
+import com.nicrosoft.consumoelectrico.utils.CSVHelper
+import com.nicrosoft.consumoelectrico.utils.formatDate
 import com.pixplicity.easyprefs.library.Prefs
 import java.io.File
 import java.util.*
