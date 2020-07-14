@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 class EmeterViewModel(val context: Context, private val dao:ElectricMeterDAO) : ViewModel() {
 
     suspend fun getElectricMeterList() = withContext(Dispatchers.IO){ return@withContext dao.getMeters() }
-    suspend fun saveElectricMeter(meter:ElectricMeter) = dao.saveElectricMeter(meter)
+    suspend fun saveElectricMeter(meter:ElectricMeter) = withContext(Dispatchers.IO){ dao.saveElectricMeter(meter) }
+    suspend fun deleteElectricMeter(meter:ElectricMeter) = withContext(Dispatchers.IO){ dao.deleteElectricMeter(meter) }
 
 }

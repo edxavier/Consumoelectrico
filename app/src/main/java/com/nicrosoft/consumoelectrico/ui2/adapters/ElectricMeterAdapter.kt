@@ -3,13 +3,24 @@ package com.nicrosoft.consumoelectrico.ui2.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import kotlinx.android.synthetic.main.electric_meter_item.view.*
 
-class ElectricMeterAdapter: ListAdapter<ElectricMeter, ElectricMeterAdapter.ViewHolder>(EmeterDiffCallback()) {
+class ElectricMeterAdapter: ListAdapter<ElectricMeter, ElectricMeterAdapter.ViewHolder>(DiffCallback()) {
+
+    class DiffCallback: DiffUtil.ItemCallback<ElectricMeter>() {
+        override fun areItemsTheSame(oldItem: ElectricMeter, newItem: ElectricMeter): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: ElectricMeter, newItem: ElectricMeter): Boolean {
+            return oldItem == newItem
+        }
+    }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
@@ -27,4 +38,6 @@ class ElectricMeterAdapter: ListAdapter<ElectricMeter, ElectricMeterAdapter.View
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
+
+
 }
