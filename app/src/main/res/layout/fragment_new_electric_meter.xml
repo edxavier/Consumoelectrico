@@ -1,198 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:tint="@color/md_white_1000"
-        app:srcCompat="@drawable/ic_check" />
+    <data>
+        <variable
+            name="vmodel"
+            type="com.nicrosoft.consumoelectrico.ui2.ElectricViewModel" />
+    </data>
 
-    <ScrollView
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:fitsSystemWindows="true" android:id="@+id/nestedScrollView"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui2.NewElectricMeterFragment">
+        android:layout_height="match_parent">
 
-
-        <LinearLayout
-            android:paddingBottom="24dp"
-            android:id="@+id/form_container"
-            android:layout_width="match_parent"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:tint="@color/md_white_1000"
+            app:srcCompat="@drawable/ic_check" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                app:startIconDrawable="@drawable/ic_electric_meter2"
-                style="@style/filledTextInputLayout"
+        <ScrollView
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:fitsSystemWindows="true"
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui2.NewElectricMeterFragment">
+
+
+            <LinearLayout
+                android:paddingBottom="24dp"
+                android:id="@+id/form_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_margin="16dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_emeter_name"
+                <com.google.android.material.textfield.TextInputLayout
+                    app:startIconDrawable="@drawable/ic_electric_meter2"
+                    style="@style/filledTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/label_medidor"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="8dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                app:startIconDrawable="@drawable/ic_electric_meter2"
-                style="@style/filledTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@{vmodel.meter.name}"
+                        android:id="@+id/txt_emeter_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/label_medidor"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_emeter_description"
+                <com.google.android.material.textfield.TextInputLayout
+                    app:startIconDrawable="@drawable/ic_electric_meter2"
+                    style="@style/filledTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/description"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="8dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                app:startIconDrawable="@drawable/ic_monetization"
-                style="@style/filledTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txt_emeter_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/description"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_emeter_kw_price"
+                <com.google.android.material.textfield.TextInputLayout
+                    app:startIconDrawable="@drawable/ic_monetization"
+                    style="@style/filledTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/settings.ac.price.kwh"
-                    android:inputType="numberDecimal" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="8dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                app:startIconDrawable="@drawable/ic_descuento"
-                style="@style/filledTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txt_emeter_kw_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/settings.ac.price.kwh"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_emeter_kw_vat"
+                <com.google.android.material.textfield.TextInputLayout
+                    app:startIconDrawable="@drawable/ic_descuento"
+                    style="@style/filledTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="VAT"
-                    android:inputType="numberDecimal" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="8dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                app:startIconDrawable="@drawable/ic_descuento"
-                style="@style/filledTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txt_emeter_kw_vat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="VAT"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_emeter_kw_discount"
+                <com.google.android.material.textfield.TextInputLayout
+                    app:startIconDrawable="@drawable/ic_descuento"
+                    style="@style/filledTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/settings.ac.discount.kwh"
-                    android:inputType="numberDecimal" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="8dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                app:startIconDrawable="@drawable/ic_monetization"
-                style="@style/filledTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txt_emeter_kw_discount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/settings.ac.discount.kwh"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_emeter_fixed_charges"
+                <com.google.android.material.textfield.TextInputLayout
+                    app:startIconDrawable="@drawable/ic_monetization"
+                    style="@style/filledTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/settings.ac.fixed_charges"
-                    android:inputType="numberDecimal" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="8dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                app:startIconDrawable="@drawable/ic_network_gauge"
-                style="@style/filledTextInputLayout"
-                app:helperText="@string/limit_help"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txt_emeter_fixed_charges"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/settings.ac.fixed_charges"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_emeter_kw_limit"
+                <com.google.android.material.textfield.TextInputLayout
+                    app:startIconDrawable="@drawable/ic_network_gauge"
+                    style="@style/filledTextInputLayout"
+                    app:helperText="@string/limit_help"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txt_emeter_kw_limit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/settings.ac.period.limit"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:paddingStart="12dp"
+                    android:drawableStart="@drawable/ic_notification"
+                    android:textSize="16sp"
+                    android:checked="true"
+                    android:drawablePadding="12dp"
+                    android:text="Lose discount over limit"
+                    android:textColor="@color/md_black_1000_75"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_marginStart="12dp"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Solo se aplicara el descuento si el consumo es menor o igual al limite establecido"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    app:startIconDrawable="@drawable/ic_calendar"
+                    style="@style/filledTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/settings.ac.period.limit"
-                    android:inputType="numberDecimal" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="8dp">
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:paddingStart="12dp"
-                android:drawableStart="@drawable/ic_notification"
-                android:textSize="16sp"
-                android:checked="true"
-                android:drawablePadding="12dp"
-                android:text="Lose discount over limit"
-                android:textColor="@color/md_black_1000_75"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_marginStart="12dp"
-                android:textSize="12sp"
-                android:layout_marginBottom="8dp"
-                android:text="Solo se aplicara el descuento si el consumo es menor o igual al limite establecido"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txt_emeter_period_len"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/settings.ac.period"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                app:startIconDrawable="@drawable/ic_calendar"
-                style="@style/filledTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_emeter_period_len"
+                <com.google.android.material.textfield.TextInputLayout
+                    app:startIconDrawable="@drawable/ic_calendar"
+                    style="@style/filledTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/settings.ac.period"
-                    android:inputType="numberDecimal" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="8dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                app:startIconDrawable="@drawable/ic_calendar"
-                style="@style/filledTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txt_emeter_reminder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/settings.ac.reminder_afer"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_emeter_reminder"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/settings.ac.reminder_afer"
-                    android:inputType="numberDecimal" />
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
-        </LinearLayout>
-
-    </ScrollView>
+        </ScrollView>
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

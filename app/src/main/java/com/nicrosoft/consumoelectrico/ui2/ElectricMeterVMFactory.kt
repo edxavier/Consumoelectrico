@@ -10,6 +10,6 @@ class ElectricMeterVMFactory(
         private val context: Context, private val dao:ElectricMeterDAO
 ): ViewModelProvider.NewInstanceFactory()  {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return EmeterViewModel(context, dao) as T
+        return ElectricViewModel(context, dao) as T
     }
 }

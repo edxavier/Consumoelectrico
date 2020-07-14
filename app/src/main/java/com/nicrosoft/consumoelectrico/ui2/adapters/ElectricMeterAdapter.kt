@@ -10,7 +10,9 @@ import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import kotlinx.android.synthetic.main.electric_meter_item.view.*
 
-class ElectricMeterAdapter: ListAdapter<ElectricMeter, ElectricMeterAdapter.ViewHolder>(DiffCallback()) {
+class ElectricMeterAdapter(
+        private val itemClickListener: AdapterItemListener
+): ListAdapter<ElectricMeter, ElectricMeterAdapter.ViewHolder>(DiffCallback()) {
 
     class DiffCallback: DiffUtil.ItemCallback<ElectricMeter>() {
         override fun areItemsTheSame(oldItem: ElectricMeter, newItem: ElectricMeter): Boolean {
@@ -24,9 +26,14 @@ class ElectricMeterAdapter: ListAdapter<ElectricMeter, ElectricMeterAdapter.View
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
-        fun bind(meter: ElectricMeter){
+        fun bind(meter: ElectricMeter, listener: AdapterItemListener?){
             itemView.apply {
-
+                //Disparar evento para que la vista que lo implemente tenda el objeto al que se le dio click
+                this.setOnClickListener { listener?.onItemClickListener(meter) }
+                with(this){
+                    button_item_details.setOnClickListener { listener?.onItemDetailListener(meter) }
+                    txt_meter_name.text = meter.name
+                }
             }
         }
     }
@@ -36,8 +43,12 @@ class ElectricMeterAdapter: ListAdapter<ElectricMeter, ElectricMeterAdapter.View
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), itemClickListener)
     }
 
+    interface AdapterItemListener{
+        fun onItemClickListener(meter:ElectricMeter)
+        fun onItemDetailListener(meter:ElectricMeter)
+    }
 
 }

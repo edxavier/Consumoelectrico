@@ -1,33 +1,34 @@
 package com.nicrosoft.consumoelectrico.ui2
 
-import android.opengl.Visibility
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
+import android.view.animation.OvershootInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItems
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter
-import com.nicrosoft.consumoelectrico.utils.fadeZoomIn
-import com.nicrosoft.consumoelectrico.utils.hideFabButtonOnScroll
-import com.nicrosoft.consumoelectrico.utils.slideIn
+import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter.AdapterItemListener
+import com.nicrosoft.consumoelectrico.utils.*
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
+import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
 import kotlinx.android.synthetic.main.emeter_list_fragment.*
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class EmeterListFragment : ScopeFragment(), KodeinAware {
+class EmeterListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
     override val kodein by kodein()
     private val vmFactory by instance<ElectricMeterVMFactory>()
-    private lateinit var viewModel: EmeterViewModel
+    private lateinit var viewModel: ElectricViewModel
 
 
     private lateinit var navController: NavController
@@ -41,43 +42,82 @@ class EmeterListFragment : ScopeFragment(), KodeinAware {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        viewModel = ViewModelProvider(this, vmFactory).get(EmeterViewModel::class.java)
-        message_.visibility = View.GONE
+        viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
 
         initLayout()
+        loadData()
+    }
+    
+    private fun loadData(){
+        viewModel.getElectricMeterList().observe(viewLifecycleOwner, Observer {
+            toggleMessageVisibility(it.isEmpty())
+            adapter.submitList(it)
+        })
+    }
 
-        launch {
-            viewModel.getElectricMeterList().observe(viewLifecycleOwner, Observer {
-                Log.e("EDER", it.size.toString())
-                if(it.isEmpty())
-                    message_.visibility = View.VISIBLE
-                adapter.submitList(it)
-            })
+    private fun toggleMessageVisibility(isEmpty:Boolean){
+        if(isEmpty) {
+            message_.setVisible()
+            animation_view.fadeZoomIn()
+            message_title.slideIn()
+            message_body.slideIn()
         }
-
-
-
+        else
+            message_.setHidden()
     }
 
     private fun initLayout() {
-        adapter = ElectricMeterAdapter()
-        val controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation);
-        emeter_list.layoutAnimation = controller
+        adapter = ElectricMeterAdapter(this)
+        val animAdapter = ScaleInAnimationAdapter(adapter)
+        animAdapter.setFirstOnly(false)
+        animAdapter.setInterpolator(OvershootInterpolator())
+        emeter_list.itemAnimator = ScaleInBottomAnimator()
+        emeter_list.adapter = animAdapter
         emeter_list.setHasFixedSize(true)
-        emeter_list.adapter = adapter
         emeter_list.hideFabButtonOnScroll(fab_new_electric_meter)
-
         fab_new_electric_meter.setOnClickListener {
-            val action = EmeterListFragmentDirections.actionNavEmaterListToNewEmeterReadingFragment()
-            val action2 = EmeterListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment()
-            //navController.navigate(action2)
-            launch {
-                viewModel.saveElectricMeter(ElectricMeter(name = "Prueba statica"))
+            val action = EmeterListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment()
+            navController.navigate(action)
+        }
+    }
+
+    override fun onItemClickListener(meter: ElectricMeter) {
+        MaterialDialog(requireContext()).show {
+            title(text = meter.name)
+            listItems(R.array.medidor_options) { _, index, _ ->
+                when(index){
+                    0->{
+                        val action = EmeterListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment(editingItem = true)
+                        // ya que se comparte el VM se establece el objeto y asi evitar hacer consulta para cargarlo
+                        viewModel.selectedMeter(meter)
+                        navController.navigate(action)
+                    }
+                    1->{
+                        showDeleteConfirmDialog(meter)
+                    }
+                }
             }
         }
-        animation_view.fadeZoomIn()
-        message_title.slideIn()
-        message_body.slideIn()
+
+    }
+
+    override fun onItemDetailListener(meter: ElectricMeter) {
+        launch {
+            val action = EmeterListFragmentDirections.actionNavEmaterListToNewEmeterReadingFragment()
+            navController.navigate(action)
+            //viewModel.deleteElectricMeter(meter)
+        }
+    }
+
+    private fun showDeleteConfirmDialog(meter: ElectricMeter){
+        MaterialDialog(requireContext()).show {
+            title(text = meter.name)
+            message(R.string.delete_medidor_notice)
+            positiveButton(R.string.agree){
+                launch { viewModel.deleteElectricMeter(meter) }
+            }
+            negativeButton(R.string.cancel)
+        }
     }
 
 }

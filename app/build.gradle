@@ -55,9 +55,11 @@ android {
 // To inline the bytecode built with JVM target 1.8 into
 // bytecode that is being built with JVM target 1.6. (e.g. navArgs)
 
-
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    dataBinding {
+        enabled true
     }
 
 }
@@ -141,6 +143,7 @@ dependencies {
 
     //ANIMATIONS
     implementation 'com.airbnb.android:lottie:3.4.1'
+    implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
 
     // Kodein
     implementation "org.kodein.di:kodein-di-generic-jvm:6.5.5"
