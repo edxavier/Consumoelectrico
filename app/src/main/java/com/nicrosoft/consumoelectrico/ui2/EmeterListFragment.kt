@@ -78,6 +78,9 @@ class EmeterListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
         fab_new_electric_meter.setOnClickListener {
             val action = EmeterListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment()
             navController.navigate(action)
+            launch {
+                viewModel.saveElectricMeter(ElectricMeter(name = "Test house"))
+            }
         }
     }
 

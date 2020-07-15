@@ -5,9 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="vmodel"
-            type="com.nicrosoft.consumoelectrico.ui2.ElectricViewModel" />
+        <variable name="meter" type="com.nicrosoft.consumoelectrico.data.entities.ElectricMeter" />
+        <variable name="vm" type="com.nicrosoft.consumoelectrico.ui2.ElectricViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -52,7 +51,7 @@
                     android:layout_marginBottom="8dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:text="@{vmodel.meter.name}"
+                        android:text="@{meter.name}"
                         android:id="@+id/txt_emeter_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -68,6 +67,7 @@
                     android:layout_marginBottom="8dp">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:text="@{meter.description}"
                         android:id="@+id/txt_emeter_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -84,6 +84,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_emeter_kw_price"
+                        android:text="@{String.valueOf(meter.kwPrice)}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/settings.ac.price.kwh"

@@ -12,9 +12,8 @@ import kotlinx.coroutines.withContext
 
 class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) : ViewModel() {
 
-    private val _meter = MutableLiveData<ElectricMeter>()
-    val meter: LiveData<ElectricMeter> = _meter
-    fun selectedMeter(meter: ElectricMeter) { _meter.value = meter }
+    var meter = MutableLiveData<ElectricMeter>()
+    fun selectedMeter(_meter: ElectricMeter) { meter.value = _meter }
 
     fun getElectricMeterList() = dao.getMeters()
     suspend fun saveElectricMeter(meter:ElectricMeter) = withContext(Dispatchers.IO){ dao.saveElectricMeter(meter) }
