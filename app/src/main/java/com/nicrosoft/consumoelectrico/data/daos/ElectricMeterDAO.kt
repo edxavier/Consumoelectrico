@@ -29,7 +29,7 @@ interface ElectricMeterDAO {
 
     // QUERIES
     @Query("SELECT * FROM price_range where meter_id=:meter_id")
-    fun getPriceRanges(meter_id:Int): List<PriceRange>
+    fun getPriceRanges(meter_id:Int): LiveData<List<PriceRange>>
 
     @Query("SELECT * FROM electric_meter order by id desc")
     fun getMeters(): LiveData<List<ElectricMeter>>

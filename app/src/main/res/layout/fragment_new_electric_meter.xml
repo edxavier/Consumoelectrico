@@ -156,10 +156,13 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:layout_marginTop="8dp"
+                    android:background="@color/md_grey_100"
                     android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
                     android:id="@+id/sw_lose_discount"
                     android:drawableStart="@drawable/ic_notification"
-                    android:textSize="16sp"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:checked="@{meter.loseDiscount}"
                     android:drawablePadding="12dp"
                     android:text="Lose discount over limit"
@@ -206,6 +209,67 @@
                         android:text="@{String.valueOf(meter.readReminder)}"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="2dp"
+                        style="@style/TextAppearance.MaterialComponents.Overline"
+                        android:textSize="12sp"
+                        android:text="Rangos de precios"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                    <View
+                        android:background="@color/divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+                    <TextView
+                        android:layout_marginBottom="8dp"
+                        android:textSize="11sp"
+                        android:text="Todo valor fuera de rango sera calculado usando el precio general establecido. "
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/price_ranges"
+                        android:layout_width="match_parent"
+                        android:layout_height="121dp"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        tools:listitem="@layout/item_price_range" />
+                    <LinearLayout
+                        android:layout_margin="16dp"
+                        android:id="@+id/price_message"
+                        android:visibility="gone"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp">
+                        <TextView
+                            style="@style/TextAppearance.MaterialComponents.Subtitle2"
+                            android:text="@string/no_data_chart"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:text="Ingrese los valores despues de crear su medidor"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_add_price"
+                    app:cornerRadius="18dp"
+                    android:text="Agregar precio"
+                    android:minWidth="150dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 

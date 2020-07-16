@@ -46,7 +46,7 @@
     <string name="end_period_ask">¿Esta seguro que desea finalizar periodo en esta fecha?</string>
     <string name="end_period_psoitive">Continuar</string>
 
-    <string name="edit_reading">Editar lectura</string>
+    <string name="edit_reading">Editar</string>
     <string name="save">Guardar</string>
 
     <string name="settings.ac.period">Periodo (días)</string>
@@ -135,8 +135,8 @@
     -->
 
     <string-array name="medidor_options">
-        <item>Editar medidor</item>
-        <item>Borrar medidor</item>
+        <item>Editar</item>
+        <item>Borrar</item>
     </string-array>
 
     <string name="detail.period">Periodo</string>
@@ -180,7 +180,10 @@
     <string name="fix_charges_help">Indicates the sum of all fixed costs reflected in the invoice such as public lighting</string>
     <string name="limit_help">
         Consumo deseado al final del peroiodo de facturacion, ya sea por control o por beneficios de descuentos </string>
-    <string name="electric_meters">Electric meters</string>
-    <string name="new_emeter">New electric meter</string>
+    <string name="electric_meters">Medidores Electricos</string>
+    <string name="new_meter">Nuevo Medidor</string>
+    <string name="edit">Editar</string>
+    <string name="non_empty_message">Porfavor especifique algun valor</string>
+    <string name="delete">Delete</string>
 
 </resources>

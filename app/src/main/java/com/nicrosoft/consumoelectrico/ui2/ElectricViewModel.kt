@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.nicrosoft.consumoelectrico.data.daos.ElectricMeterDAO
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
+import com.nicrosoft.consumoelectrico.data.entities.PriceRange
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -18,8 +19,15 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
 
 
     fun getElectricMeterList() = dao.getMeters()
+    fun getPriceList(meter_id:Int) = dao.getPriceRanges(meter_id)
+
     suspend fun saveElectricMeter(meter:ElectricMeter) = withContext(Dispatchers.IO){ dao.saveElectricMeter(meter) }
+    suspend fun savePrice(price:PriceRange) = withContext(Dispatchers.IO){ dao.savePriceRage(price) }
+
     suspend fun deleteElectricMeter(meter:ElectricMeter) = withContext(Dispatchers.IO){ dao.deleteElectricMeter(meter) }
+    suspend fun deleteElectricMeter(price:PriceRange) = withContext(Dispatchers.IO){ dao.deletePriceRage(price) }
+
     suspend fun updateElectricMeter(meter:ElectricMeter) = withContext(Dispatchers.IO){ dao.updateElectricMeter(meter) }
+    suspend fun updateElectricMeter(price:PriceRange) = withContext(Dispatchers.IO){ dao.updatePriceRage(price) }
 
 }

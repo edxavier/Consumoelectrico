@@ -18,10 +18,10 @@ import java.util.*
         )]
 )
 data class PriceRange(
-        @PrimaryKey(autoGenerate = true) val id:Int,
-        @ColumnInfo(name = "code") val code:String = UUID.randomUUID().toString(),
-        @ColumnInfo(name = "from_kw") val fromKw:Int = 0,
-        @ColumnInfo(name = "to_kw") val toKw:Int = 0,
-        @ColumnInfo(name = "price") val price:Float = 0f,
-        @ColumnInfo(name = "meter_id") val meterId:Int
+        @PrimaryKey(autoGenerate = true) var id:Int? = null,
+        @ColumnInfo(name = "code") var code:String = UUID.randomUUID().toString(),
+        @ColumnInfo(name = "from_kw") var fromKw:Int = 0,
+        @ColumnInfo(name = "to_kw") var toKw:Int = 0,
+        @ColumnInfo(name = "price") var price:Float = 0f,
+        @ColumnInfo(name = "meter_id") var meterId:Int
 )

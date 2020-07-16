@@ -160,7 +160,10 @@
     <string name="fix_charges_help">Indicates the sum of all fixed costs reflected in the invoice such as public lighting</string>
     <string name="limit_help">Indicate which is the maximum consumption you want at the end of a billing period, either by self-control or by discounts benefits</string>
     <string name="electric_meters">Electric meters</string>
-    <string name="new_emeter">New electric meter</string>
+    <string name="new_meter">New electric meter</string>
+    <string name="edit">Edit</string>
+    <string name="non_empty_message">Please enter some value</string>
+    <string name="delete">Delete</string>
 
 
 </resources>

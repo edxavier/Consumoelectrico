@@ -275,7 +275,7 @@
 
         </LinearLayout>
 
-        <include layout="@layout/electric_meter_item"/>
+        <include layout="@layout/item_electric_meter"/>
 
     </LinearLayout>
 

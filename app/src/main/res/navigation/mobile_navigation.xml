@@ -162,7 +162,7 @@
     <fragment
         android:id="@+id/newElectricMeterFragment"
         android:name="com.nicrosoft.consumoelectrico.ui2.NewElectricMeterFragment"
-        android:label="@string/new_emeter"
+        android:label="@string/new_meter"
         tools:layout="@layout/fragment_new_electric_meter" >
         <argument
             android:name="editingItem"

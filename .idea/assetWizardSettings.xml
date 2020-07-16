@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/home/eradar/scripts/android-studio/plugins/android/lib/android.jar!/images/material/icons/materialiconsoutlined/notification_important/outline_notification_important_24.xml" />
+                                      <entry key="url" value="jar:file:/home/eradar/scripts/android-studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/chevron_right/baseline_chevron_right_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +28,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_notification" />
+                            <entry key="outputName" value="ic_baseline_chevron_right" />
                             <entry key="sourceFile" value="$USER_HOME$/Downloads/descuento.svg" />
                           </map>
                         </option>

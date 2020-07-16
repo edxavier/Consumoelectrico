@@ -201,7 +201,10 @@
     <string name="limit_help">Desired consumption at the end of a billing period, either by self-control or by discounts benefits</string>
     <string name="electric_meters">Electric meters</string>
 
-    <string name="new_emeter">New electric meter</string>
+    <string name="new_meter">New electric meter</string>
+    <string name="edit">Edit</string>
+    <string name="non_empty_message">Please enter some value</string>
+    <string name="delete">Delete</string>
 
 
 </resources>

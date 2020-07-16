@@ -84,7 +84,7 @@ class Mainkt : ScopeActivity(), BillingProcessor.IBillingHandler {
     private fun setupBanner() {
         adView.setHidden()
         val adRequest = AdRequest.Builder()
-                .addTestDevice("B162B59FFBB489F8FC90FE755FFA25F0")
+                .addTestDevice("B48A47589EE977D85159EDC0E8B15AB9")
                 .build()
         adView.loadAd(adRequest)
         adView.adListener = object : AdListener() {

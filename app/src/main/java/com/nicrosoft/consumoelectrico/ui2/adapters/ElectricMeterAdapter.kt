@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
-import kotlinx.android.synthetic.main.electric_meter_item.view.*
+import kotlinx.android.synthetic.main.item_electric_meter.view.*
 
 class ElectricMeterAdapter(
         private val itemClickListener: AdapterItemListener
@@ -39,7 +39,7 @@ class ElectricMeterAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context!!).inflate(R.layout.electric_meter_item, parent, false))
+        return ViewHolder(LayoutInflater.from(parent.context!!).inflate(R.layout.item_electric_meter, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
