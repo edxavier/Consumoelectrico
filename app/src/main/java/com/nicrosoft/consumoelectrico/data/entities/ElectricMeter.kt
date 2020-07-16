@@ -9,18 +9,20 @@ import java.util.*
 @Entity(tableName = "electric_meter")
 data class ElectricMeter(
         @PrimaryKey(autoGenerate = true) val id:Int? = null,
-        @ColumnInfo(name = "code") val code:String = UUID.randomUUID().toString(),
-        @ColumnInfo(name = "name") val name:String,
-        @ColumnInfo(name = "description") val description:String? = "",
-        @ColumnInfo(name = "kw_price") val kwPrice:Float = 0f,
-        @ColumnInfo(name = "fixed_prices") val fixedPrices:Float = 0f,
-        @ColumnInfo(name = "taxes") val taxes:Float = 0f,
-        @ColumnInfo(name = "kw_discount") val kwDiscount:Float = 0f,
-        @ColumnInfo(name = "max_kw_limit") val maxKwLimit:Int = 150,
-        @ColumnInfo(name = "lose_discount_over_limit") val loseDiscount:Boolean = true,
-        @ColumnInfo(name = "period_length") val periodLength:Int  = 30,
-        @ColumnInfo(name = "read_reminder") val readReminder:Int  = 14
+        @ColumnInfo(name = "code") var code:String = UUID.randomUUID().toString(),
+        @ColumnInfo(name = "name") var name:String,
+        @ColumnInfo(name = "description") var description:String? = "",
+        @ColumnInfo(name = "kw_price") var kwPrice:Float = 0f,
+        @ColumnInfo(name = "fixed_prices") var fixedPrices:Float = 0f,
+        @ColumnInfo(name = "taxes") var taxes:Float = 0f,
+        @ColumnInfo(name = "kw_discount") var kwDiscount:Float = 0f,
+        @ColumnInfo(name = "max_kw_limit") var maxKwLimit:Int = 150,
+        @ColumnInfo(name = "lose_discount_over_limit") var loseDiscount:Boolean = true,
+        @ColumnInfo(name = "period_length") var periodLength:Int  = 30,
+        @ColumnInfo(name = "read_reminder") var readReminder:Int  = 14
 ){
+
+
     fun equals(other:ElectricMeter):Boolean {
         if(this.id != other.id)
             return false

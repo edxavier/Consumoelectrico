@@ -141,6 +141,8 @@ dependencies {
 
     implementation 'com.params.progressview:step-progress:1.0.2'
 
+    implementation "com.wajahatkarim3.easyvalidation:easyvalidation-core:1.0.1"
+
     //ANIMATIONS
     implementation 'com.airbnb.android:lottie:3.4.1'
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'

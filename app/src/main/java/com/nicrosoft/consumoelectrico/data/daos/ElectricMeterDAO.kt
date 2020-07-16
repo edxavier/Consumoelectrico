@@ -14,7 +14,7 @@ interface ElectricMeterDAO {
     fun deleteElectricMeter(meter: ElectricMeter)
 
     @Update
-    fun updateElectricMeter(meter: ElectricMeter)
+    fun updateElectricMeter(meter: ElectricMeter):Int
 
 
     //PRICE RANGE

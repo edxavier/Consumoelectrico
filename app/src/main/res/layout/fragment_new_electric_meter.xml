@@ -6,10 +6,10 @@
 
     <data>
         <variable name="meter" type="com.nicrosoft.consumoelectrico.data.entities.ElectricMeter" />
-        <variable name="vm" type="com.nicrosoft.consumoelectrico.ui2.ElectricViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
         android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -67,8 +67,8 @@
                     android:layout_marginBottom="8dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:text="@{meter.description}"
                         android:id="@+id/txt_emeter_description"
+                        android:text="@{meter.description}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/description"
@@ -100,6 +100,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_emeter_kw_vat"
+                        android:text="@{String.valueOf(meter.taxes)}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="VAT"
@@ -116,6 +117,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_emeter_kw_discount"
                         android:layout_width="match_parent"
+                        android:text="@{String.valueOf(meter.kwDiscount)}"
                         android:layout_height="wrap_content"
                         android:hint="@string/settings.ac.discount.kwh"
                         android:inputType="numberDecimal" />
@@ -133,6 +135,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/settings.ac.fixed_charges"
+                        android:text="@{String.valueOf(meter.fixedPrices)}"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -145,6 +148,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_emeter_kw_limit"
+                        android:text="@{String.valueOf(meter.maxKwLimit)}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/settings.ac.period.limit"
@@ -153,9 +157,10 @@
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:paddingStart="12dp"
+                    android:id="@+id/sw_lose_discount"
                     android:drawableStart="@drawable/ic_notification"
                     android:textSize="16sp"
-                    android:checked="true"
+                    android:checked="@{meter.loseDiscount}"
                     android:drawablePadding="12dp"
                     android:text="Lose discount over limit"
                     android:textColor="@color/md_black_1000_75"
@@ -182,6 +187,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/settings.ac.period"
+                        android:text="@{String.valueOf(meter.periodLength)}"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -197,6 +203,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/settings.ac.reminder_afer"
+                        android:text="@{String.valueOf(meter.readReminder)}"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
