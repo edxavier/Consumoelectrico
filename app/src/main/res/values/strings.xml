@@ -39,7 +39,7 @@
     <string name="settings.ac.period.limit">kWh limit by period</string>
 
     <string name="settings.ac.price.kwh">Price per kWh</string>
-    <string name="settings.ac.discount.kwh">Discount per kWh </string>
+    <string name="settings.ac.discount.kwh">Discount per kWh (%)</string>
     <string name="settings.ac.currency">Currency</string>
 
     <string name="chart.legend.accumulated">Cumulative consumption (kWh)</string>
@@ -205,6 +205,18 @@
     <string name="edit">Edit</string>
     <string name="non_empty_message">Please enter some value</string>
     <string name="delete">Delete</string>
+    <string name="first_save_new_meter">Save your new meter before adding price range</string>
+    <string name="invalid_kw_range">Invalid kw range</string>
+    <string name="item_updated">Item updated</string>
+    <string name="range_overlaps">Range overlaps with existing one</string>
+    <string name="item_saved">Item saved</string>
+    <string name="delete_item_notice">Selected item will be removed permantly</string>
+    <string name="taxes">Taxes (%)</string>
+    <string name="lose_discount">Lose discount if over limit</string>
+    <string name="lose_discount_hint">Discount will only be applied if consumption is less than or equal to the established limit.</string>
+    <string name="price_ranges">Price ranges</string>
+    <string name="range_hint">Any value out of range will be calculated using the general established price.</string>
+    <string name="add_price">Add price</string>
 
 
 </resources>

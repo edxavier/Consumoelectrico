@@ -61,7 +61,7 @@
     <string name="not_show_again">Não mostrar novamente</string>
     <string name="help">Socorro</string>
     <string name="settings.ac.price.kwh">Preço por kWh</string>
-    <string name="settings.ac.discount.kwh">Desconto por kWh</string>
+    <string name="settings.ac.discount.kwh">Desconto por kWh (%)</string>
     <string name="settings.ac.currency">moeda</string>
     <string name="energy_meter_name">Medidor de energia</string>
     <string name="initial_reading">Leitura inicial</string>
@@ -157,13 +157,25 @@
     <string name="title_choose_file">Selecione um arquivo</string>
     <string name="folder_choose">Clic accept to choose current folder</string>
     <string name="lectura_editar_hint">Se você tiver a data errada, exclua e insira novamente o registro com a data correta</string>
-    <string name="fix_charges_help">Indicates the sum of all fixed costs reflected in the invoice such as public lighting</string>
-    <string name="limit_help">Indicate which is the maximum consumption you want at the end of a billing period, either by self-control or by discounts benefits</string>
-    <string name="electric_meters">Electric meters</string>
-    <string name="new_meter">New electric meter</string>
-    <string name="edit">Edit</string>
-    <string name="non_empty_message">Please enter some value</string>
-    <string name="delete">Delete</string>
+    <string name="fix_charges_help">Indica a soma de todos os custos fixos refletidos na fatura, como iluminação pública</string>
+    <string name="limit_help">Indica qual é o consumo máximo que você deseja ao final de um período de cobrança, seja por autocontrole ou por benefícios de descontos</string>
+    <string name="electric_meters">Medidores elétricos</string>
+    <string name="new_meter">Novo medidor elétrico</string>
+    <string name="edit">Editar</string>
+    <string name="non_empty_message">Digite algum valor</string>
+    <string name="delete">Excluir</string>
+    <string name="first_save_new_meter">Salve seu novo medidor antes de adicionar faixa de preço</string>
+    <string name="invalid_kw_range">Faixa de kw inválida</string>
+    <string name="item_updated">Item atualizado</string>
+    <string name="range_overlaps">O intervalo se sobrepõe ao existente</string>
+    <string name="item_saved">Item salvo</string>
+    <string name="delete_item_notice">O item selecionado será removido permanentemente</string>
+    <string name="taxes">Impostos (%)</string>
+    <string name="lose_discount">Perder desconto se estiver acima do limite</string>
+    <string name="lose_discount_hint">O desconto será aplicado apenas se o consumo for menor ou igual ao limite estabelecido.</string>
+    <string name="price_ranges">Faixas de preço</string>
+    <string name="range_hint">Qualquer valor fora do intervalo será calculado usando o preço geral estabelecido.</string>
+    <string name="add_price">Adicionar preço</string>
 
 
 </resources>

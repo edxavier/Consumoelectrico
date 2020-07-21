@@ -20,7 +20,7 @@
             android:layout_marginBottom="8dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txt_from_kw"
+                android:id="@+id/dlg_txt_from_kw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="From (kw)"
@@ -34,7 +34,7 @@
             android:layout_marginBottom="8dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txt_to_kw"
+                android:id="@+id/dlg_txt_to_kw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="To (kw)"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txt_price_kw"
+                android:id="@+id/dlg_txt_price_kw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Price"

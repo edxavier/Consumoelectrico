@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="170dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="16dp"
@@ -16,10 +15,11 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/label_kw_price"
             android:layout_gravity="center"
             android:textColor="?attr/colorPrimaryDark"
             android:text="$3.5"
-            style="@style/TextAppearance.MaterialComponents.Headline4"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <View
@@ -34,19 +34,18 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="0 Kw"
-                style="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:id="@+id/label_from_kw"
+                android:text="1000 Kw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_marginEnd="12sp"
-                android:layout_marginStart="12sp"
+
                 app:srcCompat="@drawable/ic_baseline_chevron_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
-                style="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:text="25 Kw"
+                android:id="@+id/label_to_kw"
+                android:text="1255 Kw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

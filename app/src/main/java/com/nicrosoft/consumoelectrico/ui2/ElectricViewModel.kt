@@ -25,9 +25,11 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     suspend fun savePrice(price:PriceRange) = withContext(Dispatchers.IO){ dao.savePriceRage(price) }
 
     suspend fun deleteElectricMeter(meter:ElectricMeter) = withContext(Dispatchers.IO){ dao.deleteElectricMeter(meter) }
-    suspend fun deleteElectricMeter(price:PriceRange) = withContext(Dispatchers.IO){ dao.deletePriceRage(price) }
+    suspend fun deletePriceRange(price:PriceRange) = withContext(Dispatchers.IO){ dao.deletePriceRage(price) }
 
     suspend fun updateElectricMeter(meter:ElectricMeter) = withContext(Dispatchers.IO){ dao.updateElectricMeter(meter) }
-    suspend fun updateElectricMeter(price:PriceRange) = withContext(Dispatchers.IO){ dao.updatePriceRage(price) }
+    suspend fun updatePriceRange(price:PriceRange) = withContext(Dispatchers.IO){ dao.updatePriceRage(price) }
+
+    suspend fun getOverlappingPrice(min:Int, max:Int) = withContext(Dispatchers.IO){ dao.getOverlappingPrice(min, max) }
 
 }

@@ -2,12 +2,12 @@ package com.nicrosoft.consumoelectrico.ui2
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -27,23 +27,19 @@ import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
 import com.nicrosoft.consumoelectrico.databinding.FragmentNewElectricMeterBinding
-import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter
 import com.nicrosoft.consumoelectrico.ui2.adapters.PriceRangeAdapter
 import com.nicrosoft.consumoelectrico.utils.setHidden
 import com.nicrosoft.consumoelectrico.utils.setVisible
-import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
 import com.wajahatkarim3.easyvalidation.core.view_ktx.nonEmpty
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
+import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter
 import jp.wasabeef.recyclerview.animators.FadeInRightAnimator
-import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
 import kotlinx.android.synthetic.main.app_bar_mainkt.*
-import kotlinx.android.synthetic.main.emeter_list_fragment.*
+import kotlinx.android.synthetic.main.dlg_prices.*
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.nio.file.Files.delete
 
 
 class NewElectricMeterFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.PriceItemListener {
@@ -102,14 +98,9 @@ class NewElectricMeterFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter
             buttonAddPrice.setOnClickListener {
                 launch {
                     if(params.editingItem){
-                        launch {
-                            viewModel.savePrice(PriceRange(fromKw = 0, toKw = 50, meterId = viewModel.meter.value?.id!!))
-                            Snackbar.make(binding.coordinator, "Price has been saved", Snackbar.LENGTH_SHORT)
-                                    .setTextColor(ContextCompat.getColor(requireContext(), R.color.md_green_500))
-                                    .show()
-                        }
+                        showCreateDialog()
                     }else{
-                        Snackbar.make(binding.coordinator, "Please save your new meter before adding price range", Snackbar.LENGTH_LONG)
+                        Snackbar.make(binding.coordinator, R.string.first_save_new_meter, Snackbar.LENGTH_LONG)
                                 .setTextColor(ContextCompat.getColor(requireContext(), R.color.md_amber_500))
                                 .show()
                     }
@@ -218,7 +209,7 @@ class NewElectricMeterFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter
         }
     }
 
-    fun hideKeyboard() {
+    private fun hideKeyboard() {
         val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
@@ -228,16 +219,8 @@ class NewElectricMeterFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter
             title(R.string.options)
             listItems(R.array.medidor_options) { _, index, _ ->
                 when(index){
-                    0->{
-                        //val action = EmeterListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment(editingItem = true)
-                        // ya que se comparte el VM se establece el objeto y asi evitar hacer consulta para cargarlo
-                        //viewModel.selectedMeter(meter)
-                        //navController.navigate(action)
-                        showEditDialog(price)
-                    }
-                    1->{
-                        showDeleteConfirmDialog(price)
-                    }
+                    0-> showEditDialog(price)
+                    1-> showDeleteConfirmDialog(price)
                 }
             }
         }
@@ -250,13 +233,42 @@ class NewElectricMeterFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter
                     .title(R.string.edit)
                     .negativeButton(R.string.cancel) { dismiss() }
                     .positiveButton(R.string.ok) {
-                        dismiss()
+                        if(checkNonEmptyEditText(dlg_txt_from_kw) && checkNonEmptyEditText(dlg_txt_to_kw) &&
+                                checkNonEmptyEditText(dlg_txt_price_kw)){
+                            val from = dlg_txt_from_kw.text.toString().toInt()
+                            val to = dlg_txt_to_kw.text.toString().toInt()
+                            launch {
+                                val op = viewModel.getOverlappingPrice(from, to)
+                                if(op!= null){
+                                    //Si existe rangos que incluyan los neuvos valores, verificar que no este dentro del mismo rango
+                                    // si es asi eliminarlo y volverlo a crear, si no avisar que no se puede por que invade una rango diferente
+                                    if(op.id == price.id){
+                                        viewModel.deletePriceRange(price)
+                                        val newPrice = PriceRange(fromKw = from, toKw = to, price = dlg_txt_price_kw.text.toString().toFloat() , meterId =  price.meterId)
+                                        viewModel.savePrice(newPrice)
+                                        dismiss()
+                                    }else {
+                                        dlg_txt_from_kw.error = getString(R.string.range_overlaps)
+                                        dlg_txt_to_kw.error = getString(R.string.range_overlaps)
+                                        dlg_txt_from_kw.requestFocus()
+                                    }
+                                }else{
+                                    //Si no existe invasion de rango actualizar campos
+                                    price.fromKw = from
+                                    price.toKw = to
+                                    price.price = dlg_txt_price_kw.text.toString().toFloat()
+                                    viewModel.updatePriceRange(price)
+                                    dismiss()
+                                    Snackbar.make(binding.coordinator, R.string.item_updated, Snackbar.LENGTH_LONG).show()
+                                }
+                            }
+                        }
                     }
         }
         try {
-            val fromKw = dlg.getCustomView().findViewById(R.id.txt_from_kw) as TextInputEditText
-            val toKw = dlg.getCustomView().findViewById(R.id.txt_to_kw) as TextInputEditText
-            val priceKw = dlg.getCustomView().findViewById(R.id.txt_to_kw) as TextInputEditText
+            val fromKw = dlg.getCustomView().findViewById(R.id.dlg_txt_from_kw) as TextInputEditText
+            val toKw = dlg.getCustomView().findViewById(R.id.dlg_txt_to_kw) as TextInputEditText
+            val priceKw = dlg.getCustomView().findViewById(R.id.dlg_txt_price_kw) as TextInputEditText
             fromKw.setText(price.fromKw.toString())
             toKw.setText(price.toKw.toString())
             priceKw.setText(price.price.toString())
@@ -264,15 +276,66 @@ class NewElectricMeterFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter
 
     }
 
+    private fun showCreateDialog() {
+        MaterialDialog(requireContext()).show {
+            customView(R.layout.dlg_prices, scrollable = true)
+                    .noAutoDismiss()
+                    .title(R.string.edit)
+                    .negativeButton(R.string.cancel) { dismiss() }
+                    .positiveButton(R.string.ok) {
+                        if(checkNonEmptyEditText(dlg_txt_from_kw) && checkNonEmptyEditText(dlg_txt_to_kw) &&
+                                checkNonEmptyEditText(dlg_txt_price_kw)){
+                            if(checkValidRangeValues(dlg_txt_from_kw, dlg_txt_to_kw)){
+                                val from = dlg_txt_from_kw.text.toString().toInt()
+                                val to = dlg_txt_to_kw.text.toString().toInt()
+                                launch {
+                                    val op = viewModel.getOverlappingPrice(from, to)
+                                    if(op!= null){
+                                        dlg_txt_from_kw.error = getString(R.string.range_overlaps)
+                                        dlg_txt_to_kw.error = getString(R.string.range_overlaps)
+                                        dlg_txt_from_kw.requestFocus()
+                                    }else{
+                                        val price = PriceRange(meterId = viewModel.meter.value!!.id!!)
+                                        price.fromKw = from
+                                        price.toKw = to
+                                        price.price = dlg_txt_price_kw.text.toString().toFloat()
+                                        viewModel.savePrice(price)
+                                        dismiss()
+                                        Snackbar.make(binding.coordinator, R.string.item_saved, Snackbar.LENGTH_LONG).show()
+                                    }
+                                }
+                            }
+                        }
+                    }
+        }
+    }
+
     private fun showDeleteConfirmDialog(price: PriceRange){
         MaterialDialog(requireContext()).show {
             title(R.string.delete)
-            message(R.string.delete_medidor_notice)
+            message(R.string.delete_item_notice)
             positiveButton(R.string.agree){
-                launch { viewModel.deleteElectricMeter(price) }
+                launch { viewModel.deletePriceRange(price) }
             }
             negativeButton(R.string.cancel)
         }
     }
 
+    private fun checkNonEmptyEditText(editText: TextInputEditText): Boolean{
+        return editText.validator().nonEmpty().addErrorCallback {
+            editText.error = getString(R.string.non_empty_message)
+        }.check()
+    }
+
+    private fun checkValidRangeValues(from: TextInputEditText, to: TextInputEditText): Boolean{
+        val fromVal = from.text.toString().toInt()
+        val toVal = to.text.toString().toInt()
+        if((toVal-fromVal < 1)) {
+            from.error = getString(R.string.invalid_kw_range)
+            to.error = getString(R.string.invalid_kw_range)
+            from.requestFocus()
+            return false
+        }
+        return true
+    }
 }

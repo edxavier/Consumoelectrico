@@ -103,7 +103,7 @@
                         android:text="@{String.valueOf(meter.taxes)}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="VAT"
+                        android:hint="@string/taxes"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -165,7 +165,7 @@
                     style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:checked="@{meter.loseDiscount}"
                     android:drawablePadding="12dp"
-                    android:text="Lose discount over limit"
+                    android:text="@string/lose_discount"
                     android:textColor="@color/md_black_1000_75"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -174,7 +174,7 @@
                     android:layout_marginStart="12dp"
                     android:textSize="12sp"
                     android:layout_marginBottom="8dp"
-                    android:text="Solo se aplicara el descuento si el consumo es menor o igual al limite establecido"
+                    android:text="@string/lose_discount_hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -219,7 +219,7 @@
                         android:layout_marginBottom="2dp"
                         style="@style/TextAppearance.MaterialComponents.Overline"
                         android:textSize="12sp"
-                        android:text="Rangos de precios"
+                        android:text="@string/price_ranges"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
                     <View
@@ -228,8 +228,8 @@
                         android:layout_height="1dp"/>
                     <TextView
                         android:layout_marginBottom="8dp"
-                        android:textSize="11sp"
-                        android:text="Todo valor fuera de rango sera calculado usando el precio general establecido. "
+                        android:textSize="12sp"
+                        android:text="@string/range_hint"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
@@ -254,7 +254,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                         <TextView
-                            android:text="Ingrese los valores despues de crear su medidor"
+                            android:text="@string/first_save_new_meter"
                             android:gravity="center"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
@@ -264,9 +264,10 @@
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:id="@+id/button_add_price"
                     app:cornerRadius="18dp"
-                    android:text="Agregar precio"
+                    android:text="@string/add_price"
                     android:minWidth="150dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>

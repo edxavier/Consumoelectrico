@@ -101,7 +101,7 @@
     <string name="not_show_again">No volver a mostrar</string>
     <string name="help">Help</string>
     <string name="settings.ac.price.kwh">Precio por kWh</string>
-    <string name="settings.ac.discount.kwh">Descuento por kWh</string>
+    <string name="settings.ac.discount.kwh">Descuento por kWh (%)</string>
     <string name="settings.ac.currency">Moneda</string>
     <string name="energy_meter_name">Medidor de energía</string>
     <string name="initial_reading">Lectura inicial</string>
@@ -177,13 +177,27 @@
     <string name="title_choose_file">Seleccione un archivo</string>
     <string name="folder_choose">Clic accept to choose current folder</string>
     <string name="lectura_editar_hint">Si se ha equivocado de fecha, por favor elimina y vuelve a ingresar el registro con la fecha correcta</string>
-    <string name="fix_charges_help">Indicates the sum of all fixed costs reflected in the invoice such as public lighting</string>
-    <string name="limit_help">
-        Consumo deseado al final del peroiodo de facturacion, ya sea por control o por beneficios de descuentos </string>
-    <string name="electric_meters">Medidores Electricos</string>
-    <string name="new_meter">Nuevo Medidor</string>
     <string name="edit">Editar</string>
     <string name="non_empty_message">Porfavor especifique algun valor</string>
-    <string name="delete">Delete</string>
+
+    <string name="fix_charges_help">Indica la suma de todos los costos fijos reflejados en la factura, como el alumbrado público</string>
+    <string name="limit_help">Consumo deseado al final de un período de facturación, ya sea por autocontrol o por descuentos.</string>
+    <string name="electric_meters">Medidores electricos</string>
+
+    <string name="new_meter">Nuevo medidor eléctrico</string>
+    <string name="delete">Eliminar</string>
+    <string name="first_save_new_meter">Guarde su nuevo medidor antes de agregar rango de precios</string>
+    <string name="invalid_kw_range">Rango de kw no válido</string>
+    <string name="item_updated">Elemento actualizado</string>
+    <string name="range_overlaps">Rango se superpone con uno existente</string>
+    <string name="item_saved">Elemento guardado</string>
+    <string name="delete_item_notice">El elemento seleccionado se eliminará permanentemente</string>
+    <string name="taxes">Impuestos (%)</string>
+    <string name="lose_discount">Perder descuento si supera el límite</string>
+    <string name="lose_discount_hint">El descuento solo se aplicará si el consumo es menor o igual al límite establecido.</string>
+    <string name="price_ranges">Rangos de precios</string>
+    <string name="range_hint">Cualquier valor fuera de rango se calculará utilizando el precio general establecido.s</string>
+    <string name="add_price">Agregar precio</string>
+
 
 </resources>

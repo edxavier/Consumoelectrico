@@ -1,5 +1,6 @@
 package com.nicrosoft.consumoelectrico.ui2.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
-import kotlinx.android.synthetic.main.item_electric_meter.view.*
+import com.pixplicity.easyprefs.library.Prefs
+import kotlinx.android.synthetic.main.item_price_range.view.*
 
 class PriceRangeAdapter(
         private val itemClickListener: PriceItemListener
@@ -26,11 +28,16 @@ class PriceRangeAdapter(
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
-        fun bind(meter: PriceRange, listener: PriceItemListener?){
+        @SuppressLint("SetTextI18n")
+        fun bind(price: PriceRange, listener: PriceItemListener?){
             itemView.apply {
                 //Disparar evento para que la vista que lo implemente tenda el objeto al que se le dio click
-                this.setOnClickListener { listener?.onPriceItemClickListener(meter) }
+                this.setOnClickListener { listener?.onPriceItemClickListener(price) }
                 with(this){
+                    label_from_kw.text = "${price.fromKw} kW"
+                    label_to_kw.text = "${price.toKw} kW"
+                    val simbol = Prefs.getString("price_simbol", "$")
+                    label_kw_price.text = "$simbol${price.price}"
                 }
             }
         }
