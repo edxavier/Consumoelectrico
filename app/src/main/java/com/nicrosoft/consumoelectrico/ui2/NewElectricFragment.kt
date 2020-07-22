@@ -2,7 +2,6 @@ package com.nicrosoft.consumoelectrico.ui2
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,14 +41,14 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
 
-class NewElectricMeterFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.PriceItemListener {
+class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.PriceItemListener {
     override val kodein by kodein()
-    private val vmFactory by instance<ElectricMeterVMFactory>()
+    private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
     private lateinit var binding: FragmentNewElectricMeterBinding
 
     private lateinit var navController: NavController
-    private lateinit var params: NewElectricMeterFragmentArgs
+    private lateinit var params: NewElectricFragmentArgs
     private lateinit var adapter: PriceRangeAdapter
 
     override fun onCreateView(
@@ -64,7 +63,7 @@ class NewElectricMeterFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        params = NewElectricMeterFragmentArgs.fromBundle(requireArguments())
+        params = NewElectricFragmentArgs.fromBundle(requireArguments())
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }

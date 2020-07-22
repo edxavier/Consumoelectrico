@@ -25,9 +25,9 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class EmeterListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
+class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
     override val kodein by kodein()
-    private val vmFactory by instance<ElectricMeterVMFactory>()
+    private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
 
 
@@ -76,7 +76,7 @@ class EmeterListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
         emeter_list.setHasFixedSize(true)
         emeter_list.hideFabButtonOnScroll(fab_new_electric_meter)
         fab_new_electric_meter.setOnClickListener {
-            val action = EmeterListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment()
+            val action = ElectricListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment()
             navController.navigate(action)
         }
     }
@@ -87,7 +87,7 @@ class EmeterListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
             listItems(R.array.medidor_options) { _, index, _ ->
                 when(index){
                     0->{
-                        val action = EmeterListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment(editingItem = true)
+                        val action = ElectricListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment(editingItem = true)
                         // ya que se comparte el VM se establece el objeto y asi evitar hacer consulta para cargarlo
                         viewModel.selectedMeter(meter)
                         navController.navigate(action)
@@ -103,9 +103,9 @@ class EmeterListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
 
     override fun onItemDetailListener(meter: ElectricMeter) {
         launch {
-            val action = EmeterListFragmentDirections.actionNavEmaterListToNewEmeterReadingFragment()
+            viewModel.selectedMeter(meter)
+            val action = ElectricListFragmentDirections.actionNavEmaterListToNewEmeterReadingFragment()
             navController.navigate(action)
-            //viewModel.deleteElectricMeter(meter)
         }
     }
 

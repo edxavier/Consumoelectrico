@@ -17,13 +17,13 @@ import java.util.*
         )]
 )
 data class ElectricBillPeriod(
-        @PrimaryKey(autoGenerate = true) val id:Int,
-        @ColumnInfo(name = "code") val code:String = UUID.randomUUID().toString(),
-        @ColumnInfo(name = "from_date") val fromKw:Date,
-        @ColumnInfo(name = "to_date") val toKw:Date,
-        @ColumnInfo(name = "active") val active:Boolean,
-        @ColumnInfo(name = "total_bill") val totalBill:Float = 0f,
-        @ColumnInfo(name = "total_kw") val totalKw:Float = 0f,
-        @ColumnInfo(name = "meter_id") val meterId:Int,
-        @ColumnInfo(name = "created_at") val createdAt:Date
+        @PrimaryKey(autoGenerate = true) var id:Int? = null,
+        @ColumnInfo(name = "code") var code:String = UUID.randomUUID().toString(),
+        @ColumnInfo(name = "from_date") var fromKw:Date,
+        @ColumnInfo(name = "to_date") var toKw:Date,
+        @ColumnInfo(name = "active") var active:Boolean,
+        @ColumnInfo(name = "total_bill") var totalBill:Float = 0f,
+        @ColumnInfo(name = "total_kw") var totalKw:Float = 0f,
+        @ColumnInfo(name = "meter_id") var meterId:Int,
+        @ColumnInfo(name = "created_at") var createdAt:Date
 )

@@ -8,7 +8,7 @@ import java.util.*
 
 @Entity(tableName = "electric_meter")
 data class ElectricMeter(
-        @PrimaryKey(autoGenerate = true) val id:Int? = null,
+        @PrimaryKey(autoGenerate = true) var id:Int? = null,
         @ColumnInfo(name = "code") var code:String = UUID.randomUUID().toString(),
         @ColumnInfo(name = "name") var name:String,
         @ColumnInfo(name = "description") var description:String? = "",

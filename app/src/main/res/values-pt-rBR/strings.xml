@@ -38,9 +38,9 @@
     <string name="edit_reading">Editar leitura</string>
     <string name="save">Salve</string>
     <string name="settings.ac.period">Período de faturamento (dias)</string>
-    <string name="settings.ac.period.limit">limite de kWh por período</string>
+    <string name="settings.ac.period.limit">Limite de kWh por período</string>
     <string name="chart.legend.avg.limit">Limite médio (kWh)</string>
-    <string name="chart.legend.period.limit">limite de período (kWh)</string>
+    <string name="chart.legend.period.limit">Limite de período (kWh)</string>
     <string name="chart.legend.bar">Consumo desde a leitura anterior (kWh)</string>
     <string name="chart.legend.avg">Média (kWh)</string>
     <string name="chart.legend.accumulated">Consumo acumulado (kWh)</string>
@@ -67,7 +67,7 @@
     <string name="initial_reading">Leitura inicial</string>
     <string name="estimated_expense">Despesa estimada</string>
     <string name="estimated_unsubsidized_expense">Estimativa de despesa não subsidiada</string>
-    <string name="settings.ac.fixed_charges">custos fixos</string>
+    <string name="settings.ac.fixed_charges">Custos fixos</string>
     <string name="days_consumed_val">%1$.0f dias</string>
     <string name="label_medidor">Nome / ID</string>
     <string name="description">Descrição</string>
@@ -176,6 +176,7 @@
     <string name="price_ranges">Faixas de preço</string>
     <string name="range_hint">Qualquer valor fora do intervalo será calculado usando o preço geral estabelecido.</string>
     <string name="add_price">Adicionar preço</string>
+    <string name="datetime_format">dd MMMM yyy h:m a</string>
 
 
 </resources>

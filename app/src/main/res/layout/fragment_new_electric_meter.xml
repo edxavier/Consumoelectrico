@@ -29,7 +29,7 @@
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui2.NewElectricMeterFragment">
+            tools:context=".ui2.NewElectricFragment">
 
 
             <LinearLayout

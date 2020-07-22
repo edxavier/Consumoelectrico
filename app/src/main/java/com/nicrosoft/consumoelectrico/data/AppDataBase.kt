@@ -8,12 +8,12 @@ import androidx.room.TypeConverters
 import com.nicrosoft.consumoelectrico.data.daos.ElectricMeterDAO
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
-import com.nicrosoft.consumoelectrico.data.entities.ElectricMeterReading
+import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
 
 @TypeConverters(Converters::class)
 @Database(entities = [
-    ElectricMeter::class, ElectricBillPeriod::class, PriceRange::class, ElectricMeterReading::class
+    ElectricMeter::class, ElectricBillPeriod::class, PriceRange::class, ElectricReading::class
 ], version = 1)
 abstract class AppDataBase:RoomDatabase() {
     abstract fun ElectricMeterDao(): ElectricMeterDAO

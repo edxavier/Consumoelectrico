@@ -217,6 +217,7 @@
     <string name="price_ranges">Price ranges</string>
     <string name="range_hint">Any value out of range will be calculated using the general established price.</string>
     <string name="add_price">Add price</string>
+    <string name="datetime_format">MMMM dd, yyy h:m a</string>
 
 
 </resources>

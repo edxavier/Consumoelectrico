@@ -2,7 +2,9 @@ package com.nicrosoft.consumoelectrico.data.daos
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
+import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
 
 @Dao
@@ -38,6 +40,10 @@ interface ElectricMeterDAO {
     @Query("SELECT * FROM price_range where from_kw BETWEEN :min AND :max OR to_kw BETWEEN :min AND :max OR (:min BETWEEN from_kw AND to_kw AND :max BETWEEN from_kw AND to_kw)")
     fun getOverlappingPrice(min:Int, max:Int): PriceRange?
 
-    //@Query("SELECT * FROM price_range where from_kw BETWEEN :min AND :max OR to_kw BETWEEN :min AND :max")
-    //fun countOverlappingPrices(min:Int, max:Int): List<PriceRange>
+    @Query("SELECT * FROM electric_meter_reading where period_id=:period_id order by reading_date desc limit 2")
+    fun getLastTwoElectricReadings(period_id: Int): List<ElectricReading>
+
+    @Query("SELECT * FROM electric_bill_period where meter_id=:meter_id order by from_date desc limit 1")
+    fun getLastElectricPeriod(meter_id: Int): ElectricBillPeriod?
+
 }

@@ -275,8 +275,6 @@
 
         </LinearLayout>
 
-        <include layout="@layout/item_electric_meter"/>
-
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

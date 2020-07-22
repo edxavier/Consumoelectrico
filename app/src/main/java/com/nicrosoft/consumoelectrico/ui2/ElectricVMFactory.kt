@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.nicrosoft.consumoelectrico.data.daos.ElectricMeterDAO
 
 @Suppress("UNCHECKED_CAST")
-class ElectricMeterVMFactory(
+class ElectricVMFactory(
         private val context: Context, private val dao:ElectricMeterDAO
 ): ViewModelProvider.NewInstanceFactory()  {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

@@ -61,6 +61,12 @@ fun Date.formatDate(context: Context): String{
     return sdf.format(this.time)
 }
 
+fun Date.formatDate(context: Context, includeTime:Boolean): String{
+    val myFormat = context.getString(R.string.datetime_format)
+    val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
+    return sdf.format(this.time)
+}
+
 fun String.removeZeroDecimal():String {
     return if(this.endsWith(".0") or this.endsWith(".00" ))
         this.split(".")[0]

@@ -55,10 +55,10 @@ class NuevaLecturaFragment : Fragment(), ReadingView {
         super.onViewCreated(view, savedInstanceState)
 
 
-        params = NuevaLecturaFragmentArgs.fromBundle(arguments!!)
+        params = NuevaLecturaFragmentArgs.fromBundle(requireArguments())
         if(!Prefs.getBoolean("isPurchased", false))
             requestInterstialAds()
-        navController = Navigation.findNavController(activity!!, R.id.nav_host_fragment)
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
 
         txt_medidor_name.text = params.name
@@ -70,18 +70,18 @@ class NuevaLecturaFragment : Fragment(), ReadingView {
         }
         if (lastReading == null) {
             endPeriodSw!!.isEnabled = false
-            MaterialDialog(context!!).show {
+            MaterialDialog(requireContext()).show {
                 title(R.string.notice)
                 message(R.string.first_reading_notice)
                 positiveButton(R.string.ok)
             }
         } else {
             txt_last_reading.text  = getString(R.string.last_reading_suggest,
-                    lastReading?.fecha_lectura?.formatDate(context!!), lastReading?.lectura?.toTwoDecimalPlace())
+                    lastReading?.fecha_lectura?.formatDate(requireContext()), lastReading?.lectura?.toTwoDecimalPlace())
         }
-        //txt_fecha.setText(fecha_lectura.time.formatDate(context!!))
+        //txt_fecha.setText(fecha_lectura.time.formatDate(requireContext()))
         txt_fecha.setOnClickListener {
-            MaterialDialog(context!!).show {
+            MaterialDialog(requireContext()).show {
                 datePicker (maxDate = maxDate){ _, date ->
                     fecha_lectura.timeInMillis = date.timeInMillis
                     updateDateLabel()
@@ -109,7 +109,7 @@ class NuevaLecturaFragment : Fragment(), ReadingView {
             lectura.lectura = txt_lectura!!.text.toString().trim { it <= ' ' }.toFloat()
             lectura.observacion = txtObservacion!!.text.toString()
             if (endPeriodSw!!.isChecked) {
-                MaterialDialog(context!!).show {
+                MaterialDialog(requireContext()).show {
                     title(R.string.activity_new_reading_dialog_title)
                     message(R.string.activity_new_reading_dialog_content)
                     positiveButton(R.string.end_period_psoitive) {
@@ -139,7 +139,7 @@ class NuevaLecturaFragment : Fragment(), ReadingView {
         validReading = false
     }
     private fun updateDateLabel(){
-        txt_fecha.setText(fecha_lectura.time.formatDate(context!!))
+        txt_fecha.setText(fecha_lectura.time.formatDate(requireContext()))
     }
     private fun checkIfValidReading() {
         txt_ilayout_fecha.isErrorEnabled = false

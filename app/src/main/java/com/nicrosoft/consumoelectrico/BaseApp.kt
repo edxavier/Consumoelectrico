@@ -10,7 +10,7 @@ import com.nicrosoft.consumoelectrico.data.AppDataBase
 import com.nicrosoft.consumoelectrico.utils.DumpDataService
 import com.nicrosoft.consumoelectrico.utils.ReminderService
 import com.nicrosoft.consumoelectrico.realm.Migration
-import com.nicrosoft.consumoelectrico.ui2.ElectricMeterVMFactory
+import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
 import com.pixplicity.easyprefs.library.Prefs
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -34,7 +34,7 @@ class BaseApp : MultiDexApplication(), KodeinAware {
         bind() from singleton { instance<AppDataBase>().ElectricMeterDao() }
 
         // ViewModelFactory
-        bind() from provider { ElectricMeterVMFactory(instance(), instance()) }
+        bind() from provider { ElectricVMFactory(instance(), instance()) }
     }
 
     override fun onCreate() {

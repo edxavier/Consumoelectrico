@@ -1,9 +1,6 @@
 package com.nicrosoft.consumoelectrico.ui2
 
 import android.content.Context
-import android.util.Log
-import androidx.databinding.Bindable
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.nicrosoft.consumoelectrico.data.daos.ElectricMeterDAO
@@ -29,7 +26,10 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
 
     suspend fun updateElectricMeter(meter:ElectricMeter) = withContext(Dispatchers.IO){ dao.updateElectricMeter(meter) }
     suspend fun updatePriceRange(price:PriceRange) = withContext(Dispatchers.IO){ dao.updatePriceRage(price) }
-
     suspend fun getOverlappingPrice(min:Int, max:Int) = withContext(Dispatchers.IO){ dao.getOverlappingPrice(min, max) }
+    suspend fun getLastTwoElectricReadings(periodId:Int) = withContext(Dispatchers.IO){ dao.getLastTwoElectricReadings(periodId) }
+    suspend fun getLastElectricPeriod(meterId:Int) = withContext(Dispatchers.IO){ dao.getLastElectricPeriod(meterId) }
+
+
 
 }
