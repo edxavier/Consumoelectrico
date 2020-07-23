@@ -176,7 +176,7 @@
     <string name="price_ranges">Faixas de preço</string>
     <string name="range_hint">Qualquer valor fora do intervalo será calculado usando o preço geral estabelecido.</string>
     <string name="add_price">Adicionar preço</string>
-    <string name="datetime_format">dd MMMM yyy h:m a</string>
+    <string name="datetime_format">dd MMMM yyy hh:mm a</string>
 
 
 </resources>

@@ -20,6 +20,9 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.databinding.FragmentNewEmeterReadingBinding
 import com.nicrosoft.consumoelectrico.utils.formatDate
 import com.nicrosoft.consumoelectrico.utils.getLastReading
+import com.nicrosoft.consumoelectrico.utils.hideKeyboard
+import com.nicrosoft.consumoelectrico.utils.setHidden
+import com.wajahatkarim3.easyvalidation.core.view_ktx.nonEmpty
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -67,6 +70,12 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
                     }else{
                         nrTxtLastReading.text = "---- kWh"
                         nrTxtReadingSince.text = "Never"
+                        nrEndPeriodSw.setHidden()
+                        MaterialDialog(requireContext()).show {
+                            title(R.string.notice)
+                            message(R.string.first_reading_notice)
+                            positiveButton(R.string.ok)
+                        }
                     }
                 }
             }
@@ -82,14 +91,57 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
                                 selectedDate.set(Calendar.MINUTE, time.get(Calendar.MINUTE))
                                 tempReading.readingDate.time = selectedDate.timeInMillis
                                 nrTxtReadingDate.setText(tempReading.readingDate.formatDate(requireContext(), includeTime = true))
+                                validateInputs()
                             }
                         }
                     }
                 }
             }
             nrFab.setOnClickListener {
-
+                launch {
+                    if(!validateInputs())
+                        return@launch
+                    if(!validateReadingValue())
+                        return@launch
+                    saveReading()
+                }
+                nrFab.hideKeyboard()
             }
         }
     }
+
+    private fun validateInputs():Boolean{
+        val message = getString(R.string.non_empty_message)
+        with(binding){
+            nrTxtIlayoutFecha.isErrorEnabled = true
+            if(nrTxtReadingDate.text.isNullOrEmpty()) {
+                nrTxtIlayoutFecha.error = message
+                return false
+            }else {
+                nrTxtIlayoutFecha.isErrorEnabled = false
+                nrTxtIlayoutFecha.error = ""
+            }
+            if(nrTxtMeterReading.text.isNullOrEmpty()) {
+                nrTxtMeterReading.error = message
+                nrTxtMeterReading.requestFocus()
+                return false
+            }
+            return true
+        }
+    }
+
+    private suspend fun validateReadingValue():Boolean{
+        val r = binding.nrTxtMeterReading.text.toString().toFloat()
+        val isValid = viewModel.validatedReadingValue(tempReading.readingDate, r)
+        if (!isValid){
+            binding.nrTxtMeterReading.error = getString(R.string.range_overlaps)
+        }
+        return isValid
+    }
+
+    private suspend fun saveReading() {
+
+    }
+
 }
+

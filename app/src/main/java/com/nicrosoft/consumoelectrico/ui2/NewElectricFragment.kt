@@ -27,6 +27,7 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
 import com.nicrosoft.consumoelectrico.databinding.FragmentNewElectricMeterBinding
 import com.nicrosoft.consumoelectrico.ui2.adapters.PriceRangeAdapter
+import com.nicrosoft.consumoelectrico.utils.hideKeyboard
 import com.nicrosoft.consumoelectrico.utils.setHidden
 import com.nicrosoft.consumoelectrico.utils.setVisible
 import com.wajahatkarim3.easyvalidation.core.view_ktx.nonEmpty
@@ -92,7 +93,7 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
                     updateMeter()
                 else
                     saveMeter()
-                hideKeyboard()
+                fab.hideKeyboard()
             }
             buttonAddPrice.setOnClickListener {
                 launch {
@@ -206,11 +207,6 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
                 return false
             return true
         }
-    }
-
-    private fun hideKeyboard() {
-        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
     override fun onPriceItemClickListener(price: PriceRange) {

@@ -6,6 +6,7 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
+import java.util.*
 
 @Dao
 interface ElectricMeterDAO {
@@ -22,6 +23,14 @@ interface ElectricMeterDAO {
     //PRICE RANGE
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun savePriceRage(range: PriceRange)
+
+    //PRICE READING
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    fun saveReading(reading: ElectricReading)
+
+    //PRICE READING
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    fun savePeriod(period: ElectricBillPeriod)
 
     @Delete
     fun deletePriceRage(range: PriceRange)
@@ -43,7 +52,13 @@ interface ElectricMeterDAO {
     @Query("SELECT * FROM electric_meter_reading where period_id=:period_id order by reading_date desc limit 2")
     fun getLastTwoElectricReadings(period_id: Int): List<ElectricReading>
 
+    @Query("SELECT * FROM electric_meter_reading order by reading_date desc limit 2")
+    fun getLastTwoElectricReadings(): List<ElectricReading>
+
     @Query("SELECT * FROM electric_bill_period where meter_id=:meter_id order by from_date desc limit 1")
     fun getLastElectricPeriod(meter_id: Int): ElectricBillPeriod?
+
+    @Query("SELECT count(*) FROM electric_meter_reading where reading_date>:readingDate AND reading_value<:readingValue")
+    fun countInvalidReadings(readingDate: Date, readingValue:Float): Int
 
 }

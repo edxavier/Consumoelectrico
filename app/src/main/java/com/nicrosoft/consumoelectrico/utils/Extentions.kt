@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -88,4 +89,10 @@ fun PopupMenu.enableIcons(){
         argTypes = Boolean::class.javaPrimitiveType!!
         menuHelper.javaClass.getDeclaredMethod("setForceShowIcon", argTypes).invoke(menuHelper, true)
     }catch (e:Exception){}
+}
+
+
+fun FloatingActionButton. hideKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(this.windowToken, 0)
 }
