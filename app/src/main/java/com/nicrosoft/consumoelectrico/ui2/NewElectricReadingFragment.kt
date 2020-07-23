@@ -66,7 +66,8 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
                 launch {
                     val lastTwoReadings =  m.getLastReading(viewModel)
                     if(lastTwoReadings.isNotEmpty()){
-                        nrTxtLastReading.text = "lastReading.readingValue.toString()"
+                        nrTxtLastReading.text = lastTwoReadings[0].readingValue.toString()
+                        nrTxtReadingSince.text = lastTwoReadings[0].readingDate.formatDate(requireContext(), true)
                     }else{
                         nrTxtLastReading.text = "---- kWh"
                         nrTxtReadingSince.text = "Never"
@@ -91,7 +92,7 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
                                 selectedDate.set(Calendar.MINUTE, time.get(Calendar.MINUTE))
                                 tempReading.readingDate.time = selectedDate.timeInMillis
                                 nrTxtReadingDate.setText(tempReading.readingDate.formatDate(requireContext(), includeTime = true))
-                                validateInputs()
+                                validateDatetime()
                             }
                         }
                     }
@@ -114,13 +115,8 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
         val message = getString(R.string.non_empty_message)
         with(binding){
             nrTxtIlayoutFecha.isErrorEnabled = true
-            if(nrTxtReadingDate.text.isNullOrEmpty()) {
-                nrTxtIlayoutFecha.error = message
+            if(!validateDatetime())
                 return false
-            }else {
-                nrTxtIlayoutFecha.isErrorEnabled = false
-                nrTxtIlayoutFecha.error = ""
-            }
             if(nrTxtMeterReading.text.isNullOrEmpty()) {
                 nrTxtMeterReading.error = message
                 nrTxtMeterReading.requestFocus()
@@ -129,18 +125,32 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
             return true
         }
     }
+    private fun validateDatetime():Boolean{
+        val message = getString(R.string.non_empty_message)
+        with(binding) {
+            return if (nrTxtReadingDate.text.isNullOrEmpty()) {
+                nrTxtIlayoutFecha.error = message
+                false
+            } else {
+                nrTxtIlayoutFecha.isErrorEnabled = false
+                nrTxtIlayoutFecha.error = ""
+                true
+            }
+        }
+    }
 
     private suspend fun validateReadingValue():Boolean{
         val r = binding.nrTxtMeterReading.text.toString().toFloat()
         val isValid = viewModel.validatedReadingValue(tempReading.readingDate, r)
         if (!isValid){
-            binding.nrTxtMeterReading.error = getString(R.string.range_overlaps)
+            binding.nrTxtMeterReading.error = getString(R.string.alert_over_range)
         }
         return isValid
     }
 
     private suspend fun saveReading() {
-
+        tempReading.readingValue = binding.nrTxtMeterReading.text.toString().toFloat()
+        viewModel.savedReading(tempReading, binding.meter!!.id!!)
     }
 
 }

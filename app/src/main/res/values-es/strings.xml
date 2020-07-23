@@ -58,7 +58,7 @@
     <string name="chart.legend.accumulated">Consumo acumulado (kWh)</string>
     <string name="chart.legend.estimate">Consumo estimado (kWh)</string>
 
-    <string name="alert_over_range">Valor fuera de rango</string>
+    <string name="alert_over_range">Lectura fuera de rango</string>
 
     <string name="cancel">Cancelar</string>
     <string name="options">Opciones</string>

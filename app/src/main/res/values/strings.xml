@@ -33,7 +33,7 @@
     <string name="end_period">End billing period</string>
     <string name="end_period_ask">Are you sure to finish the billing period on this date?</string>
     <string name="end_period_psoitive">Continue</string>
-    <string name="alert_over_range">Valor fuera de rango</string>
+    <string name="alert_over_range">Reading out of range</string>
     <string name="save">Save</string>
     <string name="settings.ac.period">Billing period (days)</string>
     <string name="settings.ac.period.limit">kWh limit by period</string>

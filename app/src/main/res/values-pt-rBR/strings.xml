@@ -45,7 +45,7 @@
     <string name="chart.legend.avg">Média (kWh)</string>
     <string name="chart.legend.accumulated">Consumo acumulado (kWh)</string>
     <string name="chart.legend.estimate">Consumo estimado</string>
-    <string name="alert_over_range">Valor fora de rango</string>
+    <string name="alert_over_range">Leitura fora da faixa</string>
     <string name="cancel">Cancelar</string>
     <string name="options">opções</string>
     <string name="share_app_msg">Grave e acompanhe facilmente o consumo de eletricidade de sua casa com este aplicativo</string>

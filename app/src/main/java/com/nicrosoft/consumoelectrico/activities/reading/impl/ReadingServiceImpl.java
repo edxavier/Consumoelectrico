@@ -149,7 +149,6 @@ public class ReadingServiceImpl implements ReadingService {
                     LocalDate end = new LocalDate(lectura.fecha_lectura);
                     //inicializar  variable p, para calcular los dias desde que inicio el periodo hasta la fecha de la lectura actual
                     Period p = new Period(start, end, PeriodType.days());
-
                     //Berificar si hay registro anterior y calcular, actualizar el registro siguiente si existe
                     // en teoria siempre existira un anterior que es el inicio de periodo, antes que eso ya no se puede agregar nada.
                     if(readingsBefore.size()>0) {

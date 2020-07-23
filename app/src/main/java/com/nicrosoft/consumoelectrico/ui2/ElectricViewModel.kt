@@ -11,6 +11,9 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.joda.time.LocalDate
+import org.joda.time.Period
+import org.joda.time.PeriodType
 import java.util.*
 
 class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) : ViewModel() {
@@ -32,21 +35,32 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     suspend fun updatePriceRange(price:PriceRange) = withContext(Dispatchers.IO){ dao.updatePriceRage(price) }
     suspend fun getOverlappingPrice(min:Int, max:Int) = withContext(Dispatchers.IO){ dao.getOverlappingPrice(min, max) }
 
-    suspend fun getLastTwoElectricReadings(periodId:Int) = withContext(Dispatchers.IO){ dao.getLastTwoElectricReadings(periodId) }
+    suspend fun getLastTwoElectricReadings(periodId:Int) = withContext(Dispatchers.IO){ dao.getLastTwoPeriodElectricReadings(periodId) }
     suspend fun getLastElectricPeriod(meterId:Int) = withContext(Dispatchers.IO){ dao.getLastElectricPeriod(meterId) }
 
     suspend fun validatedReadingValue(readingDate: Date, readingValue:Float):Boolean = withContext(Dispatchers.IO){
-        val invalids = dao.countInvalidReadings(readingDate, readingValue)
-        return@withContext invalids <= 0
+        val future = dao.countInvalidFutureReadings(readingDate, readingValue)
+        val past = dao.countInvalidPastReadings(readingDate, readingValue)
+        return@withContext future <= 0 && past <=0
     }
 
     suspend fun savedReading(reading: ElectricReading, meter_id: Int) = withContext(Dispatchers.IO){
-        var period = dao.getLastElectricPeriod(meter_id)
+        val period = dao.getLastElectricPeriod(meter_id)
         if (period!=null){
             reading.periodId = period.id
-            val lastPeriodReadings = dao.getLastTwoElectricReadings(period.id!!)
+            val lastPeriodReadings = dao.getLastTwoPeriodElectricReadings(period.id!!)
             if (lastPeriodReadings.isNotEmpty()){
-                val last = lastPeriodReadings.first()
+                val previous = lastPeriodReadings.first()
+                Log.e("EDER", "Existe almenos 1 lectura")
+                computeReading(reading, previous, period, false)
+            }else{
+                Log.e("EDER", "Periodo sin lecturaas")
+                //Si el periodo no tiene lecturas, cargar las ultimas lecturas del periodo anterior
+                val previousReadings = dao.getLastTwoMeterElectricReadings(meter_id)
+                if(previousReadings.isNotEmpty()){
+                    val previous = lastPeriodReadings.first()
+                    computeReading(reading, previous, period, true)
+                }
             }
         }else{
             //Si es el primer periodo crear de cero
@@ -55,13 +69,28 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     }
 
     private fun createFirstPeriod(reading: ElectricReading, meter_id: Int){
-        val newPeriod = ElectricBillPeriod(fromDate = reading.readingDate, meterId = meter_id)
+        val newPeriod = ElectricBillPeriod(fromDate = reading.readingDate, meterId = meter_id, toDate = reading.readingDate)
         dao.savePeriod(newPeriod)
         val period = dao.getLastElectricPeriod(meter_id)
         if(period!=null) {
             reading.periodId = period.id
             dao.saveReading(reading)
+            Log.e("EDER", "Primera lectura y periodo creado")
         }else
             Log.e("EDER", "ERROR AL CREAR PRIMER PERIODO")
     }
+
+    private fun computeReading(current:ElectricReading, previous:ElectricReading,
+                               period:ElectricBillPeriod, prevPeriodReading:Boolean){
+        val startDate = LocalDate(period.fromDate)
+        val endDate = LocalDate(current.readingDate)
+        //inicializar  variable p, para calcular las horas desde que inicio el periodo hasta la fecha de la lectura actual
+        val p = Period(startDate, endDate, PeriodType.hours())
+        current.kwConsumption = current.readingValue - previous.readingValue
+        if (!prevPeriodReading) {
+            current.kwAggConsumption = current.kwAggConsumption + previous.kwAggConsumption
+            current.consumptionHours = p.hours.toFloat()
+        }
+    }
+
 }
