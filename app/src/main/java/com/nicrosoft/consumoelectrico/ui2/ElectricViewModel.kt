@@ -23,6 +23,8 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
 
 
     fun getElectricMeterList() = dao.getMeters()
+    fun getPeriodMetersReadings(periodID:Int) = dao.getPeriodMetersReadings(periodID)
+    fun getAllMeterReadings(meterID:Int) = dao.getAllMeterReadings(meterID)
     fun getPriceList(meter_id:Int) = dao.getPriceRanges(meter_id)
 
     suspend fun saveElectricMeter(meter:ElectricMeter) = withContext(Dispatchers.IO){ dao.saveElectricMeter(meter) }
@@ -48,6 +50,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         val period = dao.getLastElectricPeriod(meter_id)
         if (period!=null){
             reading.periodId = period.id
+            reading.meterId = meter_id
             val lastPeriodReadings = dao.getLastTwoPeriodElectricReadings(period.id!!)
             if (lastPeriodReadings.isNotEmpty()){
                 val previous = lastPeriodReadings.first()
@@ -74,6 +77,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         val period = dao.getLastElectricPeriod(meter_id)
         if(period!=null) {
             reading.periodId = period.id
+            reading.meterId = meter_id
             dao.saveReading(reading)
             Log.e("EDER", "Primera lectura y periodo creado")
         }else
@@ -85,12 +89,17 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         val startDate = LocalDate(period.fromDate)
         val endDate = LocalDate(current.readingDate)
         //inicializar  variable p, para calcular las horas desde que inicio el periodo hasta la fecha de la lectura actual
-        val p = Period(startDate, endDate, PeriodType.hours())
+        val totalHours = Period(startDate, endDate, PeriodType.hours())
+        val previousHours = Period(LocalDate(previous.readingDate), endDate, PeriodType.hours())
         current.kwConsumption = current.readingValue - previous.readingValue
-        if (!prevPeriodReading) {
-            current.kwAggConsumption = current.kwAggConsumption + previous.kwAggConsumption
-            current.consumptionHours = p.hours.toFloat()
-        }
+        current.consumptionHours = totalHours.hours.toFloat()
+        current.consumptionPreviousHours = previousHours.hours.toFloat()
+        if (prevPeriodReading)
+            current.kwAggConsumption = current.kwConsumption
+        else
+            current.kwAggConsumption = current.kwConsumption + previous.kwAggConsumption
+        current.kwAvgConsumption = current.kwAggConsumption / current.consumptionHours
+        dao.saveReading(current)
     }
 
 }

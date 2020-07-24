@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.datetime.datePicker
 import com.afollestad.materialdialogs.datetime.dateTimePicker
 import com.afollestad.materialdialogs.datetime.timePicker
+import com.google.android.material.snackbar.Snackbar
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
@@ -28,6 +29,8 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
+import androidx.lifecycle.Observer
+import kotlinx.coroutines.delay
 
 
 class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
@@ -57,6 +60,13 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
         tempReading = ElectricReading()
         initUI()
+        viewModel.getAllMeterReadings(viewModel.meter.value!!.id!!).observe(viewLifecycleOwner, Observer { it ->
+            it.forEach {
+                Log.e("EDER", "${it.readingDate.formatDate(requireContext())} - " +
+                        "${it.readingValue} - ${it.kwConsumption} - ${it.kwAvgConsumption} " +
+                        "- ${it.kwAggConsumption} - ${it.consumptionPreviousHours} - ${it.consumptionHours}")
+            }
+        })
     }
 
     private fun initUI() {
@@ -105,6 +115,9 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
                     if(!validateReadingValue())
                         return@launch
                     saveReading()
+                    Snackbar.make(binding.coordinator, R.string.item_saved, Snackbar.LENGTH_LONG).show()
+                    delay(1100)
+                    navController.navigateUp()
                 }
                 nrFab.hideKeyboard()
             }

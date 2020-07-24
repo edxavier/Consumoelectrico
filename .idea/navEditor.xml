@@ -34,6 +34,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="electricReadingListFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-480" />
+                            <option name="y" value="236" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="listaLecturasFragment">
                     <value>
                       <LayoutPositions>

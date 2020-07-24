@@ -31,6 +31,7 @@ data class ElectricReading(
         @ColumnInfo(name = "kw_avg_consumption") var kwAvgConsumption:Float = 0f,
         @ColumnInfo(name = "kw_agg_consumption") var kwAggConsumption:Float = 0f,
         @ColumnInfo(name = "consumption_hours") var consumptionHours:Float = 0f,
+        @ColumnInfo(name = "consumption_previous_hours") var consumptionPreviousHours:Float = 0f,
         @ColumnInfo(name = "comments") var comments:String = ""
 
 )

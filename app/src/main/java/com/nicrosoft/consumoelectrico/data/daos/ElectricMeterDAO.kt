@@ -45,6 +45,11 @@ interface ElectricMeterDAO {
     @Query("SELECT * FROM electric_meter order by id desc")
     fun getMeters(): LiveData<List<ElectricMeter>>
 
+    @Query("SELECT * FROM electric_meter_reading where period_id=:periodId order by id desc")
+    fun getPeriodMetersReadings(periodId: Int): LiveData<List<ElectricReading>>
+    @Query("SELECT * FROM electric_meter_reading where period_id=:meterId order by id desc")
+    fun getAllMeterReadings(meterId: Int): LiveData<List<ElectricReading>>
+
     //Cargar los rangos que se sobreponen o contienen al rango especificado
     @Query("SELECT * FROM price_range where from_kw BETWEEN :min AND :max OR to_kw BETWEEN :min AND :max OR (:min BETWEEN from_kw AND to_kw AND :max BETWEEN from_kw AND to_kw)")
     fun getOverlappingPrice(min:Int, max:Int): PriceRange?

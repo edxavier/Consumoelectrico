@@ -14,10 +14,11 @@ import com.afollestad.materialdialogs.list.listItems
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
-import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter
-import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter.AdapterItemListener
+import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
+import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricReadingAdapter
 import com.nicrosoft.consumoelectrico.utils.*
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
+import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
 import kotlinx.android.synthetic.main.emeter_list_fragment.*
 import kotlinx.coroutines.launch
@@ -25,18 +26,18 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
+class ElectricReadingListFragment : ScopeFragment(), KodeinAware, ElectricReadingAdapter.AdapterItemListener {
     override val kodein by kodein()
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
 
 
     private lateinit var navController: NavController
-    private lateinit var adapter:ElectricMeterAdapter
+    private lateinit var adapter:ElectricReadingAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.emeter_list_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_electric_reading_list, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -49,10 +50,17 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
     }
     
     private fun loadData(){
-        viewModel.getElectricMeterList().observe(viewLifecycleOwner, Observer {
-            toggleMessageVisibility(it.isEmpty())
-            adapter.submitList(it)
-        })
+        launch {
+            val period = viewModel.getLastElectricPeriod(viewModel.meter.value!!.id!!)
+            if(period!=null) {
+                viewModel.getPeriodMetersReadings(period.id!!).observe(viewLifecycleOwner, Observer {
+                    toggleMessageVisibility(it.isEmpty())
+                    adapter.submitList(it)
+                })
+            }else{
+                toggleMessageVisibility(true)
+            }
+        }
     }
 
     private fun toggleMessageVisibility(isEmpty:Boolean){
@@ -67,33 +75,33 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
     }
 
     private fun initLayout() {
-        adapter = ElectricMeterAdapter(this)
+        adapter = ElectricReadingAdapter(this)
         val animAdapter = ScaleInAnimationAdapter(adapter)
         animAdapter.setFirstOnly(false)
         animAdapter.setInterpolator(OvershootInterpolator())
-        emeter_list.itemAnimator = ScaleInBottomAnimator()
+        emeter_list.itemAnimator = FadeInDownAnimator()
         emeter_list.adapter = animAdapter
         emeter_list.setHasFixedSize(true)
         emeter_list.hideFabButtonOnScroll(fab_new_electric_meter)
         fab_new_electric_meter.setOnClickListener {
-            val action = ElectricListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment()
-            navController.navigate(action)
+            //val action = ElectricListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment()
+            //navController.navigate(action)
         }
     }
 
-    override fun onItemClickListener(meter: ElectricMeter) {
+    override fun onItemClickListener(meter: ElectricReading) {
         MaterialDialog(requireContext()).show {
-            title(text = meter.name)
+            title(text = "meter.name")
             listItems(R.array.medidor_options) { _, index, _ ->
                 when(index){
                     0->{
-                        val action = ElectricListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment(editingItem = true)
+                        //val action = ElectricListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment(editingItem = true)
                         // ya que se comparte el VM se establece el objeto y asi evitar hacer consulta para cargarlo
-                        viewModel.selectedMeter(meter)
-                        navController.navigate(action)
+                        //viewModel.selectedMeter(meter)
+                        //navController.navigate(action)
                     }
                     1->{
-                        showDeleteConfirmDialog(meter)
+                        //showDeleteConfirmDialog(meter)
                     }
                 }
             }
@@ -101,19 +109,11 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
 
     }
 
-    override fun onItemDetailListener(meter: ElectricMeter) {
+    override fun onItemDetailListener(meter: ElectricReading) {
         launch {
-            viewModel.selectedMeter(meter)
-            val action = ElectricListFragmentDirections.actionNavEmaterListToElectricReadingListFragment()
-            navController.navigate(action)
-        }
-    }
-
-    override fun onItemNewReading(meter: ElectricMeter) {
-        launch {
-            viewModel.selectedMeter(meter)
-            val action = ElectricListFragmentDirections.actionNavEmaterListToNewEmeterReadingFragment()
-            navController.navigate(action)
+            //viewModel.selectedMeter(meter)
+            //val action = ElectricListFragmentDirections.actionNavEmaterListToNewEmeterReadingFragment()
+            //navController.navigate(action)
         }
     }
 

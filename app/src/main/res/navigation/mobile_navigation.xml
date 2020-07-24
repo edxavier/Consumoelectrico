@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/nav_emater_list">
+    app:startDestination="@id/nav_emater_list"
+    tools:ignore="UnusedNavigation">
 
     <compartir_app  android:id="@+id/nav_share"/>
     <valorar_app  android:id="@+id/nav_rate"/>
@@ -157,6 +158,13 @@
             app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_nav_emater_list_to_newEmeterReadingFragment"
             app:destination="@id/newEmeterReadingFragment" />
+        <action
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
+            android:id="@+id/action_nav_emater_list_to_electricReadingListFragment"
+            app:destination="@id/electricReadingListFragment" />
     </fragment>
 
     <fragment
@@ -179,4 +187,8 @@
             app:argType="boolean"
             android:defaultValue="false" />
     </fragment>
+    <fragment
+        android:id="@+id/electricReadingListFragment"
+        android:name="com.nicrosoft.consumoelectrico.ui2.ElectricReadingListFragment"
+        android:label="ElectricReadingListFragment" />
 </navigation>
