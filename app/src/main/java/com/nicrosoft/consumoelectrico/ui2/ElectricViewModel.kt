@@ -23,9 +23,9 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
 
 
     fun getElectricMeterList() = dao.getMeters()
-    fun getPeriodMetersReadings(periodID:Int) = dao.getPeriodMetersReadings(periodID)
-    fun getAllMeterReadings(meterID:Int) = dao.getAllMeterReadings(meterID)
-    fun getPriceList(meter_id:Int) = dao.getPriceRanges(meter_id)
+    fun getPeriodMetersReadings(periodCode:String) = dao.getPeriodMetersReadings(periodCode)
+    fun getAllMeterReadings(meterCode:String) = dao.getAllMeterReadings(meterCode)
+    fun getPriceList(meterCode:String) = dao.getPriceRanges(meterCode)
 
     suspend fun saveElectricMeter(meter:ElectricMeter) = withContext(Dispatchers.IO){ dao.saveElectricMeter(meter) }
     suspend fun savePrice(price:PriceRange) = withContext(Dispatchers.IO){ dao.savePriceRage(price) }
@@ -37,8 +37,8 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     suspend fun updatePriceRange(price:PriceRange) = withContext(Dispatchers.IO){ dao.updatePriceRage(price) }
     suspend fun getOverlappingPrice(min:Int, max:Int) = withContext(Dispatchers.IO){ dao.getOverlappingPrice(min, max) }
 
-    suspend fun getLastTwoElectricReadings(periodId:Int) = withContext(Dispatchers.IO){ dao.getLastTwoPeriodElectricReadings(periodId) }
-    suspend fun getLastElectricPeriod(meterId:Int) = withContext(Dispatchers.IO){ dao.getLastElectricPeriod(meterId) }
+    suspend fun getLastTwoElectricReadings(periodCode: String) = withContext(Dispatchers.IO){ dao.getLastTwoPeriodElectricReadings(periodCode) }
+    suspend fun getLastElectricPeriod(meterCode: String) = withContext(Dispatchers.IO){ dao.getLastElectricPeriod(meterCode) }
 
     suspend fun validatedReadingValue(readingDate: Date, readingValue:Float):Boolean = withContext(Dispatchers.IO){
         val future = dao.countInvalidFutureReadings(readingDate, readingValue)
@@ -46,12 +46,12 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         return@withContext future <= 0 && past <=0
     }
 
-    suspend fun savedReading(reading: ElectricReading, meter_id: Int) = withContext(Dispatchers.IO){
-        val period = dao.getLastElectricPeriod(meter_id)
+    suspend fun savedReading(reading: ElectricReading, meterCode: String) = withContext(Dispatchers.IO){
+        val period = dao.getLastElectricPeriod(meterCode)
         if (period!=null){
-            reading.periodId = period.id
-            reading.meterId = meter_id
-            val lastPeriodReadings = dao.getLastTwoPeriodElectricReadings(period.id!!)
+            reading.periodCode = period.code
+            reading.meterCode = meterCode
+            val lastPeriodReadings = dao.getLastTwoPeriodElectricReadings(period.code)
             if (lastPeriodReadings.isNotEmpty()){
                 val previous = lastPeriodReadings.first()
                 Log.e("EDER", "Existe almenos 1 lectura")
@@ -59,7 +59,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             }else{
                 Log.e("EDER", "Periodo sin lecturaas")
                 //Si el periodo no tiene lecturas, cargar las ultimas lecturas del periodo anterior
-                val previousReadings = dao.getLastTwoMeterElectricReadings(meter_id)
+                val previousReadings = dao.getLastTwoMeterElectricReadings(meterCode)
                 if(previousReadings.isNotEmpty()){
                     val previous = lastPeriodReadings.first()
                     computeReading(reading, previous, period, true)
@@ -67,17 +67,17 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             }
         }else{
             //Si es el primer periodo crear de cero
-            createFirstPeriod(reading,meter_id)
+            createFirstPeriod(reading,meterCode)
         }
     }
 
-    private fun createFirstPeriod(reading: ElectricReading, meter_id: Int){
-        val newPeriod = ElectricBillPeriod(fromDate = reading.readingDate, meterId = meter_id, toDate = reading.readingDate)
+    private fun createFirstPeriod(reading: ElectricReading, meterCode: String){
+        val newPeriod = ElectricBillPeriod(fromDate = reading.readingDate, meterCode = meterCode, toDate = reading.readingDate)
         dao.savePeriod(newPeriod)
-        val period = dao.getLastElectricPeriod(meter_id)
+        val period = dao.getLastElectricPeriod(meterCode)
         if(period!=null) {
-            reading.periodId = period.id
-            reading.meterId = meter_id
+            reading.periodCode = period.code
+            reading.meterCode = meterCode
             dao.saveReading(reading)
             Log.e("EDER", "Primera lectura y periodo creado")
         }else

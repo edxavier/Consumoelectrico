@@ -51,9 +51,9 @@ class ElectricReadingListFragment : ScopeFragment(), KodeinAware, ElectricReadin
     
     private fun loadData(){
         launch {
-            val period = viewModel.getLastElectricPeriod(viewModel.meter.value!!.id!!)
+            val period = viewModel.getLastElectricPeriod(viewModel.meter.value!!.code)
             if(period!=null) {
-                viewModel.getPeriodMetersReadings(period.id!!).observe(viewLifecycleOwner, Observer {
+                viewModel.getPeriodMetersReadings(period.code).observe(viewLifecycleOwner, Observer {
                     toggleMessageVisibility(it.isEmpty())
                     adapter.submitList(it)
                 })

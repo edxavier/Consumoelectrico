@@ -118,7 +118,7 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
     }
 
     private fun loadPrices(){
-        viewModel.getPriceList(viewModel.meter.value?.id!!).observe(viewLifecycleOwner, Observer {
+        viewModel.getPriceList(viewModel.meter.value!!.code).observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
             if(it.isEmpty()) {
                 binding.priceMessage.setVisible()
@@ -239,7 +239,7 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
                                     // si es asi eliminarlo y volverlo a crear, si no avisar que no se puede por que invade una rango diferente
                                     if(op.id == price.id){
                                         viewModel.deletePriceRange(price)
-                                        val newPrice = PriceRange(fromKw = from, toKw = to, price = dlg_txt_price_kw.text.toString().toFloat() , meterId =  price.meterId)
+                                        val newPrice = PriceRange(fromKw = from, toKw = to, price = dlg_txt_price_kw.text.toString().toFloat() , meterCode =  price.meterCode)
                                         viewModel.savePrice(newPrice)
                                         dismiss()
                                     }else {
@@ -290,7 +290,7 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
                                         dlg_txt_to_kw.error = getString(R.string.range_overlaps)
                                         dlg_txt_from_kw.requestFocus()
                                     }else{
-                                        val price = PriceRange(meterId = viewModel.meter.value!!.id!!)
+                                        val price = PriceRange(meterCode = viewModel.meter.value!!.code)
                                         price.fromKw = from
                                         price.toKw = to
                                         price.price = dlg_txt_price_kw.text.toString().toFloat()

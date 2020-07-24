@@ -60,7 +60,7 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
         tempReading = ElectricReading()
         initUI()
-        viewModel.getAllMeterReadings(viewModel.meter.value!!.id!!).observe(viewLifecycleOwner, Observer { it ->
+        viewModel.getAllMeterReadings(viewModel.meter.value!!.code).observe(viewLifecycleOwner, Observer { it ->
             it.forEach {
                 Log.e("EDER", "${it.readingDate.formatDate(requireContext())} - " +
                         "${it.readingValue} - ${it.kwConsumption} - ${it.kwAvgConsumption} " +
@@ -163,7 +163,8 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
 
     private suspend fun saveReading() {
         tempReading.readingValue = binding.nrTxtMeterReading.text.toString().toFloat()
-        viewModel.savedReading(tempReading, binding.meter!!.id!!)
+        tempReading.comments = binding.nrTxtReadingComments.text.toString()
+        viewModel.savedReading(tempReading, binding.meter!!.code)
     }
 
 }

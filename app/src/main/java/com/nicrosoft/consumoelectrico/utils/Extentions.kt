@@ -68,6 +68,22 @@ fun Date.formatDate(context: Context, includeTime:Boolean): String{
     return sdf.format(this.time)
 }
 
+fun Date.formatTimeAmPm(context: Context): String{
+    val myFormat = context.getString(R.string.datetime_am_pm)
+    val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
+    return sdf.format(this.time)
+}
+fun Date.formatDayMonth(context: Context): String{
+    val myFormat = context.getString(R.string.datetime_day_month)
+    val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
+    return sdf.format(this.time)
+}
+fun Date.formatYear(context: Context): String{
+    val myFormat = context.getString(R.string.datetime_year)
+    val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
+    return sdf.format(this.time)
+}
+
 fun String.removeZeroDecimal():String {
     return if(this.endsWith(".0") or this.endsWith(".00" ))
         this.split(".")[0]

@@ -218,6 +218,10 @@
     <string name="range_hint">Any value out of range will be calculated using the general established price.</string>
     <string name="add_price">Add price</string>
     <string name="datetime_format">MMMM dd, yyy hh:mm a</string>
+    <string name="datetime_am_pm" translatable="false">hh:mm a</string>
+    <string name="datetime_day_month">MMM dd</string>
+    <string name="datetime_year" translatable="false">yyyy</string>
+    <string name="period_consumption">Period Consumption</string>
 
 
 </resources>

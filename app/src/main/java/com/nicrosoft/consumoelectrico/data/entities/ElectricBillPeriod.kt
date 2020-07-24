@@ -1,9 +1,6 @@
 package com.nicrosoft.consumoelectrico.data.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import java.util.*
 
 
@@ -12,9 +9,10 @@ import java.util.*
         foreignKeys = [ForeignKey(
          entity = ElectricMeter::class,
                 onDelete = ForeignKey.CASCADE,
-                parentColumns = ["id"],
-                childColumns = ["meter_id"]
-        )]
+                parentColumns = ["code"],
+                childColumns = ["meter_code"]
+        )],
+        indices = [Index(value = ["code"], unique = true)]
 )
 data class ElectricBillPeriod(
         @PrimaryKey(autoGenerate = true) var id:Int? = null,
@@ -24,6 +22,6 @@ data class ElectricBillPeriod(
         @ColumnInfo(name = "active") var active:Boolean = true,
         @ColumnInfo(name = "total_bill") var totalBill:Float = 0f,
         @ColumnInfo(name = "total_kw") var totalKw:Float = 0f,
-        @ColumnInfo(name = "meter_id") var meterId:Int,
+        @ColumnInfo(name = "meter_code") var meterCode:String,
         @ColumnInfo(name = "created_at") var createdAt:Date = Date()
 )

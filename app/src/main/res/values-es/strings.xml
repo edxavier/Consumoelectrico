@@ -199,6 +199,8 @@
     <string name="range_hint">Cualquier valor fuera de rango se calculará utilizando el precio general establecido.s</string>
     <string name="add_price">Agregar precio</string>
     <string name="datetime_format">dd MMMM yyy hh:mm a</string>
+    <string name="datetime_day_month">dd MMM</string>
+    <string name="period_consumption">Consumo periodo</string>
 
 
 </resources>
