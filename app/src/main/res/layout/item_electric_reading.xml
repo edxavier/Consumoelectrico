@@ -20,7 +20,7 @@
             android:paddingStart="8dp"
             android:paddingTop="12dp"
             android:orientation="vertical"
-            android:layout_width="75dp"
+            android:layout_width="80dp"
             android:layout_height="match_parent">
 
             <TextView
@@ -41,7 +41,6 @@
                 android:textStyle="bold" />
             <TextView
                 android:id="@+id/r_txt_time"
-                android:textSize="12sp"
                 android:textColor="@color/md_grey_100"
                 android:text="09:10 am"
                 android:layout_width="match_parent"

@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/txt_meter_name"
+                    android:id="@+id/item_txt_meter_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_house"
@@ -47,7 +47,7 @@
                 <TextView
                     style="@style/TextAppearance.MaterialComponents.Overline"
                     android:background="@drawable/rectamgle"
-                    android:id="@+id/txt_meter_last_reading"
+                    android:id="@+id/item_txt_meter_last_reading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxWidth="200dp"
@@ -60,7 +60,7 @@
                     android:text="0000 Kwh" />
 
                 <TextView
-                    android:id="@+id/txt_meter_readed_since"
+                    android:id="@+id/item_txt_meter_readed_since"
                     android:textSize="12sp"
                     android:layout_marginBottom="8dp"
                     android:textColor="@color/md_white_1000"
@@ -82,7 +82,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content">
                     <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                        android:id="@+id/circular_progress"
+                        android:id="@+id/item_circular_progress"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         app:startAngle="180"
@@ -113,7 +113,7 @@
                     <TextView
                         android:fontFamily="@font/share_tech"
                         android:textColor="@color/md_red_500_75"
-                        android:id="@+id/exceso_consumo"
+                        android:id="@+id/item_consumption_excess"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -143,7 +143,7 @@
                         tools:ignore="MissingPrefix" />
 
                     <TextView
-                        android:id="@+id/txt_period_avg"
+                        android:id="@+id/item_txt_period_daily_avg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -166,7 +166,7 @@
                         android:layout_height="wrap_content" />
                     <TextView
                         android:visibility="visible"
-                        android:id="@+id/warning_msg"
+                        android:id="@+id/item_warning_msg"
                         android:layout_marginBottom="8dp"
                         android:textColor="@color/md_red_500"
                         android:fontFamily="@font/share_tech"
@@ -184,7 +184,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content">
                     <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                        android:id="@+id/circular_progress2"
+                        android:id="@+id/item_circular_progress2"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         app:startAngle="180"
@@ -212,7 +212,7 @@
                         />
 
                     <TextView
-                        android:id="@+id/exceso_periodo"
+                        android:id="@+id/item_period_day_excess"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"

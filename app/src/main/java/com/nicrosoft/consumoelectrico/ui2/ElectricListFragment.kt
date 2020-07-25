@@ -67,7 +67,7 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
     }
 
     private fun initLayout() {
-        adapter = ElectricMeterAdapter(this)
+        adapter = ElectricMeterAdapter(this, viewModel, this)
         val animAdapter = ScaleInAnimationAdapter(adapter)
         animAdapter.setFirstOnly(false)
         animAdapter.setInterpolator(OvershootInterpolator())

@@ -52,8 +52,8 @@ interface ElectricMeterDAO {
     fun getAllMeterReadings(meterCode: String): LiveData<List<ElectricReading>>
 
     //Cargar los rangos que se sobreponen o contienen al rango especificado
-    @Query("SELECT * FROM price_range where from_kw BETWEEN :min AND :max OR to_kw BETWEEN :min AND :max OR (:min BETWEEN from_kw AND to_kw AND :max BETWEEN from_kw AND to_kw)")
-    fun getOverlappingPrice(min:Int, max:Int): PriceRange?
+    @Query("SELECT * FROM price_range where meter_code=:meterCode AND from_kw BETWEEN :min AND :max OR to_kw BETWEEN :min AND :max OR (:min BETWEEN from_kw AND to_kw AND :max BETWEEN from_kw AND to_kw)")
+    fun getOverlappingPrice(min:Int, max:Int, meterCode: String): PriceRange?
 
     @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode order by reading_date desc limit 2")
     fun getLastTwoPeriodElectricReadings(periodCode: String): List<ElectricReading>
@@ -66,9 +66,9 @@ interface ElectricMeterDAO {
     fun getLastElectricPeriod(meterCode: String): ElectricBillPeriod?
 
 
-    @Query("SELECT count(*) FROM electric_meter_reading where reading_date>:readingDate AND reading_value<:readingValue")
-    fun countInvalidFutureReadings(readingDate: Date, readingValue:Float): Int
+    @Query("SELECT count(*) FROM electric_meter_reading where meter_code=:meterCode AND reading_date>:readingDate AND reading_value<:readingValue")
+    fun countInvalidFutureReadings(readingDate: Date, readingValue:Float, meterCode: String): Int
 
-    @Query("SELECT count(*) FROM electric_meter_reading where reading_date<:readingDate AND :readingValue<reading_value")
-    fun countInvalidPastReadings(readingDate: Date, readingValue:Float): Int
+    @Query("SELECT count(*) FROM electric_meter_reading where meter_code=:meterCode AND reading_date<:readingDate AND :readingValue<reading_value")
+    fun countInvalidPastReadings(readingDate: Date, readingValue:Float, meterCode: String): Int
 }

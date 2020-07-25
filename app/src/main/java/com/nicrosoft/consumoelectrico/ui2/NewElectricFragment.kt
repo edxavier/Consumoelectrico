@@ -233,7 +233,7 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
                             val from = dlg_txt_from_kw.text.toString().toInt()
                             val to = dlg_txt_to_kw.text.toString().toInt()
                             launch {
-                                val op = viewModel.getOverlappingPrice(from, to)
+                                val op = viewModel.getOverlappingPrice(from, to, binding.meter!!.code)
                                 if(op!= null){
                                     //Si existe rangos que incluyan los neuvos valores, verificar que no este dentro del mismo rango
                                     // si es asi eliminarlo y volverlo a crear, si no avisar que no se puede por que invade una rango diferente
@@ -284,7 +284,7 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
                                 val from = dlg_txt_from_kw.text.toString().toInt()
                                 val to = dlg_txt_to_kw.text.toString().toInt()
                                 launch {
-                                    val op = viewModel.getOverlappingPrice(from, to)
+                                    val op = viewModel.getOverlappingPrice(from, to, binding.meter!!.code)
                                     if(op!= null){
                                         dlg_txt_from_kw.error = getString(R.string.range_overlaps)
                                         dlg_txt_to_kw.error = getString(R.string.range_overlaps)

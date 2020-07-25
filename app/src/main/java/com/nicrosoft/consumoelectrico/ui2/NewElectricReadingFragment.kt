@@ -1,5 +1,6 @@
 package com.nicrosoft.consumoelectrico.ui2
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,10 +20,6 @@ import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.databinding.FragmentNewEmeterReadingBinding
-import com.nicrosoft.consumoelectrico.utils.formatDate
-import com.nicrosoft.consumoelectrico.utils.getLastReading
-import com.nicrosoft.consumoelectrico.utils.hideKeyboard
-import com.nicrosoft.consumoelectrico.utils.setHidden
 import com.wajahatkarim3.easyvalidation.core.view_ktx.nonEmpty
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
@@ -30,10 +27,18 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 import androidx.lifecycle.Observer
+import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
+import com.nicrosoft.consumoelectrico.utils.*
+import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.coroutines.delay
+import org.joda.time.LocalDate
+import org.joda.time.Period
+import org.joda.time.PeriodType
+import kotlin.math.min
 
 
 class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
+    private var period: ElectricBillPeriod? = null
     override val kodein by kodein()
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
@@ -43,6 +48,7 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
     private lateinit var params: NewElectricReadingFragmentArgs
     private lateinit var tempReading:ElectricReading
     private val currDatetime = Calendar.getInstance()
+    private val minDate = Calendar.getInstance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -69,6 +75,7 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
         })
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initUI() {
         binding.apply {
             meter = viewModel.meter.value
@@ -76,7 +83,14 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
                 launch {
                     val lastTwoReadings =  m.getLastReading(viewModel)
                     if(lastTwoReadings.isNotEmpty()){
-                        nrTxtLastReading.text = lastTwoReadings[0].readingValue.toString()
+                        nrTxtLastReading.text = "${lastTwoReadings[0].readingValue.toTwoDecimalPlace()} kWh"
+                        period = viewModel.getLastElectricPeriod(m.code)
+                        val p = Period(LocalDate(period?.fromDate), LocalDate(Date()), PeriodType.days())
+
+                        if(p.days <= m.periodLength-2)
+                            binding.nrEndPeriodSw.setHidden()
+                        else
+                            binding.nrEndPeriodSw.setVisible()
                         nrTxtReadingSince.text = lastTwoReadings[0].readingDate.formatDate(requireContext(), true)
                     }else{
                         nrTxtLastReading.text = "---- kWh"
@@ -91,8 +105,12 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
                 }
             }
             nrTxtReadingDate.setOnClickListener {
+                if(period!=null)
+                    minDate.timeInMillis = period?.fromDate!!.time
+                else
+                    minDate.timeInMillis = 0
                 MaterialDialog(requireContext()).show {
-                    datePicker(maxDate = currDatetime){ _, selectedDate ->
+                    datePicker(minDate= minDate, maxDate = currDatetime){ _, selectedDate ->
                         //tempReading.readingDate.time = selectedDate.timeInMillis
                         MaterialDialog(requireContext()).show {
                             cancelOnTouchOutside(false)
@@ -154,7 +172,7 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
 
     private suspend fun validateReadingValue():Boolean{
         val r = binding.nrTxtMeterReading.text.toString().toFloat()
-        val isValid = viewModel.validatedReadingValue(tempReading.readingDate, r)
+        val isValid = viewModel.validatedReadingValue(tempReading.readingDate, r, binding.meter!!.code)
         if (!isValid){
             binding.nrTxtMeterReading.error = getString(R.string.alert_over_range)
         }
@@ -164,7 +182,7 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
     private suspend fun saveReading() {
         tempReading.readingValue = binding.nrTxtMeterReading.text.toString().toFloat()
         tempReading.comments = binding.nrTxtReadingComments.text.toString()
-        viewModel.savedReading(tempReading, binding.meter!!.code)
+        viewModel.savedReading(tempReading, binding.meter!!.code, binding.nrEndPeriodSw.isChecked)
     }
 
 }
