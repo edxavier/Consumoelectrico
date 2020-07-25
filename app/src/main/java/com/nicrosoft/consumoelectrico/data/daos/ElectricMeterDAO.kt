@@ -48,6 +48,9 @@ interface ElectricMeterDAO {
     @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode order by id desc")
     fun getPeriodMetersReadings(periodCode: String): LiveData<List<ElectricReading>>
 
+    @Query("SELECT count(*) FROM electric_meter_reading where period_code=:periodCode")
+    fun getTotalPeriodReading(periodCode: String): Int
+
     @Query("SELECT * FROM electric_meter_reading where meter_code=:meterCode order by id desc")
     fun getAllMeterReadings(meterCode: String): LiveData<List<ElectricReading>>
 
@@ -55,11 +58,17 @@ interface ElectricMeterDAO {
     @Query("SELECT * FROM price_range where meter_code=:meterCode AND from_kw BETWEEN :min AND :max OR to_kw BETWEEN :min AND :max OR (:min BETWEEN from_kw AND to_kw AND :max BETWEEN from_kw AND to_kw)")
     fun getOverlappingPrice(min:Int, max:Int, meterCode: String): PriceRange?
 
-    @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode order by reading_date desc limit 2")
-    fun getLastTwoPeriodElectricReadings(periodCode: String): List<ElectricReading>
+    @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode order by reading_date desc limit 1")
+    fun getLastPeriodReading(periodCode: String): ElectricReading?
 
-    @Query("SELECT * FROM electric_meter_reading where meter_code=:meterCode order by reading_date desc limit 2")
-    fun getLastTwoMeterElectricReadings(meterCode: String): List<ElectricReading>
+    @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode AND reading_date>:readingDate limit 1")
+    fun getNextReading(periodCode: String, readingDate: Date): ElectricReading?
+
+    @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode AND reading_date<:readingDate limit 1")
+    fun getPreviousReading(periodCode: String, readingDate: Date): ElectricReading?
+
+    @Query("SELECT * FROM electric_meter_reading where meter_code=:meterCode AND reading_date<:readingDate order by reading_date desc limit 1")
+    fun getLastMeterReading(meterCode: String, readingDate: Date): ElectricReading?
 
 
     @Query("SELECT * FROM electric_bill_period where meter_code=:meterCode order by from_date desc limit 1")

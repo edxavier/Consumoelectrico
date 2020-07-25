@@ -37,7 +37,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     suspend fun updatePriceRange(price:PriceRange) = withContext(Dispatchers.IO){ dao.updatePriceRage(price) }
     suspend fun getOverlappingPrice(min:Int, max:Int, meterCode: String) = withContext(Dispatchers.IO){ dao.getOverlappingPrice(min, max, meterCode) }
 
-    suspend fun getLastTwoElectricReadings(periodCode: String) = withContext(Dispatchers.IO){ dao.getLastTwoPeriodElectricReadings(periodCode) }
+    suspend fun getLastPeriodReadings(periodCode: String) = withContext(Dispatchers.IO){ dao.getLastPeriodReading(periodCode) }
     suspend fun getLastElectricPeriod(meterCode: String) = withContext(Dispatchers.IO){ dao.getLastElectricPeriod(meterCode) }
 
     suspend fun validatedReadingValue(readingDate: Date, readingValue:Float, meterCode: String):Boolean = withContext(Dispatchers.IO){
@@ -51,19 +51,28 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         if (period!=null){
             reading.periodCode = period.code
             reading.meterCode = meterCode
-            val lastPeriodReadings = dao.getLastTwoPeriodElectricReadings(period.code)
-            if (lastPeriodReadings.isNotEmpty()){
-                val previous = lastPeriodReadings.first()
+            val totalReadings = dao.getTotalPeriodReading(period.code)
+            if (totalReadings>0){
                 Log.e("EDER", "Existe almenos 1 lectura")
-                computeReading(reading, previous, period, false)
-            }else{
-                Log.e("EDER", "Periodo sin lecturaas")
-                //Si el periodo no tiene lecturas, cargar las ultimas lecturas del periodo anterior
-                val previousReadings = dao.getLastTwoMeterElectricReadings(meterCode)
-                if(previousReadings.isNotEmpty()){
-                    val previous = lastPeriodReadings.first()
-                    computeReading(reading, previous, period, true)
+                val previous = dao.getPreviousReading(period.code, reading.readingDate)
+                val next = dao.getNextReading(period.code, reading.readingDate)
+                if(previous!=null) {
+                    Log.e("EDER", "HAY LECTURA PREVIA")
+                    computeReading(reading, previous, next, period, false)
+                }else {
+                    //No se encontro lecturas anterirores a la neuva en este periodo, esta pasa a ser la primera
+                    //Cargar ultima lectura del periodo aanterior
+                    Log.e("EDER", "No HAY LECTURA PREVIA")
+                    val previousReading = dao.getLastMeterReading(meterCode, reading.readingDate)
+                    computeReading(reading, previousReading!!, next, period, true)
                 }
+
+            }else{
+                //Si el periodo no tiene lecturas, cargar las ultimas lecturas del periodo anterior
+                val previousReading = dao.getLastMeterReading(meterCode, reading.readingDate)
+                val nextReading = null
+                if(previousReading!=null)
+                    computeReading(reading, previousReading, nextReading,  period, true)
             }
         }else{
             //Si es el primer periodo crear de cero
@@ -80,25 +89,34 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             reading.meterCode = meterCode
             dao.saveReading(reading)
             Log.e("EDER", "Primera lectura y periodo creado")
-        }else
-            Log.e("EDER", "ERROR AL CREAR PRIMER PERIODO")
+        }
     }
 
     private fun computeReading(current:ElectricReading, previous:ElectricReading,
-                               period:ElectricBillPeriod, prevPeriodReading:Boolean){
+                               next:ElectricReading?, period:ElectricBillPeriod, isFirstPeriodReading:Boolean){
         val startDate = LocalDate(period.fromDate)
         val endDate = LocalDate(current.readingDate)
         //inicializar  variable p, para calcular las horas desde que inicio el periodo hasta la fecha de la lectura actual
         val totalHours = Period(startDate, endDate, PeriodType.hours())
-        val previousHours = Period(LocalDate(previous.readingDate), endDate, PeriodType.hours())
+        var previousHours = Period(LocalDate(previous.readingDate), endDate, PeriodType.hours())
         current.kwConsumption = current.readingValue - previous.readingValue
         current.consumptionHours = totalHours.hours.toFloat()
         current.consumptionPreviousHours = previousHours.hours.toFloat()
-        if (prevPeriodReading)
+        if (isFirstPeriodReading)
             current.kwAggConsumption = current.kwConsumption
         else
             current.kwAggConsumption = current.kwConsumption + previous.kwAggConsumption
         current.kwAvgConsumption = current.kwAggConsumption / current.consumptionHours
+
+        if(next!=null){
+            Log.e("EDER", "HAY LECTURAS POSTERIORES")
+            previousHours = Period(LocalDate(current.readingDate), LocalDate(next.readingDate), PeriodType.hours())
+            next.kwConsumption = next.readingValue - current.readingValue
+            next.consumptionPreviousHours = previousHours.hours.toFloat()
+            next.kwAggConsumption = next.kwConsumption + current.kwAggConsumption
+            next.kwAvgConsumption = next.kwAggConsumption / next.consumptionHours
+        }
+
         dao.saveReading(current)
     }
 

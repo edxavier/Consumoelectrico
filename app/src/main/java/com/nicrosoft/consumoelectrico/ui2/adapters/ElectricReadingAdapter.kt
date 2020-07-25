@@ -41,15 +41,17 @@ class ElectricReadingAdapter(
                     this.r_txt_reading.text = reading.readingValue.toInt().toString()
                     this.r_txt_hourly_avg.text = String.format(Locale.getDefault(), "%.2f kWh", reading.kwAvgConsumption)
                     this.r_txt_daily_avg.text = String.format(Locale.getDefault(), "%.2f kWh", (reading.kwAvgConsumption*24))
+
                     this.r_txt_consumption.text = String.format(Locale.getDefault(), "%.2f kWh", reading.kwConsumption)
+                    this.r_txt_agg_consumption.text = String.format(Locale.getDefault(), "%.2f kWh", reading.kwAggConsumption)
+
                     this.r_txt_day_month.text = reading.readingDate.formatDayMonth(context)
                     this.r_txt_year.text = reading.readingDate.formatYear(context)
                     this.r_txt_time.text = reading.readingDate.formatTimeAmPm(context)
-                    this.r_txt_agg_consumption.text = String.format(Locale.getDefault(), "%.2f kWh", reading.kwAggConsumption)
                     if(reading.consumptionPreviousHours>48){
                         this.r_label_consumption.text = context.getString(R.string.label_consumption_since_last_reading, (reading.consumptionPreviousHours/24).toTwoDecimalPlace())
                     }else{
-                        this.r_label_consumption.text = "Consumo en ${reading.consumptionPreviousHours.toTwoDecimalPlace()} horas"
+                        this.r_label_consumption.text = context.getString(R.string.label_consumption_in_hours, (reading.consumptionPreviousHours).toTwoDecimalPlace())
                     }
                     if (reading.comments.isNullOrEmpty())
                         this.r_txt_observations.setHidden()

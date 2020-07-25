@@ -82,8 +82,8 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
             meter?.let { m ->
                 launch {
                     val lastTwoReadings =  m.getLastReading(viewModel)
-                    if(lastTwoReadings.isNotEmpty()){
-                        nrTxtLastReading.text = "${lastTwoReadings[0].readingValue.toTwoDecimalPlace()} kWh"
+                    if(lastTwoReadings!=null){
+                        nrTxtLastReading.text = "${lastTwoReadings.readingValue.toTwoDecimalPlace()} kWh"
                         period = viewModel.getLastElectricPeriod(m.code)
                         val p = Period(LocalDate(period?.fromDate), LocalDate(Date()), PeriodType.days())
 
@@ -91,7 +91,7 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
                             binding.nrEndPeriodSw.setHidden()
                         else
                             binding.nrEndPeriodSw.setVisible()
-                        nrTxtReadingSince.text = lastTwoReadings[0].readingDate.formatDate(requireContext(), true)
+                        nrTxtReadingSince.text = lastTwoReadings.readingDate.formatDate(requireContext(), true)
                     }else{
                         nrTxtLastReading.text = "---- kWh"
                         nrTxtReadingSince.text = "Never"
@@ -138,6 +138,15 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
                     navController.navigateUp()
                 }
                 nrFab.hideKeyboard()
+            }
+            nrEndPeriodSw.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked){
+                    MaterialDialog(requireContext()).show {
+                        title(R.string.end_period)
+                        message(R.string.end_period_notice)
+                        positiveButton(R.string.ok){}
+                    }
+                }
             }
         }
     }

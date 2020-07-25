@@ -144,6 +144,7 @@
     <string name="calculator.per_hour">Por hora</string>
     <string name="detail.period.readings">Lecturas del periodo</string>
     <string name="label_consumption_since_last_reading">Consumo en %1$s días</string>
+    <string name="label_consumption_in_hours">Consumo en %1$s horas</string>
     <string name="lecturas_desde_hasta">Lecturas del %1$s al %2$s</string>
     <string name="detail.chart1.title">Historial de consumo acumulado</string>
     <string name="detail.chart2.title">Historial de consumo promedio</string>
@@ -178,7 +179,7 @@
     <string name="folder_choose">Clic accept to choose current folder</string>
     <string name="lectura_editar_hint">Si se ha equivocado de fecha, por favor elimina y vuelve a ingresar el registro con la fecha correcta</string>
     <string name="edit">Editar</string>
-    <string name="non_empty_message">Porfavor especifique algun valor</string>
+    <string name="non_empty_message">Porfavor especifique algún valor</string>
 
     <string name="fix_charges_help">Indica la suma de todos los costos fijos reflejados en la factura, como el alumbrado público</string>
     <string name="limit_help">Consumo deseado al final de un período de facturación, ya sea por autocontrol o por descuentos.</string>
@@ -201,6 +202,7 @@
     <string name="datetime_format">dd MMMM yyy hh:mm a</string>
     <string name="datetime_day_month">dd MMM</string>
     <string name="period_consumption">Consumo periodo</string>
+    <string name="end_period_notice">Se cerrará este periodo con la lectura actual, asegúrate que la fecha y la lectura coincidan con los datos reflejados en tu factura eléctrica.</string>
 
 
 </resources>

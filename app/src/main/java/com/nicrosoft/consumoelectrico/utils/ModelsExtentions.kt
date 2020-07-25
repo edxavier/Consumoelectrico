@@ -5,11 +5,11 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.ui2.ElectricViewModel
 
 
-suspend fun ElectricMeter.getLastReading(viewModel:ElectricViewModel): List<ElectricReading> {
-    var lastReadings:List<ElectricReading> = ArrayList()
+suspend fun ElectricMeter.getLastReading(viewModel:ElectricViewModel): ElectricReading? {
+    var lastReadings:ElectricReading? = null
     val period = viewModel.getLastElectricPeriod(this.code)
     if (period!=null){
-        lastReadings = viewModel.getLastTwoElectricReadings(period.code)
+        lastReadings = viewModel.getLastPeriodReadings(period.code)
     }
     return lastReadings
 }

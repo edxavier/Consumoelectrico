@@ -152,6 +152,7 @@
     <string name="calculator.per_hour">Per hour</string>
     <string name="detail.period.readings">Period readings</string>
     <string name="label_consumption_since_last_reading">Consumption in %1$s days</string>
+    <string name="label_consumption_in_hours">Consumption in %1$s hours</string>
     <string name="lecturas_desde_hasta">Readings from %1$s to %2$s</string>
     <string name="detail.chart1.title">Accumulated consumption history</string>
     <string name="detail.chart2.title">Average consumption history</string>
@@ -222,6 +223,7 @@
     <string name="datetime_day_month">MMM dd</string>
     <string name="datetime_year" translatable="false">yyyy</string>
     <string name="period_consumption">Period Consumption</string>
+    <string name="end_period_notice">This period will close with the current reading, make sure that the date and the reading coincide with the data reflected on your electric bill.</string>
 
 
 </resources>

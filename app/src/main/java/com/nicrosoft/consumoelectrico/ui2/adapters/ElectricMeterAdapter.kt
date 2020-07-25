@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.ui2.ElectricViewModel
-import com.nicrosoft.consumoelectrico.utils.formatDate
 import com.nicrosoft.consumoelectrico.utils.getLastReading
 import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
 import kotlinx.android.synthetic.main.item_electric_meter.view.*
@@ -51,20 +50,19 @@ class ElectricMeterAdapter(
                     item_txt_meter_name.text = meter.name
                     scope.launch {
                         val lastReadings = meter.getLastReading(viewModel)
-                        if(lastReadings.isNotEmpty()){
-                            val last = lastReadings.first()
-                            item_txt_meter_last_reading.text = "${last.readingValue} kWh"
-                            val previousHours = Period(LocalDate(last.readingDate), LocalDate(Date()), PeriodType.hours())
+                        if(lastReadings!=null){
+                            item_txt_meter_last_reading.text = "${lastReadings.readingValue} kWh"
+                            val previousHours = Period(LocalDate(lastReadings.readingDate), LocalDate(Date()), PeriodType.hours())
                             if(previousHours.hours>=48)
                                 item_txt_meter_readed_since.text = "Hace ${previousHours.hours/24} dias"
                             else
                                 item_txt_meter_readed_since.text = "Hace ${previousHours.hours} horas"
-                            item_txt_period_daily_avg.text = (last.kwAvgConsumption*24).toTwoDecimalPlace()
+                            item_txt_period_daily_avg.text = (lastReadings.kwAvgConsumption*24).toTwoDecimalPlace()
                             item_circular_progress.maxProgress = meter.maxKwLimit.toDouble()
                             item_circular_progress2.maxProgress = meter.periodLength.toDouble()
 
-                            item_circular_progress.setCurrentProgress(last.kwAggConsumption.toDouble())
-                            item_circular_progress2.setCurrentProgress((last.consumptionHours/24).toDouble())
+                            item_circular_progress.setCurrentProgress(lastReadings.kwAggConsumption.toDouble())
+                            item_circular_progress2.setCurrentProgress((lastReadings.consumptionHours/24).toDouble())
                         }
                     }
                 }
