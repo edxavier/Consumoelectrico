@@ -224,6 +224,10 @@
     <string name="datetime_year" translatable="false">yyyy</string>
     <string name="period_consumption">Period Consumption</string>
     <string name="end_period_notice">This period will close with the current reading, make sure that the date and the reading coincide with the data reflected on your electric bill.</string>
+    <string name="title_activity_electric_details">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 
 </resources>

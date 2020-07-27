@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    tools:ignore="UnusedNavigation"
+    app:startDestination="@id/nav_electric_readings">
+
+    <fragment
+        android:id="@+id/nav_electric_readings"
+        android:name="com.nicrosoft.consumoelectrico.ui2.ElectricReadingListFragment"
+        android:label="ElectricReadingListFragment" />
+    <fragment
+        android:id="@+id/nav_electric_details"
+        android:name="com.nicrosoft.consumoelectrico.ElectricDetailsFragment"
+        android:label="fragment_electric_details"
+        tools:layout="@layout/fragment_electric_details" />
+    <fragment
+        android:id="@+id/nav_electric_load"
+        android:name="com.nicrosoft.consumoelectrico.ElectricLoadFragment"
+        android:label="fragment_electric_load"
+        tools:layout="@layout/fragment_electric_load" />
+</navigation>

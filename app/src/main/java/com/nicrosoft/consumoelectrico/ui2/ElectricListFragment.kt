@@ -1,5 +1,6 @@
 package com.nicrosoft.consumoelectrico.ui2
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +44,7 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
         super.onActivityCreated(savedInstanceState)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
 
         initLayout()
         loadData()
@@ -105,7 +107,9 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
         launch {
             viewModel.selectedMeter(meter)
             val action = ElectricListFragmentDirections.actionNavEmaterListToElectricReadingListFragment()
-            navController.navigate(action)
+            //navController.navigate(action)
+            val intent = Intent(requireContext(), ElectricDetailsActivity::class.java).apply { putExtra("meterCode", meter.code) }
+            startActivity(intent)
         }
     }
 

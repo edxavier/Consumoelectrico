@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
+import androidx.activity.addCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -44,6 +45,7 @@ class ElectricReadingListFragment : ScopeFragment(), KodeinAware, ElectricReadin
         super.onActivityCreated(savedInstanceState)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
+        requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
 
         initLayout()
         loadData()

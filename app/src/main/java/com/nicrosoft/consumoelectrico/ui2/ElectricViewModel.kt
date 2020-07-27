@@ -63,20 +63,22 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
                     computeReading(reading, previous, next, period, false)
                     period.totalKw = dao.getTotalPeriodKw(period.code)
                     dao.updatePeriod(period)
-                    if(terminatePeriod)
-                        terminatePeriod(reading, period)
+                    if(terminatePeriod) {terminatePeriod(reading, period, meterCode)}else{}
                 }else {
                     //No se encontro lecturas anterirores a la neuva en este periodo, esta pasa a ser la primera
                     //Cargar ultima lectura del periodo aanterior
                     val previousReading = dao.getLastMeterReading(meterCode, reading.readingDate)
                     computeReading(reading, previousReading!!, next, period, true)
+                    period.totalKw = dao.getTotalPeriodKw(period.code)
+                    dao.updatePeriod(period)
                 }
             }else{
                 //Si el periodo no tiene lecturas, cargar las ultimas lecturas del periodo anterior
                 val previousReading = dao.getLastMeterReading(meterCode, reading.readingDate)
                 val nextReading = null
-                if(previousReading!=null)
-                    computeReading(reading, previousReading, nextReading,  period, true)
+                if(previousReading!=null){
+                    computeReading(reading, previousReading, nextReading,  period, true)}else{}
+
             }
         }else{
             //Si es el primer periodo crear de cero
@@ -124,8 +126,33 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         dao.saveReading(current)
     }
 
-    fun terminatePeriod(current:ElectricReading, period:ElectricBillPeriod){
+    @ExperimentalTime
+    fun terminatePeriod(current:ElectricReading, period:ElectricBillPeriod, meterCode: String){
+        //Crear nuevo periodo, cerrar el actual y reasignar toda lectura posterior al nuevo periodo
+        val newPeriod = ElectricBillPeriod(fromDate = current.readingDate, meterCode = meterCode, toDate = current.readingDate)
         period.toDate = current.readingDate
         period.active = false
+        period.totalKw = dao.getTotalPeriodKw(period.code)
+        dao.updatePeriod(period)
+        dao.savePeriod(newPeriod)
+        val laterReadings = dao.getReadingsAfter(period.code, current.readingDate)
+        laterReadings.forEachIndexed { index, electricReading ->
+            Log.e("EDER", "Reasignado lecturas")
+            //Asignar lecturas al nuevo periodo
+            electricReading.periodCode = newPeriod.code
+            if(index==0){
+                electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(newPeriod.fromDate).toFloat()
+                //electricReading.consumptionPreviousHours = electricReading.readingDate.hoursSinceDate(newPeriod.fromDate).toFloat()
+                electricReading.kwAggConsumption = electricReading.kwConsumption
+                electricReading.kwAvgConsumption = electricReading.kwAggConsumption / electricReading.consumptionHours
+            }else{
+                val prev = laterReadings[index-1]
+                electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(newPeriod.fromDate).toFloat()
+                //electricReading.consumptionPreviousHours = electricReading.readingDate.hoursSinceDate(newPeriod.fromDate).toFloat()
+                electricReading.kwAggConsumption = electricReading.kwConsumption + prev.kwAggConsumption
+                electricReading.kwAvgConsumption = electricReading.kwAggConsumption / electricReading.consumptionHours
+            }
+            dao.updateElectricReading(electricReading)
+        }
     }
 }

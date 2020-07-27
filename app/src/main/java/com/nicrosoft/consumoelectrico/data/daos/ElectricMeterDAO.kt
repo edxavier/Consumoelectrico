@@ -71,6 +71,9 @@ interface ElectricMeterDAO {
     @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode AND reading_date<:readingDate order by reading_date desc limit 1")
     fun getPreviousReading(periodCode: String, readingDate: Date): ElectricReading?
 
+    @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode AND reading_date>:readingDate order by reading_date")
+    fun getReadingsAfter(periodCode: String, readingDate: Date): List<ElectricReading>
+
     @Query("SELECT * FROM electric_meter_reading where meter_code=:meterCode AND reading_date<:readingDate order by reading_date desc limit 1")
     fun getLastMeterReading(meterCode: String, readingDate: Date): ElectricReading?
 
