@@ -9,12 +9,15 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
+import com.nicrosoft.consumoelectrico.utils.formatDate
+import com.nicrosoft.consumoelectrico.utils.hoursSinceDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.joda.time.LocalDate
 import org.joda.time.Period
 import org.joda.time.PeriodType
 import java.util.*
+import kotlin.time.ExperimentalTime
 
 class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) : ViewModel() {
 
@@ -46,6 +49,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         return@withContext future <= 0 && past <=0
     }
 
+    @ExperimentalTime
     suspend fun savedReading(reading: ElectricReading, meterCode: String, terminatePeriod:Boolean) = withContext(Dispatchers.IO){
         val period = dao.getLastElectricPeriod(meterCode)
         if (period!=null){
@@ -53,20 +57,20 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             reading.meterCode = meterCode
             val totalReadings = dao.getTotalPeriodReading(period.code)
             if (totalReadings>0){
-                Log.e("EDER", "Existe almenos 1 lectura")
                 val previous = dao.getPreviousReading(period.code, reading.readingDate)
                 val next = dao.getNextReading(period.code, reading.readingDate)
                 if(previous!=null) {
-                    Log.e("EDER", "HAY LECTURA PREVIA")
                     computeReading(reading, previous, next, period, false)
+                    period.totalKw = dao.getTotalPeriodKw(period.code)
+                    dao.updatePeriod(period)
+                    if(terminatePeriod)
+                        terminatePeriod(reading, period)
                 }else {
                     //No se encontro lecturas anterirores a la neuva en este periodo, esta pasa a ser la primera
                     //Cargar ultima lectura del periodo aanterior
-                    Log.e("EDER", "No HAY LECTURA PREVIA")
                     val previousReading = dao.getLastMeterReading(meterCode, reading.readingDate)
                     computeReading(reading, previousReading!!, next, period, true)
                 }
-
             }else{
                 //Si el periodo no tiene lecturas, cargar las ultimas lecturas del periodo anterior
                 val previousReading = dao.getLastMeterReading(meterCode, reading.readingDate)
@@ -92,32 +96,36 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         }
     }
 
+    @ExperimentalTime
     private fun computeReading(current:ElectricReading, previous:ElectricReading,
                                next:ElectricReading?, period:ElectricBillPeriod, isFirstPeriodReading:Boolean){
-        val startDate = LocalDate(period.fromDate)
-        val endDate = LocalDate(current.readingDate)
         //inicializar  variable p, para calcular las horas desde que inicio el periodo hasta la fecha de la lectura actual
-        val totalHours = Period(startDate, endDate, PeriodType.hours())
-        var previousHours = Period(LocalDate(previous.readingDate), endDate, PeriodType.hours())
+        val totalHours = current.readingDate.hoursSinceDate(period.fromDate)
+        var previousHours = current.readingDate.hoursSinceDate(previous.readingDate)
+
         current.kwConsumption = current.readingValue - previous.readingValue
-        current.consumptionHours = totalHours.hours.toFloat()
-        current.consumptionPreviousHours = previousHours.hours.toFloat()
+        current.consumptionHours = totalHours.toFloat()
+        current.consumptionPreviousHours = previousHours.toFloat()
         if (isFirstPeriodReading)
             current.kwAggConsumption = current.kwConsumption
         else
             current.kwAggConsumption = current.kwConsumption + previous.kwAggConsumption
         current.kwAvgConsumption = current.kwAggConsumption / current.consumptionHours
 
-        if(next!=null){
+        next?.let {
             Log.e("EDER", "HAY LECTURAS POSTERIORES")
-            previousHours = Period(LocalDate(current.readingDate), LocalDate(next.readingDate), PeriodType.hours())
+            previousHours = next.readingDate.hoursSinceDate(current.readingDate)
             next.kwConsumption = next.readingValue - current.readingValue
-            next.consumptionPreviousHours = previousHours.hours.toFloat()
+            next.consumptionPreviousHours = previousHours.toFloat()
             next.kwAggConsumption = next.kwConsumption + current.kwAggConsumption
             next.kwAvgConsumption = next.kwAggConsumption / next.consumptionHours
+            dao.updateElectricReading(next)
         }
-
         dao.saveReading(current)
     }
 
+    fun terminatePeriod(current:ElectricReading, period:ElectricBillPeriod){
+        period.toDate = current.readingDate
+        period.active = false
+    }
 }

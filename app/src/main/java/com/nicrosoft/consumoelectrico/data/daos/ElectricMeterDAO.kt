@@ -19,6 +19,10 @@ interface ElectricMeterDAO {
     @Update
     fun updateElectricMeter(meter: ElectricMeter):Int
 
+    @Update
+    fun updateElectricReading(reading: ElectricReading):Int
+    @Update
+    fun updatePeriod(reading: ElectricBillPeriod):Int
 
     //PRICE RANGE
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -45,7 +49,7 @@ interface ElectricMeterDAO {
     @Query("SELECT * FROM electric_meter order by id desc")
     fun getMeters(): LiveData<List<ElectricMeter>>
 
-    @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode order by id desc")
+    @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode order by reading_date desc")
     fun getPeriodMetersReadings(periodCode: String): LiveData<List<ElectricReading>>
 
     @Query("SELECT count(*) FROM electric_meter_reading where period_code=:periodCode")
@@ -61,10 +65,10 @@ interface ElectricMeterDAO {
     @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode order by reading_date desc limit 1")
     fun getLastPeriodReading(periodCode: String): ElectricReading?
 
-    @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode AND reading_date>:readingDate limit 1")
+    @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode AND reading_date>:readingDate order by reading_date asc limit 1")
     fun getNextReading(periodCode: String, readingDate: Date): ElectricReading?
 
-    @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode AND reading_date<:readingDate limit 1")
+    @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode AND reading_date<:readingDate order by reading_date desc limit 1")
     fun getPreviousReading(periodCode: String, readingDate: Date): ElectricReading?
 
     @Query("SELECT * FROM electric_meter_reading where meter_code=:meterCode AND reading_date<:readingDate order by reading_date desc limit 1")
@@ -80,4 +84,8 @@ interface ElectricMeterDAO {
 
     @Query("SELECT count(*) FROM electric_meter_reading where meter_code=:meterCode AND reading_date<:readingDate AND :readingValue<reading_value")
     fun countInvalidPastReadings(readingDate: Date, readingValue:Float, meterCode: String): Int
+
+    @Query("SELECT sum(kw_consumption) FROM electric_meter_reading where period_code=:periodCode")
+    fun getTotalPeriodKw(periodCode: String): Float
+
 }

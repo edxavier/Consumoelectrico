@@ -13,6 +13,8 @@ import com.nicrosoft.consumoelectrico.R
 import kotlinx.android.synthetic.main.emeter_list_fragment.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.time.DurationUnit
+import kotlin.time.ExperimentalTime
 
 
 fun SwipeRefreshLayout.setAppColors(){
@@ -66,6 +68,13 @@ fun Date.formatDate(context: Context, includeTime:Boolean): String{
     val myFormat = context.getString(R.string.datetime_format)
     val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
     return sdf.format(this.time)
+}
+
+@ExperimentalTime
+fun Date.hoursSinceDate(prevDate:Date): Long{
+    return try {
+        DurationUnit.HOURS.convert(this.time - prevDate.time , DurationUnit.MILLISECONDS)
+    }catch (e:Exception){ -1 }
 }
 
 fun Date.formatTimeAmPm(context: Context): String{

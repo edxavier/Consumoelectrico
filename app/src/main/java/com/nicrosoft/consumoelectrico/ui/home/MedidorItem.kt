@@ -55,7 +55,7 @@ class MedidorItem(
             periodo = presenter.getActivePeriod(medidor)
             periodo?.let {
                 val lectura: Lectura = presenter.getLastReading(periodo, true)
-                lectura?.let {
+                lectura.let {
                     val avg_limit = kw_limit / period_limit.toFloat()
                     if (avg_limit < lectura.consumo_promedio) {
                         warning_icon.setVisible()

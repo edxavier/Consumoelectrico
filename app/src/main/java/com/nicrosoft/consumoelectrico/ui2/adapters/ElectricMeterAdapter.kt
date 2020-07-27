@@ -10,15 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.ui2.ElectricViewModel
-import com.nicrosoft.consumoelectrico.utils.getLastReading
-import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
+import com.nicrosoft.consumoelectrico.utils.*
 import kotlinx.android.synthetic.main.item_electric_meter.view.*
+import kotlinx.android.synthetic.main.medidor_item.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
 import org.joda.time.Period
 import org.joda.time.PeriodType
 import java.util.*
+import kotlin.time.ExperimentalTime
 
 class ElectricMeterAdapter(
         private val itemClickListener: AdapterItemListener,
@@ -37,6 +38,7 @@ class ElectricMeterAdapter(
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
+        @ExperimentalTime
         @SuppressLint("SetTextI18n")
         fun bind(meter: ElectricMeter, listener: AdapterItemListener?,
                  viewModel: ElectricViewModel,
@@ -50,19 +52,41 @@ class ElectricMeterAdapter(
                     item_txt_meter_name.text = meter.name
                     scope.launch {
                         val lastReadings = meter.getLastReading(viewModel)
-                        if(lastReadings!=null){
-                            item_txt_meter_last_reading.text = "${lastReadings.readingValue} kWh"
-                            val previousHours = Period(LocalDate(lastReadings.readingDate), LocalDate(Date()), PeriodType.hours())
-                            if(previousHours.hours>=48)
-                                item_txt_meter_readed_since.text = "Hace ${previousHours.hours/24} dias"
+                        lastReadings?.let{
+                            item_txt_meter_last_reading.text = "${lastReadings.readingValue.toInt()} kWh"
+                            val previousHours = Date().hoursSinceDate(lastReadings.readingDate)
+                            if(previousHours>=48)
+                                item_txt_meter_readed_since.text = "Hace ${previousHours/24} dias"
                             else
-                                item_txt_meter_readed_since.text = "Hace ${previousHours.hours} horas"
+                                item_txt_meter_readed_since.text = "Hace ${previousHours} horas"
                             item_txt_period_daily_avg.text = (lastReadings.kwAvgConsumption*24).toTwoDecimalPlace()
                             item_circular_progress.maxProgress = meter.maxKwLimit.toDouble()
                             item_circular_progress2.maxProgress = meter.periodLength.toDouble()
 
                             item_circular_progress.setCurrentProgress(lastReadings.kwAggConsumption.toDouble())
                             item_circular_progress2.setCurrentProgress((lastReadings.consumptionHours/24).toDouble())
+                            val avgLimit = meter.maxKwLimit / meter.periodLength
+                            if(lastReadings.kwAvgConsumption*24>avgLimit){
+                                item_warning_msg.setVisible()
+                                item_warning_icon.setVisible()
+                            }else{
+                                item_warning_msg.setHidden()
+                                item_warning_icon.setHidden()
+                            }
+                            if(lastReadings.consumptionHours/24> meter.periodLength){
+                                val v = context.getString(R.string.days_consumed_val, lastReadings.consumptionHours/24-meter.periodLength)
+                                item_period_day_excess.setVisible()
+                                item_period_day_excess.text = "+$v"
+                            }else
+                                item_period_day_excess.setHidden()
+
+                            if(lastReadings.kwAggConsumption> meter.maxKwLimit){
+                                val v = context.getString(R.string.days_consumed_val, lastReadings.kwAggConsumption-meter.maxKwLimit)
+                                item_consumption_excess.setVisible()
+                                item_consumption_excess.text = "+$v"
+                            }else
+                                item_consumption_excess.setHidden()
+
                         }
                     }
                 }
@@ -74,6 +98,7 @@ class ElectricMeterAdapter(
         return ViewHolder(LayoutInflater.from(parent.context!!).inflate(R.layout.item_electric_meter, parent, false))
     }
 
+    @ExperimentalTime
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position), itemClickListener, viewModel, scope)
     }

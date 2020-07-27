@@ -35,6 +35,7 @@ import org.joda.time.LocalDate
 import org.joda.time.Period
 import org.joda.time.PeriodType
 import kotlin.math.min
+import kotlin.time.ExperimentalTime
 
 
 class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
@@ -58,6 +59,7 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
         return binding.root
     }
 
+    @ExperimentalTime
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
@@ -68,13 +70,14 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
         initUI()
         viewModel.getAllMeterReadings(viewModel.meter.value!!.code).observe(viewLifecycleOwner, Observer { it ->
             it.forEach {
-                Log.e("EDER", "${it.readingDate.formatDate(requireContext())} - " +
-                        "${it.readingValue} - ${it.kwConsumption} - ${it.kwAvgConsumption} " +
-                        "- ${it.kwAggConsumption} - ${it.consumptionPreviousHours} - ${it.consumptionHours}")
+                //Log.e("EDER", "Fecha: ${it.readingDate.formatDate(requireContext())} - " +
+                  //      "Lectura: ${it.readingValue} - Consumo: ${it.kwConsumption} - AVG: ${it.kwAvgConsumption} " +
+                    //    "- TOTAL: ${it.kwAggConsumption} - HrPrev${it.consumptionPreviousHours} - TotalHr${it.consumptionHours}")
             }
         })
     }
 
+    @ExperimentalTime
     @SuppressLint("SetTextI18n")
     private fun initUI() {
         binding.apply {
@@ -84,14 +87,8 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
                     val lastTwoReadings =  m.getLastReading(viewModel)
                     if(lastTwoReadings!=null){
                         nrTxtLastReading.text = "${lastTwoReadings.readingValue.toTwoDecimalPlace()} kWh"
-                        period = viewModel.getLastElectricPeriod(m.code)
-                        val p = Period(LocalDate(period?.fromDate), LocalDate(Date()), PeriodType.days())
-
-                        if(p.days <= m.periodLength-2)
-                            binding.nrEndPeriodSw.setHidden()
-                        else
-                            binding.nrEndPeriodSw.setVisible()
                         nrTxtReadingSince.text = lastTwoReadings.readingDate.formatDate(requireContext(), true)
+                        verifyEndPeriod(Date())
                     }else{
                         nrTxtLastReading.text = "---- kWh"
                         nrTxtReadingSince.text = "Never"
@@ -121,6 +118,7 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
                                 tempReading.readingDate.time = selectedDate.timeInMillis
                                 nrTxtReadingDate.setText(tempReading.readingDate.formatDate(requireContext(), includeTime = true))
                                 validateDatetime()
+                                verifyEndPeriod(selectedDate.time)
                             }
                         }
                     }
@@ -147,6 +145,19 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
                         positiveButton(R.string.ok){}
                     }
                 }
+            }
+        }
+    }
+
+    private fun verifyEndPeriod(date: Date) {
+        launch {
+            period = viewModel.getLastElectricPeriod(viewModel.meter.value!!.code)
+            val p = Period(LocalDate(period?.fromDate), LocalDate(date), PeriodType.days())
+            if(p.days <= viewModel.meter.value!!.periodLength-5) {
+                binding.nrEndPeriodSw.setHidden()
+            }else {
+                binding.nrEndPeriodSw.setVisible()
+                binding.nrEndPeriodSw.isEnabled = p.days < viewModel.meter.value!!.periodLength+5
             }
         }
     }
@@ -188,6 +199,7 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
         return isValid
     }
 
+    @ExperimentalTime
     private suspend fun saveReading() {
         tempReading.readingValue = binding.nrTxtMeterReading.text.toString().toFloat()
         tempReading.comments = binding.nrTxtReadingComments.text.toString()

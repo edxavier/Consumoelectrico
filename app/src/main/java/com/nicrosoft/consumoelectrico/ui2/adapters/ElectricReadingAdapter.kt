@@ -1,21 +1,23 @@
 package com.nicrosoft.consumoelectrico.ui2.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.utils.*
-import kotlinx.android.synthetic.main.item_electric_meter.view.*
 import kotlinx.android.synthetic.main.item_electric_reading.view.*
-import kotlinx.android.synthetic.main.reading_time_line_item.*
+import org.joda.time.LocalDate
+import org.joda.time.Period
+import org.joda.time.PeriodType
 import java.util.*
+import kotlin.time.DurationUnit
+import kotlin.time.ExperimentalTime
 
 class ElectricReadingAdapter(
         private val itemClickListener: AdapterItemListener
@@ -33,6 +35,7 @@ class ElectricReadingAdapter(
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
+        @ExperimentalTime
         fun bind(reading: ElectricReading, prev:ElectricReading?, listener: AdapterItemListener?){
             itemView.apply {
                 //Disparar evento para que la vista que lo implemente tenda el objeto al que se le dio click
@@ -53,7 +56,7 @@ class ElectricReadingAdapter(
                     }else{
                         this.r_label_consumption.text = context.getString(R.string.label_consumption_in_hours, (reading.consumptionPreviousHours).toTwoDecimalPlace())
                     }
-                    if (reading.comments.isNullOrEmpty())
+                    if (reading.comments.isEmpty())
                         this.r_txt_observations.setHidden()
                     else{
                         this.r_txt_observations.setVisible()
@@ -106,6 +109,7 @@ class ElectricReadingAdapter(
         return ViewHolder(LayoutInflater.from(parent.context!!).inflate(R.layout.item_electric_reading, parent, false))
     }
 
+    @ExperimentalTime
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val previous = if(position<itemCount-1)
