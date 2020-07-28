@@ -13,14 +13,14 @@ import androidx.navigation.Navigator
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.FileFilter
 import com.afollestad.materialdialogs.files.fileChooser
-import com.nicrosoft.consumoelectrico.Mainkt
+import com.nicrosoft.consumoelectrico.MainKt
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.utils.CSVHelper
 import java.io.File
 
 
 @Navigator.Name("import_ac")
-class DestinoImport (var context: Context, var main:Mainkt): ActivityNavigator(context) {
+class DestinoImport (var context: Context, var main:MainKt): ActivityNavigator(context) {
     override fun navigate(destination: Destination, args: Bundle?, navOptions: NavOptions?, navigatorExtras: Navigator.Extras?): NavDestination? {
         //super.navigate(destination, args, navOptions, navigatorExtras)
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {

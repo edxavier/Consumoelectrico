@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
+import com.nicrosoft.consumoelectrico.TestActivity
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter.AdapterItemListener
@@ -108,7 +109,7 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
             viewModel.selectedMeter(meter)
             val action = ElectricListFragmentDirections.actionNavEmaterListToElectricReadingListFragment()
             //navController.navigate(action)
-            val intent = Intent(requireContext(), ElectricDetailsActivity::class.java).apply { putExtra("meterCode", meter.code) }
+            val intent = Intent(requireContext(), TestActivity::class.java).apply { putExtra("meterCode", meter.code) }
             startActivity(intent)
         }
     }

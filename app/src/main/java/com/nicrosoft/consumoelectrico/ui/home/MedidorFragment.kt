@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
-import com.nicrosoft.consumoelectrico.Mainkt
+import com.nicrosoft.consumoelectrico.MainKt
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.fragments.medidor.contracts.MedidorPresenter
 import com.nicrosoft.consumoelectrico.fragments.medidor.contracts.MedidorView
@@ -37,7 +37,7 @@ class MedidorFragment : Fragment(), MedidorView, RealmChangeListener<Realm> {
     private lateinit var realm: Realm
     private lateinit var homeViewModel: MedidorViewModel
     lateinit var presenter: MedidorPresenter
-    lateinit var mainActivity: Mainkt
+    lateinit var mainActivity: MainKt
 
 
     override fun onCreateView(
@@ -60,7 +60,7 @@ class MedidorFragment : Fragment(), MedidorView, RealmChangeListener<Realm> {
 
         realm = Realm.getDefaultInstance()
         realm.addChangeListener(this)
-        mainActivity = (activity as Mainkt)
+        mainActivity = (activity as MainKt)
         presenter = MedidorPresenterImpl(activity, this)
         presenter.getMedidores()
         setFabListener()
@@ -110,7 +110,7 @@ class MedidorFragment : Fragment(), MedidorView, RealmChangeListener<Realm> {
         }
         medidores_list.hideFabButtonOnScroll(fab)
         val list:MutableList<MedidorItem> = ArrayList()
-        medidores?.forEach { medidor -> list.add(MedidorItem(medidor, cntx!!, activity!! as Mainkt, presenter, realm)) }
+        medidores?.forEach { medidor -> list.add(MedidorItem(medidor, cntx!!, activity!! as MainKt, presenter, realm)) }
         groupAdapter.clear()
         groupAdapter.addAll(list)
 

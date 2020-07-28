@@ -43,7 +43,6 @@
     </style>
 
 
-
     <style name="AppButton" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">?attr/colorSecondary</item>
         <item name="android:radius">16dp</item>

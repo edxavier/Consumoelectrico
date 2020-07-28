@@ -13,7 +13,7 @@ import androidx.navigation.Navigator
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.input.input
-import com.nicrosoft.consumoelectrico.Mainkt
+import com.nicrosoft.consumoelectrico.MainKt
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.utils.CSVHelper
 import com.nicrosoft.consumoelectrico.utils.formatDate
@@ -22,7 +22,7 @@ import java.io.File
 import java.util.*
 
 @Navigator.Name("export_ac")
-class DestinoExport (var context: Context, var main:Mainkt): ActivityNavigator(context) {
+class DestinoExport (var context: Context, var main:MainKt): ActivityNavigator(context) {
     override fun navigate(destination: Destination, args: Bundle?, navOptions: NavOptions?, navigatorExtras: Navigator.Extras?): NavDestination? {
         //super.navigate(destination, args, navOptions, navigatorExtras)
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {

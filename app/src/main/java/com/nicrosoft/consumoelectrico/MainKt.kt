@@ -28,7 +28,7 @@ import com.nicrosoft.consumoelectrico.ui.destinos.DestinoValorarApp
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.content_mainkt.*
 
-class Mainkt : ScopeActivity(), BillingProcessor.IBillingHandler {
+class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     var PRODUCT_SKU = "remove_ads"

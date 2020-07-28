@@ -9,7 +9,7 @@ import android.graphics.Color
 import android.os.Build
 import android.provider.Settings
 import androidx.core.app.NotificationCompat
-import com.nicrosoft.consumoelectrico.Mainkt
+import com.nicrosoft.consumoelectrico.MainKt
 import com.nicrosoft.consumoelectrico.R
 
 class NotificationHelper(private val mContext: Context) {
@@ -21,7 +21,7 @@ class NotificationHelper(private val mContext: Context) {
      */
     fun createNotification(title: String?, message: String?) {
         /**Creates an explicit intent for an Activity in your app */
-        val resultIntent = Intent(mContext, Mainkt::class.java)
+        val resultIntent = Intent(mContext, MainKt::class.java)
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val resultPendingIntent = PendingIntent.getActivity(mContext,
                 0 /* Request code */, resultIntent,

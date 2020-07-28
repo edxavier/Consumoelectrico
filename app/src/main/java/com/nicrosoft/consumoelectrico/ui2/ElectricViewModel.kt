@@ -30,6 +30,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     fun getAllMeterReadings(meterCode:String) = dao.getAllMeterReadings(meterCode)
     fun getPriceList(meterCode:String) = dao.getPriceRanges(meterCode)
 
+    suspend fun getMeter(meterCode: String) = withContext(Dispatchers.IO){ dao.getMeter(meterCode) }
     suspend fun saveElectricMeter(meter:ElectricMeter) = withContext(Dispatchers.IO){ dao.saveElectricMeter(meter) }
     suspend fun savePrice(price:PriceRange) = withContext(Dispatchers.IO){ dao.savePriceRage(price) }
 

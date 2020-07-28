@@ -19,10 +19,16 @@
         android:theme="@style/AppTheme"
         tools:ignore="UnusedAttribute">
         <activity
-            android:name=".ui2.ElectricDetailsActivity"
-            android:label="@string/title_activity_electric_details"></activity>
+            android:theme="@style/AppTheme"
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test"
+            />
         <activity
-            android:name=".Mainkt"
+            android:name=".ui2.ElectricDetailsActivity"
+            android:label="@string/title_activity_electric_details"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".MainKt"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">
             <intent-filter>

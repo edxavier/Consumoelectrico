@@ -1,6 +1,7 @@
 package com.nicrosoft.consumoelectrico.ui2
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,12 +44,15 @@ class ElectricReadingListFragment : ScopeFragment(), KodeinAware, ElectricReadin
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_detail)
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
 
         initLayout()
-        loadData()
+        viewModel.meter.observe(viewLifecycleOwner, Observer {
+            Log.e("EDER", "METER READY")
+            loadData()
+        })
     }
     
     private fun loadData(){

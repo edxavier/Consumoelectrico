@@ -11,7 +11,7 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.list.listItems
-import com.nicrosoft.consumoelectrico.Mainkt
+import com.nicrosoft.consumoelectrico.MainKt
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.fragments.medidor.contracts.MedidorPresenter
 import com.nicrosoft.consumoelectrico.utils.setHidden
@@ -30,11 +30,11 @@ import java.util.*
 
 
 class MedidorItem(
-    val medidor:Medidor,
-    private val context: Context,
-    private val activity: Mainkt,
-    private val presenter: MedidorPresenter,
-    private val realm: Realm
+        val medidor:Medidor,
+        private val context: Context,
+        private val activity: MainKt,
+        private val presenter: MedidorPresenter,
+        private val realm: Realm
 ): Item(){
 
     @SuppressLint("SetTextI18n")
