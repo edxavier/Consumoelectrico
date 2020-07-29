@@ -18,15 +18,22 @@
 
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
 
+        <item name="android:windowContentOverlay">@null</item>
 
         <item name="fontFamily">@font/source_sans_pro</item>
         <item name="materialButtonStyle">@style/AppButton</item>
 
-
     </style>
+    <!-- Base application theme. -->
+    <style name="AppTheme.Details" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
+
+
+
 
     <style name="drawerTextStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">@font/source_sans_pro</item>

@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/adView"
-        android:id="@+id/nav_host_fragment_detail"
+        android:id="@+id/nav_host_fragment_detailActivity"
         app:defaultNavHost="true"
         app:navGraph="@navigation/details_navigation"
         android:name="androidx.navigation.fragment.NavHostFragment"

@@ -203,6 +203,8 @@
     <string name="datetime_day_month">dd MMM</string>
     <string name="period_consumption">Consumo periodo</string>
     <string name="end_period_notice">Se cerrará este periodo con la lectura actual, asegúrate que la fecha y la lectura coincidan con los datos reflejados en tu factura eléctrica.</string>
+    <string name="statistics">Statictics</string>
+    <string name="electric_load">Load</string>
 
 
 </resources>

@@ -22,7 +22,7 @@
                     android:layout_height="300dp"
                     app:lottie_autoPlay="true"
                     app:lottie_loop="true"
-                    app:lottie_rawRes="@raw/empty_state_illustration" />
+                    app:lottie_rawRes="@raw/bulb_animation" />
 
                 <TextView
                     android:id="@+id/message_title"

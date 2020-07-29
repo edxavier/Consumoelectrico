@@ -46,7 +46,7 @@ class ElectricReadingListFragment : ScopeFragment(), KodeinAware, ElectricReadin
         super.onActivityCreated(savedInstanceState)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_detail)
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
-        requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
+        //requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
 
         initLayout()
         viewModel.meter.observe(viewLifecycleOwner, Observer {

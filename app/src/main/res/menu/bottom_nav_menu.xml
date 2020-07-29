@@ -2,18 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_electric_readings"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_home" />
+        android:id="@+id/nav_readings_list"
+        android:icon="@drawable/ic_list"
+        android:title="@string/label_readings" />
+
 
     <item
         android:id="@+id/nav_electric_details"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_dashboard" />
+        android:icon="@drawable/ic_statistics"
+        android:title="@string/statistics" />
 
     <item
         android:id="@+id/nav_electric_load"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_notifications" />
+        android:icon="@drawable/ic_plug"
+        android:title="@string/electric_load" />
 
 </menu>

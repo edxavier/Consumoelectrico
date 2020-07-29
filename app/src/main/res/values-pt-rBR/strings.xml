@@ -181,6 +181,8 @@
     <string name="datetime_day_month">dd MMM</string>
     <string name="period_consumption">Consumo do período</string>
     <string name="end_period_notice">Este período será encerrado com a leitura atual, verifique se a data e a leitura coincidem com os dados refletidos na sua conta de luz.</string>
+    <string name="statistics">Statictics</string>
+    <string name="electric_load">Load</string>
 
 
 </resources>

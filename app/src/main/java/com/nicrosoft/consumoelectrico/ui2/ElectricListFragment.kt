@@ -45,7 +45,6 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
         super.onActivityCreated(savedInstanceState)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
 
         initLayout()
         loadData()
@@ -107,10 +106,10 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
     override fun onItemDetailListener(meter: ElectricMeter) {
         launch {
             viewModel.selectedMeter(meter)
-            val action = ElectricListFragmentDirections.actionNavEmaterListToElectricReadingListFragment()
-            //navController.navigate(action)
-            val intent = Intent(requireContext(), TestActivity::class.java).apply { putExtra("meterCode", meter.code) }
-            startActivity(intent)
+            val action = ElectricListFragmentDirections.actionNavEmaterListToElectricDetailFragment()
+            navController.navigate(action)
+            //val intent = Intent(requireContext(), ElectricDetailsActivity::class.java).apply { putExtra("meterCode", meter.code) }
+            //startActivity(intent)
         }
     }
 

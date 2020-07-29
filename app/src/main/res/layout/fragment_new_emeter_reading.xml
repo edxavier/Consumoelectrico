@@ -44,10 +44,21 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:visibility="gone"
                     android:layout_gravity="center"
                     app:srcCompat="@drawable/ic_home"
                     android:layout_width="64dp"
                     android:layout_height="64dp" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_gravity="center"
+                    android:id="@+id/animation_view"
+                    android:layout_width="84dp"
+                    android:layout_height="84dp"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/growing_house" />
+
 
                 <TextView
                     android:text="@{meter.name}"

@@ -9,6 +9,7 @@ class TestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.AppTheme_Details)
         setContentView(R.layout.activity_test)
         setSupportActionBar(findViewById(R.id.toolbar))
 

@@ -165,6 +165,10 @@
             app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_nav_emater_list_to_electricReadingListFragment"
             app:destination="@id/electricReadingListFragment" />
+        <action
+            android:id="@+id/action_nav_emater_list_to_electricDetailFragment"
+            app:destination="@id/electricDetailFragment" />
+
     </fragment>
 
     <fragment
@@ -191,4 +195,20 @@
         android:id="@+id/electricReadingListFragment"
         android:name="com.nicrosoft.consumoelectrico.ui2.ElectricReadingListFragment"
         android:label="@string/label_readings" />
+    <fragment
+        android:id="@+id/electricDetailFragment"
+        android:name="com.nicrosoft.consumoelectrico.ElectricDetailFragment"
+        android:label="@string/details"
+        tools:layout="@layout/fragment_electric_detail" />
+    <fragment
+        android:id="@+id/electricLoadFragment"
+        android:name="com.nicrosoft.consumoelectrico.ElectricLoadFragment"
+        android:label="fragment_electric_load"
+        tools:layout="@layout/fragment_electric_load" />
+    <fragment
+        android:id="@+id/electricDetailsFragment"
+        android:name="com.nicrosoft.consumoelectrico.ElectricDetailsFragment"
+        android:label="fragment_electric_details"
+        tools:layout="@layout/fragment_electric_details" />
+
 </navigation>
