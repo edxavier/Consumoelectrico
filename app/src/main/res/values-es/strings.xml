@@ -40,7 +40,7 @@
     '<string name="label_days_consumption">Días consumo</string>
 
     <string name="main.emty.title">No hay datos para mostrar.</string>
-    <string name="main.empty.suggest">Registra medidas frecuentemente para dar seguimiento a tu consumo electrico.</string>
+    <string name="main.empty.suggest">Registra lecturas frecuentemente para dar seguimiento a tu consumo electrico.</string>
 
     <string name="end_period">Finalizar periodo</string>
     <string name="end_period_ask">¿Esta seguro que desea finalizar periodo en esta fecha?</string>
@@ -203,8 +203,10 @@
     <string name="datetime_day_month">dd MMM</string>
     <string name="period_consumption">Consumo periodo</string>
     <string name="end_period_notice">Se cerrará este periodo con la lectura actual, asegúrate que la fecha y la lectura coincidan con los datos reflejados en tu factura eléctrica.</string>
-    <string name="statistics">Statictics</string>
-    <string name="electric_load">Load</string>
+    <string name="statistics">Estadisticas</string>
+    <string name="electric_load">Carga</string>
+    <string name="delete_notice">Este elemento será eliminado permanentemente, esta seguro que quiere continuar?</string>
+    <string name="periods">Periodos</string>
 
 
 </resources>

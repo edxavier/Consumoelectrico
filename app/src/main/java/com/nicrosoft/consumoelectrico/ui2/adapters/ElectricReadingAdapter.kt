@@ -25,11 +25,13 @@ class ElectricReadingAdapter(
 
     class DiffCallback: DiffUtil.ItemCallback<ElectricReading>() {
         override fun areItemsTheSame(oldItem: ElectricReading, newItem: ElectricReading): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.code == newItem.code
         }
 
         override fun areContentsTheSame(oldItem: ElectricReading, newItem: ElectricReading): Boolean {
-            return oldItem == newItem
+            Log.e("EDER", oldItem.readingValue.toString())
+            Log.e("EDER", newItem.readingValue.toString())
+            return false
         }
     }
 
@@ -121,7 +123,6 @@ class ElectricReadingAdapter(
 
     interface AdapterItemListener{
         fun onItemClickListener(meter:ElectricReading)
-        fun onItemDetailListener(meter:ElectricReading)
     }
 
 }

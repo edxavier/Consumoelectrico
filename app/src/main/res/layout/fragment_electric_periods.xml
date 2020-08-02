@@ -22,7 +22,7 @@
             android:layout_height="300dp"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/empty_state_illustration" />
+            app:lottie_rawRes="@raw/bulb_animation" />
 
         <TextView
             android:id="@+id/message_title"
@@ -49,11 +49,10 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/load_list"
+        android:id="@+id/period_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="4dp"
         app:layoutManager="LinearLayoutManager"
         />
-
-</RelativeLayout>
+    </RelativeLayout>

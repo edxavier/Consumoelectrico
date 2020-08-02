@@ -16,6 +16,9 @@ interface ElectricMeterDAO {
     @Delete
     fun deleteElectricMeter(meter: ElectricMeter)
 
+    @Delete
+    fun deleteElectricReading(reading: ElectricReading)
+
     @Update
     fun updateElectricMeter(meter: ElectricMeter):Int
 
@@ -60,6 +63,9 @@ interface ElectricMeterDAO {
 
     @Query("SELECT * FROM electric_meter_reading where meter_code=:meterCode order by id desc")
     fun getAllMeterReadings(meterCode: String): LiveData<List<ElectricReading>>
+
+    @Query("SELECT * FROM electric_meter_reading where meter_code=:meterCode order by reading_date asc limit 1")
+    fun getFirstMeterReading(meterCode: String): ElectricReading
 
     //Cargar los rangos que se sobreponen o contienen al rango especificado
     @Query("SELECT * FROM price_range where meter_code=:meterCode AND from_kw BETWEEN :min AND :max OR to_kw BETWEEN :min AND :max OR (:min BETWEEN from_kw AND to_kw AND :max BETWEEN from_kw AND to_kw)")

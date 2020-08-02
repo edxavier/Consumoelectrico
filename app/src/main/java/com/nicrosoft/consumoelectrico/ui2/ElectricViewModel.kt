@@ -28,6 +28,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     fun getElectricMeterList() = dao.getMeters()
     fun getPeriodMetersReadings(periodCode:String) = dao.getPeriodMetersReadings(periodCode)
     fun getAllMeterReadings(meterCode:String) = dao.getAllMeterReadings(meterCode)
+    suspend fun getFirstMeterReading(meterCode:String) = withContext(Dispatchers.IO){ dao.getFirstMeterReading(meterCode) }
     fun getPriceList(meterCode:String) = dao.getPriceRanges(meterCode)
 
     suspend fun getMeter(meterCode: String) = withContext(Dispatchers.IO){ dao.getMeter(meterCode) }
@@ -95,7 +96,6 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             reading.periodCode = period.code
             reading.meterCode = meterCode
             dao.saveReading(reading)
-            Log.e("EDER", "Primera lectura y periodo creado")
         }
     }
 
@@ -128,7 +128,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     }
 
     @ExperimentalTime
-    fun terminatePeriod(current:ElectricReading, period:ElectricBillPeriod, meterCode: String){
+    suspend fun terminatePeriod(current:ElectricReading, period:ElectricBillPeriod, meterCode: String) = withContext(Dispatchers.IO) {
         //Crear nuevo periodo, cerrar el actual y reasignar toda lectura posterior al nuevo periodo
         val newPeriod = ElectricBillPeriod(fromDate = current.readingDate, meterCode = meterCode, toDate = current.readingDate)
         period.toDate = current.readingDate
@@ -149,6 +149,89 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             }else{
                 val prev = laterReadings[index-1]
                 electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(newPeriod.fromDate).toFloat()
+                //electricReading.consumptionPreviousHours = electricReading.readingDate.hoursSinceDate(newPeriod.fromDate).toFloat()
+                electricReading.kwAggConsumption = electricReading.kwConsumption + prev.kwAggConsumption
+                electricReading.kwAvgConsumption = electricReading.kwAggConsumption / electricReading.consumptionHours
+            }
+            dao.updateElectricReading(electricReading)
+        }
+    }
+
+
+    @ExperimentalTime
+    suspend fun updateReadingValue(reading:ElectricReading) = withContext(Dispatchers.IO){
+        val previous = dao.getPreviousReading(reading.periodCode!!, reading.readingDate)
+        val next = dao.getNextReading(reading.periodCode!!, reading.readingDate)
+        var previousPeriodLastReading:ElectricReading? = null
+        if (previous==null) {
+            previousPeriodLastReading = dao.getLastMeterReading(reading.meterCode!!, reading.readingDate)
+        }
+        recomputeAndUpdate(previous, reading, previousPeriodLastReading)
+        recomputeAndUpdate(reading, next, previousPeriodLastReading)
+        //dao.updateElectricReading(reading)
+    }
+
+
+    @ExperimentalTime
+    private fun recomputeAndUpdate(previous: ElectricReading?, next: ElectricReading?, prevPeriodLastReading:ElectricReading?) {
+        //Si hay un proximo recalcular los valores
+        //si no hay proximo no es necesario hacer ningun calculo, los valores anteriores no dependen de lo que se esta eliminando
+        //por tanto si solo hay una lectura y es la primera no sera necesario nada mas que eliminarla
+        next?.let {
+            if(previous!=null){
+                //Solo se recalcula el consumo entre las lecturas y las horas consumo entre ellas, lo demas no se ve afectado ya que se calcula respecto al inicio periodo
+                it.kwConsumption = it.readingValue - previous.readingValue
+                it.consumptionPreviousHours = it.readingDate.hoursSinceDate(previous.readingDate).toFloat()
+                it.kwAggConsumption = it.kwConsumption + previous.kwAggConsumption
+                it.kwAvgConsumption = it.kwAggConsumption / it.consumptionHours
+            }else{
+                //No hay lectura previa asi que cargar la ultima lectura del periodo anterior
+                if(prevPeriodLastReading!=null){
+                    next.kwConsumption = next.readingValue - prevPeriodLastReading.readingValue
+                    next.consumptionPreviousHours = next.readingDate.hoursSinceDate(prevPeriodLastReading.readingDate).toFloat()
+                    next.consumptionHours = next.consumptionPreviousHours
+                    next.kwAggConsumption = next.kwConsumption
+                    next.kwAvgConsumption = next.kwAggConsumption / next.consumptionHours
+                }else{
+                    next.kwConsumption = 0f
+                    next.consumptionPreviousHours = 0f
+                    next.consumptionHours = 0f
+                    next.kwAggConsumption = 0f
+                    next.kwAvgConsumption = 0f
+                    recomputeLaterReadings(next)
+                }
+            }
+            dao.updateElectricReading(next)
+        }
+    }
+
+    @ExperimentalTime
+    suspend fun deleteElectricReading(reading:ElectricReading) = withContext(Dispatchers.IO){
+        Log.e("EDER", "DELETED ${reading.readingValue}")
+        val previous = dao.getPreviousReading(reading.periodCode!!, reading.readingDate)
+        val next = dao.getNextReading(reading.periodCode!!, reading.readingDate)
+        var previousPeriodLastReading:ElectricReading? = null
+        if (previous==null)
+            previousPeriodLastReading = dao.getLastMeterReading(reading.meterCode!!, reading.readingDate)
+        recomputeAndUpdate(previous, next, previousPeriodLastReading)
+        dao.deleteElectricReading(reading)
+        Log.e("EDER", "DELETED ${reading.readingValue}")
+    }
+
+    @ExperimentalTime
+    private fun recomputeLaterReadings(reading: ElectricReading){
+        val laterReadings = dao.getReadingsAfter(reading.periodCode!!, reading.readingDate)
+        laterReadings.forEachIndexed { index, electricReading ->
+            Log.e("EDER", "RECALCULANDO lecturas")
+            //Recalcular lecturas despues de la lectura pasada, que solo seria en caso de que esta sea la primer lectura de la hsitoria del medidor
+            if(index>0){
+                electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(reading.readingDate).toFloat()
+                //electricReading.consumptionPreviousHours = electricReading.readingDate.hoursSinceDate(newPeriod.fromDate).toFloat()
+                electricReading.kwAggConsumption = electricReading.kwConsumption
+                electricReading.kwAvgConsumption = electricReading.kwAggConsumption / electricReading.consumptionHours
+            }else{
+                val prev = laterReadings[index-1]
+                electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(reading.readingDate).toFloat()
                 //electricReading.consumptionPreviousHours = electricReading.readingDate.hoursSinceDate(newPeriod.fromDate).toFloat()
                 electricReading.kwAggConsumption = electricReading.kwConsumption + prev.kwAggConsumption
                 electricReading.kwAvgConsumption = electricReading.kwAggConsumption / electricReading.consumptionHours

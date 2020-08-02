@@ -46,7 +46,6 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
 
     private lateinit var navController: NavController
     private lateinit var binding: FragmentNewEmeterReadingBinding
-    private lateinit var params: NewElectricReadingFragmentArgs
     private lateinit var tempReading:ElectricReading
     private val currDatetime = Calendar.getInstance()
     private val minDate = Calendar.getInstance()
@@ -63,7 +62,6 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
-        params = NewElectricReadingFragmentArgs.fromBundle(requireArguments())
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
         tempReading = ElectricReading()

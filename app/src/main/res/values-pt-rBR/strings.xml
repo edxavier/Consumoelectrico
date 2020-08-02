@@ -31,7 +31,7 @@
     <string name="label_days">dias</string>
     <string name="label_days_consumption">Dias consumidos</string>
     <string name="main.emty.title">Não há dados para mostrar</string>
-    <string name="main.empty.suggest">Registre as medidas com frequência para acompanhar o consumo de eletricidade doméstica.</string>
+    <string name="main.empty.suggest">Registre as leituras com frequência para acompanhar o consumo de eletricidade doméstica.</string>
     <string name="end_period">Fim do período de cobrança</string>
     <string name="end_period_ask">Tem certeza de terminar o período de cobrança nessa data?</string>
     <string name="end_period_psoitive">Continuar</string>
@@ -183,6 +183,8 @@
     <string name="end_period_notice">Este período será encerrado com a leitura atual, verifique se a data e a leitura coincidem com os dados refletidos na sua conta de luz.</string>
     <string name="statistics">Statictics</string>
     <string name="electric_load">Load</string>
+    <string name="delete_notice">This item will be permantly deleted, are you sure to continue?</string>
+    <string name="periods">Periods</string>
 
 
 </resources>

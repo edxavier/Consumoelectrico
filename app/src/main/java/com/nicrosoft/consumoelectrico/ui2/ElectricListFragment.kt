@@ -108,8 +108,6 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
             viewModel.selectedMeter(meter)
             val action = ElectricListFragmentDirections.actionNavEmaterListToElectricDetailFragment()
             navController.navigate(action)
-            //val intent = Intent(requireContext(), ElectricDetailsActivity::class.java).apply { putExtra("meterCode", meter.code) }
-            //startActivity(intent)
         }
     }
 

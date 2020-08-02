@@ -66,13 +66,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textAllCaps="true"
                     android:textColor="@color/md_black_1000_75"
                     android:textSize="22sp" />
 
                 <TextView
                     android:textAlignment="center"
-                    style="@style/TextAppearance.MaterialComponents.Overline"
                     android:padding="2dp"
                     android:minWidth="100dp"
                     android:background="@drawable/borders"

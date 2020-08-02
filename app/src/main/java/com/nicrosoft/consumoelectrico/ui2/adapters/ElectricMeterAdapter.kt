@@ -81,7 +81,7 @@ class ElectricMeterAdapter(
                                 item_period_day_excess.setHidden()
 
                             if(lastReadings.kwAggConsumption> meter.maxKwLimit){
-                                val v = context.getString(R.string.days_consumed_val, lastReadings.kwAggConsumption-meter.maxKwLimit)
+                                val v = context.getString(R.string.initial_reading_val, (lastReadings.kwAggConsumption-meter.maxKwLimit).toTwoDecimalPlace())
                                 item_consumption_excess.setVisible()
                                 item_consumption_excess.text = "+$v"
                             }else

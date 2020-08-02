@@ -187,7 +187,7 @@
         android:label="@string/new_reading"
         tools:layout="@layout/fragment_new_emeter_reading" >
         <argument
-            android:name="editingMode"
+            android:name="callFromReadingList"
             app:argType="boolean"
             android:defaultValue="false" />
     </fragment>
@@ -199,7 +199,11 @@
         android:id="@+id/electricDetailFragment"
         android:name="com.nicrosoft.consumoelectrico.ElectricDetailFragment"
         android:label="@string/details"
-        tools:layout="@layout/fragment_electric_detail" />
+        tools:layout="@layout/fragment_electric_detail" >
+        <action
+            android:id="@+id/action_electricDetailFragment_to_newEmeterReadingFragment"
+            app:destination="@id/newEmeterReadingFragment" />
+    </fragment>
     <fragment
         android:id="@+id/electricLoadFragment"
         android:name="com.nicrosoft.consumoelectrico.ElectricLoadFragment"
@@ -207,8 +211,8 @@
         tools:layout="@layout/fragment_electric_load" />
     <fragment
         android:id="@+id/electricDetailsFragment"
-        android:name="com.nicrosoft.consumoelectrico.ElectricDetailsFragment"
+        android:name="com.nicrosoft.consumoelectrico.ElectricPeriodsFragment"
         android:label="fragment_electric_details"
-        tools:layout="@layout/fragment_electric_details" />
+        tools:layout="@layout/fragment_electric_periods" />
 
 </navigation>

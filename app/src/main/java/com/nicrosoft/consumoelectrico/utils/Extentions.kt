@@ -6,6 +6,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -120,4 +121,10 @@ fun PopupMenu.enableIcons(){
 fun FloatingActionButton. hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(this.windowToken, 0)
+}
+
+fun <T> MutableLiveData<List<T>>.add(item: T) {
+    val updatedItems = this.value?.toMutableList()
+    updatedItems?.add(item)
+    this.value = updatedItems
 }
