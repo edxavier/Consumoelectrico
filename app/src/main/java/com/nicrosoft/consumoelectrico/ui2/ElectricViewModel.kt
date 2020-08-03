@@ -26,6 +26,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
 
 
     fun getElectricMeterList() = dao.getMeters()
+    fun getMeterPeriods(meterCode: String) = dao.getMeterPeriods(meterCode)
     fun getPeriodMetersReadings(periodCode:String) = dao.getPeriodMetersReadings(periodCode)
     fun getAllMeterReadings(meterCode:String) = dao.getAllMeterReadings(meterCode)
     suspend fun getFirstMeterReading(meterCode:String) = withContext(Dispatchers.IO){ dao.getFirstMeterReading(meterCode) }

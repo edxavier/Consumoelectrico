@@ -52,6 +52,10 @@ interface ElectricMeterDAO {
     @Query("SELECT * FROM electric_meter order by id desc")
     fun getMeters(): LiveData<List<ElectricMeter>>
 
+    @Query("SELECT * FROM electric_bill_period where meter_code=:meterCode order by id desc")
+    fun getMeterPeriods(meterCode: String): LiveData<List<ElectricBillPeriod>>
+
+
     @Query("SELECT * FROM electric_meter where code=:meterCode order by id desc")
     fun getMeter(meterCode: String): ElectricMeter
 
