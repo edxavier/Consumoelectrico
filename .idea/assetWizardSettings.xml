@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialiconsoutlined/event_note/outline_event_note_24.xml" />
+                                      <entry key="url" value="jar:file:/home/eradar/scripts/android-studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/lens/baseline_lens_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,8 +28,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_period_calendar" />
-                            <entry key="sourceFile" value="C:\Users\Eder Xavier Rojas\Downloads\list.svg" />
+                            <entry key="outputName" value="ic_circle" />
+                            <entry key="sourceFile" value="$USER_HOME$/C:\Users\Eder Xavier Rojas\Downloads\list.svg" />
                           </map>
                         </option>
                       </PersistentState>
