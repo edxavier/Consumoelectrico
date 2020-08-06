@@ -64,8 +64,6 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
                 val next = dao.getNextReading(period.code, reading.readingDate)
                 if(previous!=null) {
                     computeReading(reading, previous, next, period, false)
-                    period.totalKw = dao.getTotalPeriodKw(period.code)
-                    dao.updatePeriod(period)
                     if(terminatePeriod) {terminatePeriod(reading, period, meterCode)}else{}
                 }else {
                     //No se encontro lecturas anterirores a la neuva en este periodo, esta pasa a ser la primera
@@ -83,6 +81,11 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
                     computeReading(reading, previousReading, nextReading,  period, true)}else{}
 
             }
+            period.totalKw = dao.getTotalPeriodKw(period.code)
+            val lr = dao.getLastPeriodReading(period.code)
+            if(lr!=null)
+                period.toDate = lr.readingDate
+            dao.updatePeriod(period)
         }else{
             //Si es el primer periodo crear de cero
             createFirstPeriod(reading,meterCode)

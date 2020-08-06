@@ -40,7 +40,7 @@ class PeriodsAdapter(
                 this.setOnClickListener { listener?.onPeriodItemClickListener(period) }
                 with(this){
                     item_label_from_period.text = period.fromDate.formatDate(context)
-                    item_label_from_period.text = period.toDate.formatDate(context)
+                    item_label_to_period.text = period.toDate.formatDate(context)
                     item_label_total_kw.text = period.totalKw.toTwoDecimalPlace()
                     item_label_total_spend.text = period.totalBill.toTwoDecimalPlace()
                     if(period.active)
