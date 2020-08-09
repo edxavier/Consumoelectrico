@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicrosoft.consumoelectrico.R
+import com.nicrosoft.consumoelectrico.data.ExpenseDetail
+import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
+import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
+import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import kotlinx.android.synthetic.main.emeter_list_fragment.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -123,8 +127,30 @@ fun FloatingActionButton. hideKeyboard() {
     imm.hideSoftInputFromWindow(this.windowToken, 0)
 }
 
+
 fun <T> MutableLiveData<List<T>>.add(item: T) {
     val updatedItems = this.value?.toMutableList()
     updatedItems?.add(item)
     this.value = updatedItems
+}
+
+fun Float.calculateExpenses(meter: ElectricMeter): ExpenseDetail{
+    val eDetails = ExpenseDetail()
+    var energyExp = this * meter.kwPrice
+    eDetails.energy = energyExp
+    val discount = if(meter.loseDiscount){
+        if(this>meter.maxKwLimit)
+            0f
+        else
+            energyExp * (meter.kwDiscount/100)
+    }else
+        this * (meter.kwDiscount/100)
+    eDetails.discount = discount
+    energyExp -= discount
+    val taxes = energyExp * (meter.taxes/100)
+    eDetails.taxes = taxes
+    energyExp += (taxes + meter.fixedPrices)
+    eDetails.fixed = meter.fixedPrices
+    eDetails.total = energyExp
+    return eDetails
 }

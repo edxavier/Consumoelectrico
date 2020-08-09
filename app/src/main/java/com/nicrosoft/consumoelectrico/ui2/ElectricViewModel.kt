@@ -43,8 +43,9 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     suspend fun updatePriceRange(price:PriceRange) = withContext(Dispatchers.IO){ dao.updatePriceRage(price) }
     suspend fun getOverlappingPrice(min:Int, max:Int, meterCode: String) = withContext(Dispatchers.IO){ dao.getOverlappingPrice(min, max, meterCode) }
 
-    suspend fun getLastPeriodReadings(periodCode: String) = withContext(Dispatchers.IO){ dao.getLastPeriodReading(periodCode) }
-    suspend fun getLastElectricPeriod(meterCode: String) = withContext(Dispatchers.IO){ dao.getLastElectricPeriod(meterCode) }
+    suspend fun getLastPeriodReading(periodCode: String) = withContext(Dispatchers.IO){ dao.getLastPeriodReading(periodCode) }
+    suspend fun getFirstPeriodReading(periodCode: String) = withContext(Dispatchers.IO){ dao.getFirstPeriodReading(periodCode) }
+    suspend fun getLastPeriod(meterCode: String) = withContext(Dispatchers.IO){ dao.getLastElectricPeriod(meterCode) }
 
     suspend fun validatedReadingValue(readingDate: Date, readingValue:Float, meterCode: String):Boolean = withContext(Dispatchers.IO){
         val future = dao.countInvalidFutureReadings(readingDate, readingValue, meterCode)

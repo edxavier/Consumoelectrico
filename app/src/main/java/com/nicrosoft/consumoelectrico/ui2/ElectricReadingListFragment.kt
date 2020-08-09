@@ -2,11 +2,8 @@ package com.nicrosoft.consumoelectrico.ui2
 
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.*
 import android.view.animation.OvershootInterpolator
-import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,17 +16,13 @@ import com.google.android.material.snackbar.Snackbar
 import com.nicrosoft.consumoelectrico.ElectricDetailFragmentDirections
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
-import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricReadingAdapter
 import com.nicrosoft.consumoelectrico.utils.*
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
-import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
-import kotlinx.android.synthetic.main.emeter_list_fragment.*
 import kotlinx.android.synthetic.main.emeter_list_fragment.animation_view
 import kotlinx.android.synthetic.main.emeter_list_fragment.emeter_list
-import kotlinx.android.synthetic.main.emeter_list_fragment.fab_new_electric_meter
 import kotlinx.android.synthetic.main.emeter_list_fragment.message_
 import kotlinx.android.synthetic.main.emeter_list_fragment.message_body
 import kotlinx.android.synthetic.main.emeter_list_fragment.message_title
@@ -69,7 +62,7 @@ class ElectricReadingListFragment : ScopeFragment(), KodeinAware, ElectricReadin
     
     private fun loadData(){
         launch {
-            val period = viewModel.getLastElectricPeriod(viewModel.meter.value!!.code)
+            val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
             if(period!=null) {
                 viewModel.getPeriodMetersReadings(period.code).observe(viewLifecycleOwner, Observer {
                     toggleMessageVisibility(it.isEmpty())
@@ -106,7 +99,7 @@ class ElectricReadingListFragment : ScopeFragment(), KodeinAware, ElectricReadin
     @ExperimentalTime
     override fun onItemClickListener(reading: ElectricReading) {
         launch {
-            val period = viewModel.getLastElectricPeriod(reading.meterCode!!)
+            val period = viewModel.getLastPeriod(reading.meterCode!!)
             val meter = viewModel.getMeter(reading.meterCode!!)
             val options = resources.getStringArray(R.array.readings_options).toMutableList()
             if(reading.readingDate.hoursSinceDate(period!!.fromDate)/24<=meter.periodLength-5)
@@ -135,7 +128,7 @@ class ElectricReadingListFragment : ScopeFragment(), KodeinAware, ElectricReadin
             negativeButton(R.string.cancel)
             positiveButton(R.string.agree){
                 launch {
-                    val period = viewModel.getLastElectricPeriod(reading.meterCode!!)
+                    val period = viewModel.getLastPeriod(reading.meterCode!!)
                     viewModel.terminatePeriod(reading, period!!, reading.meterCode!!)
                     loadData()
                 }

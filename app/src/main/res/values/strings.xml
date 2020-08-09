@@ -241,6 +241,9 @@
     <string name="electric_load">Load</string>
     <string name="delete_notice">This item will be permanently deleted, do you want to proceed?</string>
     <string name="periods">Periods</string>
+    <string name="daily_avg">Daily Average</string>
+    <string name="empty_placeholder">----</string>
+    <string name="expenses">Approximate expenses</string>
 
 
 </resources>

@@ -53,10 +53,10 @@
     <string name="settings.ac.period.limit">Límite de consumo por periodo</string>
     <string name="chart.legend.avg.limit">Límite promedio (kWh)</string>
     <string name="chart.legend.period.limit">Límite Periodo (kWh)</string>
-    <string name="chart.legend.bar">Consumo desde lectura anterior (kWh)</string>
-    <string name="chart.legend.avg">Promedio (kWh)</string>
-    <string name="chart.legend.accumulated">Consumo acumulado (kWh)</string>
-    <string name="chart.legend.estimate">Consumo estimado (kWh)</string>
+    <string name="chart.legend.bar">Consumo desde lectura anterior</string>
+    <string name="chart.legend.avg">Promedio</string>
+    <string name="chart.legend.accumulated">Consumo acumulado</string>
+    <string name="chart.legend.estimate">Consumo estimado</string>
 
     <string name="alert_over_range">Lectura fuera de rango</string>
 
@@ -207,6 +207,8 @@
     <string name="electric_load">Carga</string>
     <string name="delete_notice">Este elemento será eliminado permanentemente, esta seguro que quiere continuar?</string>
     <string name="periods">Periodos</string>
+    <string name="daily_avg">Promedio Diario</string>
+    <string name="expenses">Approximate expenses</string>
 
 
 </resources>

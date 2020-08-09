@@ -37,7 +37,10 @@
         <item name="textColor">@color/md_black_1000_75</item>
     </style>
 
-
+    <style name="AppTheme.Section" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="android:fontFamily">@font/source_sans_pro</item>
+        <item name="fontFamily">@font/source_sans_pro_semibold</item>
+    </style>
 
 
     <style name="drawerTextStyle" parent="android:Widget.TextView">

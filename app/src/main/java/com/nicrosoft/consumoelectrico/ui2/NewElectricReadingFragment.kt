@@ -2,7 +2,6 @@ package com.nicrosoft.consumoelectrico.ui2
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,14 +12,12 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.datetime.datePicker
-import com.afollestad.materialdialogs.datetime.dateTimePicker
 import com.afollestad.materialdialogs.datetime.timePicker
 import com.google.android.material.snackbar.Snackbar
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.databinding.FragmentNewEmeterReadingBinding
-import com.wajahatkarim3.easyvalidation.core.view_ktx.nonEmpty
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -29,12 +26,10 @@ import java.util.*
 import androidx.lifecycle.Observer
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.utils.*
-import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.coroutines.delay
 import org.joda.time.LocalDate
 import org.joda.time.Period
 import org.joda.time.PeriodType
-import kotlin.math.min
 import kotlin.time.ExperimentalTime
 
 
@@ -149,7 +144,7 @@ class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
 
     private fun verifyEndPeriod(date: Date) {
         launch {
-            period = viewModel.getLastElectricPeriod(viewModel.meter.value!!.code)
+            period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
             val p = Period(LocalDate(period?.fromDate), LocalDate(date), PeriodType.days())
             if(p.days <= viewModel.meter.value!!.periodLength-5) {
                 binding.nrEndPeriodSw.setHidden()

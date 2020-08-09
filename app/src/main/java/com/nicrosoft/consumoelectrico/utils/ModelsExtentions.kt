@@ -7,9 +7,16 @@ import com.nicrosoft.consumoelectrico.ui2.ElectricViewModel
 
 suspend fun ElectricMeter.getLastReading(viewModel:ElectricViewModel): ElectricReading? {
     var lastReadings:ElectricReading? = null
-    val period = viewModel.getLastElectricPeriod(this.code)
+    val period = viewModel.getLastPeriod(this.code)
     if (period!=null){
-        lastReadings = viewModel.getLastPeriodReadings(period.code)
+        lastReadings = viewModel.getLastPeriodReading(period.code)
     }
     return lastReadings
+}
+
+
+fun ElectricReading.estimateConsumption(meter:ElectricMeter): Float{
+    val days = this.consumptionHours / 24
+    val daysLeft = meter.periodLength - days
+    return daysLeft * (this.kwAvgConsumption * 24) + this.kwAggConsumption
 }
