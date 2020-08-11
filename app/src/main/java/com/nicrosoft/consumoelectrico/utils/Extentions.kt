@@ -21,15 +21,6 @@ import java.util.*
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 
-
-fun SwipeRefreshLayout.setAppColors(){
-    this.setColorSchemeResources(
-        R.color.md_amber_500,
-        R.color.secondaryColor,
-        R.color.md_blue_500,
-        R.color.primaryColor)
-}
-
 fun RecyclerView.hideFabButtonOnScroll(fab:FloatingActionButton){
     this.addOnScrollListener(object: RecyclerView.OnScrollListener(){
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -108,19 +99,6 @@ fun String.removeZeroDecimal():String {
 fun Float.toTwoDecimalPlace(): String{
     return String.format(Locale.US, "%.2f", this).replace(",", ".").removeZeroDecimal()
 }
-fun PopupMenu.enableIcons(){
-    try {
-        val fMenuHelper = PopupMenu::class.java.getDeclaredField("mPopup")
-        val menuHelper: Any
-        val argTypes: Class<*>
-
-        fMenuHelper.isAccessible = true
-        menuHelper = fMenuHelper.get(this)!!
-        argTypes = Boolean::class.javaPrimitiveType!!
-        menuHelper.javaClass.getDeclaredMethod("setForceShowIcon", argTypes).invoke(menuHelper, true)
-    }catch (e:Exception){}
-}
-
 
 fun FloatingActionButton. hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -132,25 +110,4 @@ fun <T> MutableLiveData<List<T>>.add(item: T) {
     val updatedItems = this.value?.toMutableList()
     updatedItems?.add(item)
     this.value = updatedItems
-}
-
-fun Float.calculateExpenses(meter: ElectricMeter): ExpenseDetail{
-    val eDetails = ExpenseDetail()
-    var energyExp = this * meter.kwPrice
-    eDetails.energy = energyExp
-    val discount = if(meter.loseDiscount){
-        if(this>meter.maxKwLimit)
-            0f
-        else
-            energyExp * (meter.kwDiscount/100)
-    }else
-        this * (meter.kwDiscount/100)
-    eDetails.discount = discount
-    energyExp -= discount
-    val taxes = energyExp * (meter.taxes/100)
-    eDetails.taxes = taxes
-    energyExp += (taxes + meter.fixedPrices)
-    eDetails.fixed = meter.fixedPrices
-    eDetails.total = energyExp
-    return eDetails
 }

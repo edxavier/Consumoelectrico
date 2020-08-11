@@ -4,18 +4,15 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.nicrosoft.consumoelectrico.data.ExpenseDetail
 import com.nicrosoft.consumoelectrico.data.daos.ElectricMeterDAO
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
-import com.nicrosoft.consumoelectrico.utils.formatDate
 import com.nicrosoft.consumoelectrico.utils.hoursSinceDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.joda.time.LocalDate
-import org.joda.time.Period
-import org.joda.time.PeriodType
 import java.util.*
 import kotlin.time.ExperimentalTime
 
@@ -30,6 +27,10 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     fun getPeriodMetersReadings(periodCode:String) = dao.getPeriodMetersReadings(periodCode)
     fun getAllMeterReadings(meterCode:String) = dao.getAllMeterReadings(meterCode)
     suspend fun getFirstMeterReading(meterCode:String) = withContext(Dispatchers.IO){ dao.getFirstMeterReading(meterCode) }
+    suspend fun getLastPriceRange(meterCode:String) = withContext(Dispatchers.IO){ dao.getLastPriceRange(meterCode) }
+    suspend fun getNextPriceRange(meterCode:String, priceFrom:Int) = withContext(Dispatchers.IO){ dao.getNextPriceRange(meterCode, priceFrom) }
+    suspend fun getPreviousPriceRange(meterCode:String, priceFrom:Int) = withContext(Dispatchers.IO){ dao.getPreviousPriceRange(meterCode, priceFrom) }
+
     fun getPriceList(meterCode:String) = dao.getPriceRanges(meterCode)
 
     suspend fun getMeter(meterCode: String) = withContext(Dispatchers.IO){ dao.getMeter(meterCode) }
@@ -243,5 +244,34 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             }
             dao.updateElectricReading(electricReading)
         }
+    }
+
+    suspend fun calculateEnergyCosts(totalKWh:Float, meter: ElectricMeter):ExpenseDetail = withContext(Dispatchers.IO){
+        val eDetails = ExpenseDetail()
+        val prices = dao.getPricesList(meter.code)
+        var energyExp = if(prices.isNotEmpty()){
+            calculatePricesExpenses(totalKWh, prices)
+        }else
+            totalKWh * meter.kwPrice
+        eDetails.energy = energyExp
+        val discount = if(meter.loseDiscount){
+            if(totalKWh > meter.maxKwLimit)
+                0f
+            else
+                energyExp * (meter.kwDiscount/100)
+        }else
+            energyExp * (meter.kwDiscount/100)
+        eDetails.discount = discount
+        energyExp -= discount
+        val taxes = energyExp * (meter.taxes/100)
+        eDetails.taxes = taxes
+        energyExp += (taxes + meter.fixedPrices)
+        eDetails.fixed = meter.fixedPrices
+        eDetails.total = energyExp
+        return@withContext eDetails
+    }
+
+    private fun calculatePricesExpenses(totalKWh: Float, prices:List<PriceRange>):Float{
+        return 0f
     }
 }

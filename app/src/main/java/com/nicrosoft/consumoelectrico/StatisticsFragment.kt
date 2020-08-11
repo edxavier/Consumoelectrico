@@ -12,7 +12,6 @@ import androidx.navigation.Navigation
 import com.nicrosoft.consumoelectrico.databinding.FragmentStatisticsBinding
 import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
 import com.nicrosoft.consumoelectrico.ui2.ElectricViewModel
-import com.nicrosoft.consumoelectrico.utils.calculateExpenses
 import com.nicrosoft.consumoelectrico.utils.estimateConsumption
 import com.nicrosoft.consumoelectrico.utils.formatDate
 import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
@@ -62,16 +61,18 @@ class StatisticsFragment : ScopeFragment(), KodeinAware {
                     if(lr.consumptionHours / 24 < meter.periodLength)
                         bind.detailPeriodEstimatedConsumption.text = "${lr.estimateConsumption(meter).toTwoDecimalPlace()} kWh"
                     else
-                        bind.detailPeriodEstimatedConsumption.text = "${lr.readingValue.toTwoDecimalPlace()} kWh"
+                        bind.detailPeriodEstimatedConsumption.text = "${p.totalKw.toTwoDecimalPlace()} kWh"
                     bind.detailPeriodDaysConsumed.text = "${(lr.consumptionHours/24).toTwoDecimalPlace()}/${meter.periodLength}"
-                    bind.detailPeriodExpenses.text = "C$${p.totalKw.calculateExpenses(meter).total.toTwoDecimalPlace()}"
+                    val periodExp = viewModel.calculateEnergyCosts(p.totalKw, meter)
+                    bind.detailPeriodExpenses.text = "C$${periodExp.total.toTwoDecimalPlace()}"
+                    //Si aun no hemos revasado la duracion periodo estimar el consumo an finalizarlo
                     val dExpenses = if(lr.consumptionHours / 24 < meter.periodLength) {
-                        val detailExp = lr.estimateConsumption(meter).calculateExpenses(meter)
-                        bind.detailPeriodEstimatedExpenses.text = "C$${detailExp.total.toTwoDecimalPlace()}"
-                        detailExp
+                        val estimatedExp = viewModel.calculateEnergyCosts(lr.estimateConsumption(meter), meter)
+                        bind.detailPeriodEstimatedExpenses.text = "C$${estimatedExp.total.toTwoDecimalPlace()}"
+                        estimatedExp
                     }else {
                         bind.detailPeriodEstimatedExpenses.text = bind.detailPeriodExpenses.text
-                        p.totalKw.calculateExpenses(meter)
+                        periodExp
                     }
                     bind.detailEnergyExp.text = "C$${dExpenses.energy.toTwoDecimalPlace()}"
                     bind.detailDiscounts.text = "C$${dExpenses.discount.toTwoDecimalPlace()}"

@@ -49,6 +49,18 @@ interface ElectricMeterDAO {
     @Query("SELECT * FROM price_range where meter_code=:meterCode order by from_kw")
     fun getPriceRanges(meterCode:String): LiveData<List<PriceRange>>
 
+    @Query("SELECT * FROM price_range where meter_code=:meterCode order by from_kw")
+    fun getPricesList(meterCode:String): List<PriceRange>
+
+    @Query("SELECT * FROM price_range where meter_code=:meterCode order by from_kw desc limit 1")
+    fun getLastPriceRange(meterCode:String): PriceRange?
+
+    @Query("SELECT * FROM price_range where meter_code=:meterCode and from_kw >:priceFrom  order by from_kw asc limit 1")
+    fun getNextPriceRange(meterCode:String, priceFrom:Int): PriceRange?
+
+    @Query("SELECT * FROM price_range where meter_code=:meterCode and from_kw <:priceFrom order by from_kw desc limit 1")
+    fun getPreviousPriceRange(meterCode:String, priceFrom:Int): PriceRange?
+
     @Query("SELECT * FROM electric_meter order by id desc")
     fun getMeters(): LiveData<List<ElectricMeter>>
 

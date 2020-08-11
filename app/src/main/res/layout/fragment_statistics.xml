@@ -180,6 +180,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <TextView
+                        android:textColor="@color/md_blue_grey_800"
                         android:id="@+id/detail_period_estimated_consumption"
                         android:textSize="18sp"
                         android:text="@string/empty_placeholder"
@@ -211,6 +212,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <TextView
+                        android:textColor="@color/md_blue_grey_800"
                         android:textSize="18sp"
                         android:id="@+id/detail_period_expenses"
                         android:text="@string/empty_placeholder"
@@ -236,6 +238,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <TextView
+                        android:textColor="@color/md_blue_grey_800"
                         android:textSize="18sp"
                         android:id="@+id/detail_period_estimated_expenses"
                         android:text="@string/empty_placeholder"

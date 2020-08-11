@@ -2,6 +2,7 @@ package com.nicrosoft.consumoelectrico.ui2
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -228,33 +229,38 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
                     .title(R.string.edit)
                     .negativeButton(R.string.cancel) { dismiss() }
                     .positiveButton(R.string.ok) {
-                        if(checkNonEmptyEditText(dlg_txt_from_kw) && checkNonEmptyEditText(dlg_txt_to_kw) &&
-                                checkNonEmptyEditText(dlg_txt_price_kw)){
+                        if(checkNonEmptyEditText(dlg_txt_to_kw) && checkNonEmptyEditText(dlg_txt_price_kw)){
                             val from = dlg_txt_from_kw.text.toString().toInt()
                             val to = dlg_txt_to_kw.text.toString().toInt()
-                            launch {
-                                val op = viewModel.getOverlappingPrice(from, to, binding.meter!!.code)
-                                if(op!= null){
-                                    //Si existe rangos que incluyan los neuvos valores, verificar que no este dentro del mismo rango
-                                    // si es asi eliminarlo y volverlo a crear, si no avisar que no se puede por que invade una rango diferente
-                                    if(op.id == price.id){
-                                        viewModel.deletePriceRange(price)
-                                        val newPrice = PriceRange(fromKw = from, toKw = to, price = dlg_txt_price_kw.text.toString().toFloat() , meterCode =  price.meterCode)
-                                        viewModel.savePrice(newPrice)
+                            // No permitir que el rango mayor se menor que el rango minimo
+                            if(from >= to){
+                                dlg_txt_to_kw.error = getString(R.string.invalid_kw_range)
+                                dlg_txt_to_kw.requestFocus()
+                            }else{
+                                launch {
+                                    val next = viewModel.getNextPriceRange(binding.meter!!.code, from)
+                                    if (next!=null){
+                                        // No permitir que el rango mayor Nuevo sea mayor o igual al rango mayor-1 del siguienterango
+                                        if(to>=next.toKw-1){
+                                            dlg_txt_to_kw.error = getString(R.string.invalid_kw_range)
+                                            dlg_txt_to_kw.requestFocus()
+                                        }else {
+                                            // Reasignar el rango minimo del siguiete para que no queden rangos fuera
+                                            next.fromKw = to + 1
+                                            viewModel.updatePriceRange(next)
+                                            price.toKw = to
+                                            price.price = dlg_txt_price_kw.text.toString().toFloat()
+                                            viewModel.updatePriceRange(price)
+                                            dismiss()
+                                            Snackbar.make(binding.coordinator, R.string.item_updated, Snackbar.LENGTH_SHORT).show()
+                                        }
+                                    }else{
+                                        price.toKw = to
+                                        price.price = dlg_txt_price_kw.text.toString().toFloat()
+                                        viewModel.updatePriceRange(price)
                                         dismiss()
-                                    }else {
-                                        dlg_txt_from_kw.error = getString(R.string.range_overlaps)
-                                        dlg_txt_to_kw.error = getString(R.string.range_overlaps)
-                                        dlg_txt_from_kw.requestFocus()
+                                        Snackbar.make(binding.coordinator, R.string.item_updated, Snackbar.LENGTH_SHORT).show()
                                     }
-                                }else{
-                                    //Si no existe invasion de rango actualizar campos
-                                    price.fromKw = from
-                                    price.toKw = to
-                                    price.price = dlg_txt_price_kw.text.toString().toFloat()
-                                    viewModel.updatePriceRange(price)
-                                    dismiss()
-                                    Snackbar.make(binding.coordinator, R.string.item_updated, Snackbar.LENGTH_LONG).show()
                                 }
                             }
                         }
@@ -272,7 +278,7 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
     }
 
     private fun showCreateDialog() {
-        MaterialDialog(requireContext()).show {
+        val dlg = MaterialDialog(requireContext()).show {
             customView(R.layout.dlg_prices, scrollable = true)
                     .noAutoDismiss()
                     .title(R.string.edit)
@@ -303,6 +309,15 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
                         }
                     }
         }
+        try {
+            launch {
+                val lastPrice = viewModel.getLastPriceRange(viewModel.meter.value!!.code)
+                val fromKw = dlg.getCustomView().findViewById(R.id.dlg_txt_from_kw) as TextInputEditText
+                fromKw.setText("0")
+                lastPrice?.let { fromKw.setText((it.toKw+1).toString()) }
+            }
+        } catch (e:Exception) { }
+
     }
 
     private fun showDeleteConfirmDialog(price: PriceRange){
@@ -310,7 +325,14 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
             title(R.string.delete)
             message(R.string.delete_item_notice)
             positiveButton(R.string.agree){
-                launch { viewModel.deletePriceRange(price) }
+                launch {
+                    val next = viewModel.getNextPriceRange(binding.meter!!.code, price.fromKw)
+                    next?.let {
+                        next.fromKw = price.fromKw
+                        viewModel.updatePriceRange(next)
+                    }
+                    viewModel.deletePriceRange(price)
+                }
             }
             negativeButton(R.string.cancel)
         }
