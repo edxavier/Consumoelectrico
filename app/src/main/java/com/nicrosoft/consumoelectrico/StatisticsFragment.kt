@@ -12,9 +12,8 @@ import androidx.navigation.Navigation
 import com.nicrosoft.consumoelectrico.databinding.FragmentStatisticsBinding
 import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
 import com.nicrosoft.consumoelectrico.ui2.ElectricViewModel
-import com.nicrosoft.consumoelectrico.utils.estimateConsumption
-import com.nicrosoft.consumoelectrico.utils.formatDate
-import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
+import com.nicrosoft.consumoelectrico.utils.*
+import kotlinx.android.synthetic.main.fragment_statistics.*
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -42,11 +41,12 @@ class StatisticsFragment : ScopeFragment(), KodeinAware {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        loadData()
+        loadDetailData()
+        loadChartsData()
     }
 
     @SuppressLint("SetTextI18n")
-    private fun loadData() {
+    private fun loadDetailData() {
         val meter = viewModel.meter.value!!
         bind.detailMeterName.text = meter.name
         bind.detailMeterDesc.text = meter.description
@@ -89,4 +89,18 @@ class StatisticsFragment : ScopeFragment(), KodeinAware {
             }
         }
     }
+
+    private fun loadChartsData() {
+        launch {
+            agg_consumption_chart.setupLineChartStyle()
+            val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
+            period?.let {
+                viewModel.getChartAggConsumptionDataSet(period)
+                agg_consumption_chart.data = viewModel.getChartAggConsumptionDataSet(period)
+            }
+        }
+    }
+
+
+
 }

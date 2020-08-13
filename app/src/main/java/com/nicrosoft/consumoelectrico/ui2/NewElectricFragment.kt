@@ -284,13 +284,12 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
                     .title(R.string.edit)
                     .negativeButton(R.string.cancel) { dismiss() }
                     .positiveButton(R.string.ok) {
-                        if(checkNonEmptyEditText(dlg_txt_from_kw) && checkNonEmptyEditText(dlg_txt_to_kw) &&
-                                checkNonEmptyEditText(dlg_txt_price_kw)){
+                        if(checkNonEmptyEditText(dlg_txt_to_kw) && checkNonEmptyEditText(dlg_txt_price_kw)){
                             if(checkValidRangeValues(dlg_txt_from_kw, dlg_txt_to_kw)){
                                 val from = dlg_txt_from_kw.text.toString().toInt()
                                 val to = dlg_txt_to_kw.text.toString().toInt()
                                 launch {
-                                    val op = viewModel.getOverlappingPrice(from, to, binding.meter!!.code)
+                                    val op = viewModel.getOverlappingPrice(from, to, viewModel.meter.value!!.code)
                                     if(op!= null){
                                         dlg_txt_from_kw.error = getString(R.string.range_overlaps)
                                         dlg_txt_to_kw.error = getString(R.string.range_overlaps)

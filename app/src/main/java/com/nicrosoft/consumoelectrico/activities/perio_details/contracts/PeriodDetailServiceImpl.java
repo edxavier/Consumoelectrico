@@ -196,12 +196,12 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
                 dataSet.setValueTextColor(this.context.getResources().getColor(R.color.md_black_1000_75));
                 BarData data = new BarData(dataSet);
                 data.setBarWidth(0.8f);
-                data.setValueFormatter(new IValueFormatter() {
+                /*data.setValueFormatter(new IValueFormatter() {
                     @Override
                     public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
                         return String.format(Locale.getDefault(), "%.0f", value);
                     }
-                });
+                });*/
                 chart.setData(data);
                 chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
                 chart.getXAxis().setGranularity(1.0f);

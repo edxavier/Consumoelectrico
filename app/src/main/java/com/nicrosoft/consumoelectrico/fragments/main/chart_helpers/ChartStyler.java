@@ -81,7 +81,7 @@ public class ChartStyler {
             YAxis leftAxis = mChart.getAxisLeft();
             leftAxis.setGridColor(context.getResources().getColor(R.color.md_black_1000));
             leftAxis.setDrawZeroLine(false);
-            leftAxis.setValueFormatter(new MyYAxisValueFormatter());
+            //leftAxis.setValueFormatter(new MyYAxisValueFormatter());
             leftAxis.setAxisMinimum(0f);
             leftAxis.setDrawGridLines(false);
 
@@ -172,7 +172,7 @@ public class ChartStyler {
         barDataset.setLabel(title);
         barDataset.setValueTextColor(context.getResources().getColor(R.color.md_black_1000_75));
         barDataset.setColor(context.getResources().getColor(R.color.md_blue_grey_400));
-        barDataset.setValueFormatter(new MyValueFormatter());
+        //barDataset.setValueFormatter(new MyValueFormatter());
         barDataset.setDrawValues(false);
         ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
         dataSets.add(barDataset); // add the dataset
@@ -184,7 +184,7 @@ public class ChartStyler {
     public static RealmLineDataSet setCombinedLine(@NonNull RealmLineDataSet combinedLineDataSet, @NonNull Context context){
         String title = context.getResources().getString(R.string.chart_legend_avg);
         combinedLineDataSet.setLabel(title);
-        combinedLineDataSet.setValueFormatter(new MyAvgFormatter());
+        //combinedLineDataSet.setValueFormatter(new MyAvgFormatter());
         combinedLineDataSet.setDrawFilled(false);
         combinedLineDataSet.setHighlightEnabled(false);
         combinedLineDataSet.setLineWidth(1.2f);
@@ -204,7 +204,7 @@ public class ChartStyler {
     public static RealmLineDataSet setAcumuladoPeriodLine(@NonNull RealmLineDataSet acumuladoDataSet, @NonNull Context context){
         String title = context.getResources().getString(R.string.chart_legend_accumulated);
         acumuladoDataSet.setLabel(title);
-        acumuladoDataSet.setValueFormatter(new MyValueFormatter());
+        //acumuladoDataSet.setValueFormatter(new MyValueFormatter());
         acumuladoDataSet.setDrawFilled(false);
         acumuladoDataSet.setDrawCircleHole(false);
         acumuladoDataSet.setLineWidth(1.2f);
@@ -224,7 +224,7 @@ public class ChartStyler {
     public static RealmLineDataSet setAvgPeriodLine(@NonNull RealmLineDataSet acumuladoDataSet, @NonNull Context context){
         String title = context.getResources().getString(R.string.chart_legend_avg);
         acumuladoDataSet.setLabel(title);
-        acumuladoDataSet.setValueFormatter(new MyAvgFormatter());
+        //acumuladoDataSet.setValueFormatter(new MyAvgFormatter());
         acumuladoDataSet.setDrawFilled(false);
         acumuladoDataSet.setDrawCircleHole(false);
         acumuladoDataSet.setLineWidth(1.2f);

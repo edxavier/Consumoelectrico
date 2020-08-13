@@ -71,8 +71,14 @@ interface ElectricMeterDAO {
     @Query("SELECT * FROM electric_meter where code=:meterCode order by id desc")
     fun getMeter(meterCode: String): ElectricMeter
 
+    @Query("SELECT * FROM electric_bill_period where code=:periodCode order by id desc")
+    fun getPeriod(periodCode: String): ElectricBillPeriod
+
     @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode order by reading_date desc")
     fun getPeriodMetersReadings(periodCode: String): LiveData<List<ElectricReading>>
+
+    @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode order by reading_date asc")
+    fun getPeriodReadings(periodCode: String): List<ElectricReading>
 
     @Query("SELECT count(*) FROM electric_meter_reading where period_code=:periodCode")
     fun getTotalPeriodReading(periodCode: String): Int
@@ -84,7 +90,7 @@ interface ElectricMeterDAO {
     fun getFirstMeterReading(meterCode: String): ElectricReading
 
     //Cargar los rangos que se sobreponen o contienen al rango especificado
-    @Query("SELECT * FROM price_range where meter_code=:meterCode AND from_kw BETWEEN :min AND :max OR to_kw BETWEEN :min AND :max OR (:min BETWEEN from_kw AND to_kw AND :max BETWEEN from_kw AND to_kw)")
+    @Query("SELECT * FROM price_range where meter_code=:meterCode AND ((from_kw BETWEEN :min AND :max OR to_kw BETWEEN :min AND :max) OR (:min BETWEEN from_kw AND to_kw AND :max BETWEEN from_kw AND to_kw))")
     fun getOverlappingPrice(min:Int, max:Int, meterCode: String): PriceRange?
 
     @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode order by reading_date desc limit 1")
