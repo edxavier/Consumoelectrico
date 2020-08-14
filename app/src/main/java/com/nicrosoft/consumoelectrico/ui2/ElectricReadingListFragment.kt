@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.view.animation.OvershootInterpolator
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -149,8 +150,7 @@ class ElectricReadingListFragment : ScopeFragment(), KodeinAware, ElectricReadin
                         reading.readingValue = text.toString().toFloat()
                         viewModel.updateReadingValue(reading)
                     }else{
-                        Snackbar.make(readings_coordinator, getString(R.string.invalid_kw_range), Snackbar.LENGTH_SHORT)
-                                .setTextColor(ContextCompat.getColor(requireContext(), R.color.md_red_500))
+                        Toast.makeText(context, getString(R.string.invalid_kw_range), Toast.LENGTH_SHORT)
                                 .show()
                     }
                 }

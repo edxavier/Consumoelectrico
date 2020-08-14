@@ -59,7 +59,7 @@ class StatisticsFragment : ScopeFragment(), KodeinAware {
                     bind.detailLastReadingDate.text = lr.readingDate.formatDate(requireContext())
                     bind.detailPeriodDailyAvgConsumption.text = "${(lr.kwAvgConsumption * 24).toTwoDecimalPlace()} kWh"
                     if(lr.consumptionHours / 24 < meter.periodLength)
-                        bind.detailPeriodEstimatedConsumption.text = "${lr.estimateConsumption(meter).toTwoDecimalPlace()} kWh"
+                        bind.detailPeriodEstimatedConsumption.text = "${lr.getConsumptionProjection(meter).toTwoDecimalPlace()} kWh"
                     else
                         bind.detailPeriodEstimatedConsumption.text = "${p.totalKw.toTwoDecimalPlace()} kWh"
                     bind.detailPeriodDaysConsumed.text = "${(lr.consumptionHours/24).toTwoDecimalPlace()}/${meter.periodLength}"
@@ -67,7 +67,7 @@ class StatisticsFragment : ScopeFragment(), KodeinAware {
                     bind.detailPeriodExpenses.text = "C$${periodExp.total.toTwoDecimalPlace()}"
                     //Si aun no hemos revasado la duracion periodo estimar el consumo an finalizarlo
                     val dExpenses = if(lr.consumptionHours / 24 < meter.periodLength) {
-                        val estimatedExp = viewModel.calculateEnergyCosts(lr.estimateConsumption(meter), meter)
+                        val estimatedExp = viewModel.calculateEnergyCosts(lr.getConsumptionProjection(meter), meter)
                         bind.detailPeriodEstimatedExpenses.text = "C$${estimatedExp.total.toTwoDecimalPlace()}"
                         estimatedExp
                     }else {
@@ -80,7 +80,13 @@ class StatisticsFragment : ScopeFragment(), KodeinAware {
                     bind.detailFixedExp.text = "C$${dExpenses.fixed.toTwoDecimalPlace()}"
                     bind.detailTotal.text = "C$${dExpenses.total.toTwoDecimalPlace()}"
                 }
-                val firstReading = viewModel.getFirstPeriodReading(p.code)
+                //val firstReading = viewModel.getFirstPeriodReading(p.code)
+                val periods = viewModel.getMeterAllPeriods(meter.code)
+                val firstReading = if(periods.size>1)
+                    viewModel.getLastPeriodReading(periods[1].code)
+                else
+                    viewModel.getFirstPeriodReading(p.code)
+
                 firstReading?.let { fr ->
                     bind.detailInitialReading.text = "${fr.readingValue.toTwoDecimalPlace()} kWh"
                     bind.detailInitialReadingDate.text = fr.readingDate.formatDate(requireContext())
@@ -93,6 +99,7 @@ class StatisticsFragment : ScopeFragment(), KodeinAware {
     private fun loadChartsData() {
         launch {
             agg_consumption_chart.setupLineChartStyle()
+            agg_consumption_chart.drawLimit(viewModel.meter.value!!.maxKwLimit.toFloat())
             val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
             period?.let {
                 viewModel.getChartAggConsumptionDataSet(period)

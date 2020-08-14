@@ -5,6 +5,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 
 class HoursValueFormatter: ValueFormatter() {
     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-        return (value/24).toInt().toString()
+        return (value/24).toTwoDecimalPlace()
     }
 }

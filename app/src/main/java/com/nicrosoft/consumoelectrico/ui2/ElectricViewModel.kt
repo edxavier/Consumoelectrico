@@ -2,18 +2,22 @@ package com.nicrosoft.consumoelectrico.ui2
 
 import android.content.Context
 import android.util.Log
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.ExpenseDetail
 import com.nicrosoft.consumoelectrico.data.daos.ElectricMeterDAO
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
+import com.nicrosoft.consumoelectrico.utils.getConsumptionProjection
 import com.nicrosoft.consumoelectrico.utils.hoursSinceDate
 import com.nicrosoft.consumoelectrico.utils.setupAppStyle
 import kotlinx.coroutines.Dispatchers
@@ -30,8 +34,10 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
 
     fun getElectricMeterList() = dao.getMeters()
     fun getMeterPeriods(meterCode: String) = dao.getMeterPeriods(meterCode)
-    fun getPeriodMetersReadings(periodCode:String) = dao.getPeriodMetersReadings(periodCode)
     fun getAllMeterReadings(meterCode:String) = dao.getAllMeterReadings(meterCode)
+
+    suspend fun getMeterAllPeriods(meterCode: String) = withContext(Dispatchers.IO){ dao.getMeterAllPeriods(meterCode) }
+    suspend fun getPeriodMetersReadings(periodCode:String) = withContext(Dispatchers.IO){ dao.getPeriodMetersReadings(periodCode) }
     suspend fun getFirstMeterReading(meterCode:String) = withContext(Dispatchers.IO){ dao.getFirstMeterReading(meterCode) }
     suspend fun getLastPriceRange(meterCode:String) = withContext(Dispatchers.IO){ dao.getLastPriceRange(meterCode) }
     suspend fun getNextPriceRange(meterCode:String, priceFrom:Int) = withContext(Dispatchers.IO){ dao.getNextPriceRange(meterCode, priceFrom) }
@@ -143,11 +149,13 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     @ExperimentalTime
     suspend fun terminatePeriod(current:ElectricReading, period:ElectricBillPeriod, meterCode: String) = withContext(Dispatchers.IO) {
         //Crear nuevo periodo, cerrar el actual y reasignar toda lectura posterior al nuevo periodo
-        val newPeriod = ElectricBillPeriod(fromDate = current.readingDate, meterCode = meterCode, toDate = current.readingDate)
+        var newPeriod = ElectricBillPeriod(fromDate = current.readingDate, meterCode = meterCode, toDate = current.readingDate)
         period.toDate = current.readingDate
         period.active = false
+        dao.updatePeriod(period)
         updatePeriodTotals(period.code)
         dao.savePeriod(newPeriod)
+        newPeriod = dao.getPeriod(newPeriod.code)
         val laterReadings = dao.getReadingsAfter(period.code, current.readingDate)
         laterReadings.forEachIndexed { index, electricReading ->
             //Log.e("EDER", "Reasignado lecturas")
@@ -166,6 +174,10 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
                 electricReading.kwAvgConsumption = electricReading.kwAggConsumption / electricReading.consumptionHours
             }
             dao.updateElectricReading(electricReading)
+        }
+        if(laterReadings.isNotEmpty()){
+            newPeriod.toDate = laterReadings.last().readingDate
+            dao.updatePeriod(newPeriod)
         }
         updatePeriodTotals(newPeriod.code)
     }
@@ -239,14 +251,15 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         val period = dao.getPeriod(periodCode)
         period.totalKw = dao.getTotalPeriodKw(period.code)
         period.totalBill = calculateEnergyCosts(period.totalKw, meter.value!!).total
-        dao.updatePeriod(period)
+        val costUpdated = dao.updatePeriod(period)
+        //Log.e("EDER_COSTUPDATED", costUpdated.toString())
     }
 
     @ExperimentalTime
     private fun recomputeLaterReadings(reading: ElectricReading){
         val laterReadings = dao.getReadingsAfter(reading.periodCode!!, reading.readingDate)
         laterReadings.forEachIndexed { index, electricReading ->
-            Log.e("EDER", "RECALCULANDO lecturas")
+            //Log.e("EDER", "RECALCULANDO lecturas")
             //Recalcular lecturas despues de la lectura pasada, que solo seria en caso de que esta sea la primer lectura de la hsitoria del medidor
             if(index>0){
                 electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(reading.readingDate).toFloat()
@@ -332,16 +345,34 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
                 0f
             entries2.add(Entry(r.kwAggConsumption, total))
         }
+
         val dataSet = LineDataSet(entries, "Consumo")
         val dataSet2 = LineDataSet(entries2, "Gastos")
         dataSet.setupAppStyle(context)
         dataSet2.setupAppStyle(context)
         val dataSets: MutableList<ILineDataSet> = ArrayList()
         dataSets.add(dataSet)
+        if(readings.isNotEmpty()){
+            val projectionDs = getConsumptionProjectionDataSet(readings.last(),
+                    ContextCompat.getColor(context, R.color.md_blue_grey_400))
+            dataSets.add(projectionDs)
+        }
         //dataSets.add(dataSet2)
         return@withContext LineData(dataSets)
     }
 
-
+    private fun getConsumptionProjectionDataSet(reading: ElectricReading, color:Int): LineDataSet{
+        val entries: MutableList<Entry> = ArrayList()
+        if(reading.kwAggConsumption < meter.value!!.maxKwLimit){
+            val projection = reading.getConsumptionProjection(meter.value!!)
+            entries.add(Entry(reading.consumptionHours, reading.kwAggConsumption))
+            entries.add(Entry((meter.value!!.periodLength*24).toFloat(), projection))
+        }
+        val dataSet = LineDataSet(entries, "Proyeccion")
+        dataSet.setupAppStyle(context)
+        dataSet.enableDashedLine(15f, 15f, 0f)
+        dataSet.color = color
+        return dataSet
+    }
 
 }

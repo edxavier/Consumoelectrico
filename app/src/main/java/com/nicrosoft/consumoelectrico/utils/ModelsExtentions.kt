@@ -15,7 +15,7 @@ suspend fun ElectricMeter.getLastReading(viewModel:ElectricViewModel): ElectricR
 }
 
 
-fun ElectricReading.estimateConsumption(meter:ElectricMeter): Float{
+fun ElectricReading.getConsumptionProjection(meter:ElectricMeter): Float{
     val days = this.consumptionHours / 24
     val daysLeft = meter.periodLength - days
     return daysLeft * (this.kwAvgConsumption * 24) + this.kwAggConsumption
