@@ -313,7 +313,7 @@
                 android:textSize="12sp"
                 android:textAlignment="center"
                 android:textColor="@color/primaryDarkColor"
-                android:text="Detalles de gastos estimados"
+                android:text="@string/expense_detail"
                 style="@style/AppTheme.Section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -330,7 +330,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="@string/estimated_expense"
+                    android:text="@string/detail.consumption"
                     android:textSize="13sp" />
 
                 <TextView
@@ -358,7 +358,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="Descuentos"
+                    android:text="@string/discount"
                     android:textSize="13sp" />
 
                 <TextView
@@ -386,7 +386,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="Impuestos"
+                    android:text="@string/_taxes"
                     android:textSize="13sp" />
 
                 <TextView
@@ -442,7 +442,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     style="@style/AppTheme.Title"
-                    android:text="Total"
+                    android:text="@string/total"
                     android:textSize="13sp" />
 
                 <TextView
@@ -467,7 +467,7 @@
                 android:textSize="12sp"
                 android:textAlignment="center"
                 android:textColor="@color/primaryDarkColor"
-                android:text="Graficos"
+                android:text="@string/charts"
                 style="@style/AppTheme.Section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -490,6 +490,81 @@
                     android:layout_height="210dp" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_margin="12dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/AppTheme.Title"
+                    android:textAlignment="center"
+                    android:text="@string/detail.chart2.title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <com.github.mikephil.charting.charts.LineChart
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/avg_consumption_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_margin="12dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/AppTheme.Title"
+                    android:textAlignment="center"
+                    android:text="@string/detail.chart2.title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <com.github.mikephil.charting.charts.LineChart
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/cost_vs_day_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_margin="12dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/AppTheme.Title"
+                    android:textAlignment="center"
+                    android:text="@string/detail.chart2.cost_vs_kwh.title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <com.github.mikephil.charting.charts.LineChart
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/cost_vs_kwh_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_margin="12dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/AppTheme.Title"
+                    android:text="@string/period_history"
+                    android:fontFamily="@font/play"
+                    android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/periods_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp" />
+
+            </LinearLayout>
 
 
         </LinearLayout>

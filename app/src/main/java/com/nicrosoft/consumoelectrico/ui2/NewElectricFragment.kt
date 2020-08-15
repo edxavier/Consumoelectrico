@@ -1,13 +1,10 @@
 package com.nicrosoft.consumoelectrico.ui2
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -31,6 +28,7 @@ import com.nicrosoft.consumoelectrico.ui2.adapters.PriceRangeAdapter
 import com.nicrosoft.consumoelectrico.utils.hideKeyboard
 import com.nicrosoft.consumoelectrico.utils.setHidden
 import com.nicrosoft.consumoelectrico.utils.setVisible
+import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import com.wajahatkarim3.easyvalidation.core.view_ktx.nonEmpty
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter

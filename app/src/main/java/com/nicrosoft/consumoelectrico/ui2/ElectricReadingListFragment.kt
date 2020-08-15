@@ -5,7 +5,6 @@ import android.text.InputType
 import android.view.*
 import android.view.animation.OvershootInterpolator
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -13,13 +12,13 @@ import androidx.navigation.Navigation
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.listItems
-import com.google.android.material.snackbar.Snackbar
 import com.nicrosoft.consumoelectrico.ElectricDetailFragmentDirections
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricReadingAdapter
 import com.nicrosoft.consumoelectrico.utils.*
+import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.android.synthetic.main.emeter_list_fragment.animation_view
@@ -27,7 +26,6 @@ import kotlinx.android.synthetic.main.emeter_list_fragment.emeter_list
 import kotlinx.android.synthetic.main.emeter_list_fragment.message_
 import kotlinx.android.synthetic.main.emeter_list_fragment.message_body
 import kotlinx.android.synthetic.main.emeter_list_fragment.message_title
-import kotlinx.android.synthetic.main.fragment_electric_reading_list.*
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein

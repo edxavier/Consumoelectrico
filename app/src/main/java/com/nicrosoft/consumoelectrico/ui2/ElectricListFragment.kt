@@ -17,6 +17,7 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter.AdapterItemListener
 import com.nicrosoft.consumoelectrico.utils.*
+import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
 import kotlinx.android.synthetic.main.emeter_list_fragment.*

@@ -9,15 +9,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
-import com.nicrosoft.consumoelectrico.ui2.ElectricViewModel
+import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import com.nicrosoft.consumoelectrico.utils.*
 import kotlinx.android.synthetic.main.item_electric_meter.view.*
-import kotlinx.android.synthetic.main.medidor_item.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.joda.time.LocalDate
-import org.joda.time.Period
-import org.joda.time.PeriodType
 import java.util.*
 import kotlin.time.ExperimentalTime
 

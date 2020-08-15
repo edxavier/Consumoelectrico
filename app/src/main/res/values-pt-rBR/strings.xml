@@ -181,12 +181,17 @@
     <string name="datetime_day_month">dd MMM</string>
     <string name="period_consumption">Consumo do período</string>
     <string name="end_period_notice">Este período será encerrado com a leitura atual, verifique se a data e a leitura coincidem com os dados refletidos na sua conta de luz.</string>
-    <string name="statistics">Statictics</string>
-    <string name="electric_load">Load</string>
+    <string name="statistics">Estatisticas</string>
+    <string name="electric_load">Carga</string>
     <string name="delete_notice">This item will be permantly deleted, are you sure to continue?</string>
-    <string name="periods">Periods</string>
-    <string name="daily_avg">Daily Average</string>
-    <string name="expenses">Approximate expenses</string>
+    <string name="periods">Períodos</string>
+    <string name="daily_avg">Média diária</string>
+    <string name="expenses">Despesas aproximadas</string>
+    <string name="charts" >Gráficos</string>
+    <string name="detail.chart2.cost_vs_kwh.title">Relação custo-consumo</string>
+    <string name="discount">Desconto</string>
+    <string name="_taxes">Impostos</string>
+    <string name="expense_detail">Detalhes de despesas estimadas</string>
 
 
 </resources>

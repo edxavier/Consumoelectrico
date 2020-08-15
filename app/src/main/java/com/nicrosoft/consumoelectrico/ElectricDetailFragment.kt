@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
-import com.nicrosoft.consumoelectrico.ui2.ElectricViewModel
+import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import kotlinx.android.synthetic.main.fragment_electric_detail.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein

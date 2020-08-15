@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
-import com.nicrosoft.consumoelectrico.ui2.ElectricViewModel
+import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import com.nicrosoft.consumoelectrico.ui2.adapters.PeriodsAdapter
 import com.nicrosoft.consumoelectrico.utils.fadeZoomIn
 import com.nicrosoft.consumoelectrico.utils.setHidden

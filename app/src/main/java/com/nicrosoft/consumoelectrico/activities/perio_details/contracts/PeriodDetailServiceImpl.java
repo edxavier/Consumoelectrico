@@ -203,6 +203,7 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
                     }
                 });*/
                 chart.setData(data);
+                chart.setVisibleXRangeMaximum(12);
                 chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
                 chart.getXAxis().setGranularity(1.0f);
                 chart.getAxisLeft().setTextColor(this.context.getResources().getColor(R.color.md_black_1000_50));

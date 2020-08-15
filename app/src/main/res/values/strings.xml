@@ -244,6 +244,12 @@
     <string name="daily_avg">Daily Average</string>
     <string name="empty_placeholder">----</string>
     <string name="expenses">Approximate expenses</string>
+    <string name="charts">Charts</string>
+    <string name="detail.chart2.cost_vs_kwh.title">Cost-consumption ratio</string>
+    <string name="discount">Discount</string>
+    <string name="_taxes">Taxes</string>
+    <string name="total">Total</string>
+    <string name="expense_detail">Estimated expense details</string>
 
 
 </resources>

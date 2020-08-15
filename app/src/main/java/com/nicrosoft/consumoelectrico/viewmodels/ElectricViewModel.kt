@@ -1,17 +1,15 @@
-package com.nicrosoft.consumoelectrico.ui2
+package com.nicrosoft.consumoelectrico.viewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.ExpenseDetail
+import com.nicrosoft.consumoelectrico.data.LineChartDataSets
 import com.nicrosoft.consumoelectrico.data.daos.ElectricMeterDAO
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
@@ -22,6 +20,7 @@ import com.nicrosoft.consumoelectrico.utils.hoursSinceDate
 import com.nicrosoft.consumoelectrico.utils.setupAppStyle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.time.ExperimentalTime
@@ -332,33 +331,16 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         return expenses
     }
 
-    suspend fun getChartAggConsumptionDataSet(period: ElectricBillPeriod): LineData = withContext(Dispatchers.IO){
+    suspend fun getLineChartData(period: ElectricBillPeriod): LineChartDataSets = withContext(Dispatchers.IO){
+        val dSets = LineChartDataSets()
         val readings = dao.getPeriodReadings(period.code)
-        val entries: MutableList<Entry> = ArrayList()
-        val entries2: MutableList<Entry> = ArrayList()
-        readings.forEach { r ->
-            entries.add(Entry(r.consumptionHours, r.kwAggConsumption))
-            val cost = calculateEnergyCosts(r.kwAggConsumption, meter.value!!)
-            val total = if (cost.energy > 0)
-                cost.total
-            else
-                0f
-            entries2.add(Entry(r.kwAggConsumption, total))
-        }
 
-        val dataSet = LineDataSet(entries, "Consumo")
-        val dataSet2 = LineDataSet(entries2, "Gastos")
-        dataSet.setupAppStyle(context)
-        dataSet2.setupAppStyle(context)
-        val dataSets: MutableList<ILineDataSet> = ArrayList()
-        dataSets.add(dataSet)
-        if(readings.isNotEmpty()){
-            val projectionDs = getConsumptionProjectionDataSet(readings.last(),
-                    ContextCompat.getColor(context, R.color.md_blue_grey_400))
-            dataSets.add(projectionDs)
-        }
-        //dataSets.add(dataSet2)
-        return@withContext LineData(dataSets)
+        dSets.consumptionDs = getConsumptionChartDataSets(readings)
+        dSets.dailyAvgDs = getAvgConsumptionChartDataSets(readings)
+        dSets.costPerDayDs = getCostPerDayChartDataSets(readings)
+        dSets.costPerKwDs = getCostPerKwhChartDataSets(readings)
+        dSets.periodDs = getPeriodDataSets()
+        return@withContext dSets
     }
 
     private fun getConsumptionProjectionDataSet(reading: ElectricReading, color:Int): LineDataSet{
@@ -375,4 +357,95 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         return dataSet
     }
 
+    private fun getConsumptionChartDataSets(readings:List<ElectricReading>): LineData {
+        val entries: MutableList<Entry> = ArrayList()
+        readings.forEach { r -> entries.add(Entry(r.consumptionHours, r.kwAggConsumption)) }
+        val dataSet = LineDataSet(entries, context.getString(R.string.chart_legend_accumulated))
+        dataSet.setupAppStyle(context)
+        val dataSets: MutableList<ILineDataSet> = ArrayList()
+        dataSets.add(dataSet)
+        if(readings.isNotEmpty()){
+            val projectionDs = getConsumptionProjectionDataSet(readings.last(),
+                    ContextCompat.getColor(context, R.color.md_blue_grey_400))
+            dataSets.add(projectionDs)
+        }
+        return LineData(dataSets)
+    }
+    private fun getAvgConsumptionChartDataSets(readings:List<ElectricReading>): LineData {
+        val dailyEntries: MutableList<Entry> = ArrayList()
+        val hourlyEntries: MutableList<Entry> = ArrayList()
+        readings.forEach { r ->
+            dailyEntries.add(Entry(r.consumptionHours, (r.kwAvgConsumption*24)))
+            hourlyEntries.add(Entry(r.consumptionHours, r.kwAvgConsumption))
+        }
+        val dailyDataSet = LineDataSet(dailyEntries, context.getString(R.string.chart_legend_avg))
+        val hourlyDataSet = LineDataSet(hourlyEntries, "Promedio por hora")
+        dailyDataSet.setupAppStyle(context)
+        hourlyDataSet.setupAppStyle(context)
+        hourlyDataSet.color = ContextCompat.getColor(context, R.color.md_teal_500)
+        val dataSets: MutableList<ILineDataSet> = ArrayList()
+        dataSets.add(dailyDataSet)
+        dataSets.add(hourlyDataSet)
+        return LineData(dataSets)
+    }
+
+    private suspend fun getCostPerDayChartDataSets(readings:List<ElectricReading>): LineData {
+        val entries: MutableList<Entry> = ArrayList()
+        readings.forEach { r ->
+            val cost = calculateEnergyCosts(r.kwAggConsumption, meter.value!!)
+            val total = if (cost.energy > 0)
+                cost.total
+            else
+                0f
+            entries.add(Entry( r.consumptionHours, total))
+        }
+        val dataSet = LineDataSet(entries, "Gasto vs dias")
+        dataSet.setupAppStyle(context)
+        val dataSets: MutableList<ILineDataSet> = ArrayList()
+        dataSets.add(dataSet)
+        return LineData(dataSets)
+    }
+    private suspend fun getCostPerKwhChartDataSets(readings:List<ElectricReading>): LineData {
+        val entries: MutableList<Entry> = ArrayList()
+        readings.forEach { r ->
+            val cost = calculateEnergyCosts(r.kwAggConsumption, meter.value!!)
+            val total = if (cost.energy > 0)
+                cost.total
+            else
+                0f
+            entries.add(Entry(r.kwAggConsumption, total))
+        }
+        val dataSet = LineDataSet(entries, "Gasto vs kWh")
+        dataSet.setupAppStyle(context)
+        val dataSets: MutableList<ILineDataSet> = ArrayList()
+        dataSets.add(dataSet)
+        return LineData(dataSets)
+    }
+
+    private fun getPeriodDataSets(): BarData {
+        val periods = dao.getMeterAllPeriods(meter.value!!.code)
+        val entries: MutableList<BarEntry> = ArrayList()
+
+        periods.sortedBy { it.fromDate }.forEachIndexed{ index, period ->
+            entries.add(BarEntry(index.toFloat(), period.totalKw))
+        }
+        val pDataSet = BarDataSet(entries, context.getString(R.string.label_billing_period))
+        pDataSet.color = ContextCompat.getColor(context, R.color.md_blue_grey_500)
+        val dataSets: MutableList<IBarDataSet> = ArrayList()
+        dataSets.add(pDataSet)
+        val data = BarData(dataSets)
+        data.barWidth = 0.8f
+        return  data
+    }
+
+    suspend fun getPeriodDataLabels(): MutableList<String>  = withContext(Dispatchers.IO){
+        val periods = dao.getMeterAllPeriods(meter.value!!.code)
+        val labels: MutableList<String> = ArrayList()
+        val timeFormat = SimpleDateFormat("MMM", Locale.getDefault())
+
+        periods.sortedBy { it.fromDate }.forEach{ period ->
+            labels.add(timeFormat.format(period.fromDate))
+        }
+        return@withContext labels
+    }
 }

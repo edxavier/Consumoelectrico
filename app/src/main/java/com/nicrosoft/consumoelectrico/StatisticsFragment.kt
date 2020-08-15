@@ -2,6 +2,7 @@ package com.nicrosoft.consumoelectrico
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.nicrosoft.consumoelectrico.databinding.FragmentStatisticsBinding
 import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
-import com.nicrosoft.consumoelectrico.ui2.ElectricViewModel
+import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import com.nicrosoft.consumoelectrico.utils.*
 import kotlinx.android.synthetic.main.fragment_statistics.*
 import kotlinx.coroutines.launch
@@ -98,12 +99,24 @@ class StatisticsFragment : ScopeFragment(), KodeinAware {
 
     private fun loadChartsData() {
         launch {
-            agg_consumption_chart.setupLineChartStyle()
+            agg_consumption_chart.setupLineChartStyle(HoursValueFormatter(), MyMarkerView(requireContext(), R.layout.marker))
+            avg_consumption_chart.setupLineChartStyle(HoursValueFormatter(), MyMarkerView(requireContext(), R.layout.marker))
+            cost_vs_day_chart.setupLineChartStyle(HoursValueFormatter(), CostVsDayMarkerView(requireContext(), R.layout.marker))
+            cost_vs_kwh_chart.setupLineChartStyle(KwValueFormatter(), CostVsKwMarkerView(requireContext(), R.layout.marker))
+            periods_chart.setupBarChartStyle(viewModel.getPeriodDataLabels())
+
             agg_consumption_chart.drawLimit(viewModel.meter.value!!.maxKwLimit.toFloat())
+            avg_consumption_chart.drawLimit((viewModel.meter.value!!.maxKwLimit/viewModel.meter.value!!.periodLength).toFloat())
+
             val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
             period?.let {
-                viewModel.getChartAggConsumptionDataSet(period)
-                agg_consumption_chart.data = viewModel.getChartAggConsumptionDataSet(period)
+                val lineData = viewModel.getLineChartData(period)
+                agg_consumption_chart.data = lineData.consumptionDs
+                avg_consumption_chart.data = lineData.dailyAvgDs
+                cost_vs_day_chart.data = lineData.costPerDayDs
+                cost_vs_kwh_chart.data = lineData.costPerKwDs
+                periods_chart.data = lineData.periodDs
+
             }
         }
     }

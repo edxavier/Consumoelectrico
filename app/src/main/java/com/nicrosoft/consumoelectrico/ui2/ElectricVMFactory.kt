@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.nicrosoft.consumoelectrico.data.daos.ElectricMeterDAO
+import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ElectricVMFactory(

@@ -208,7 +208,12 @@
     <string name="delete_notice">Este elemento será eliminado permanentemente, esta seguro que quiere continuar?</string>
     <string name="periods">Periodos</string>
     <string name="daily_avg">Promedio Diario</string>
-    <string name="expenses">Approximate expenses</string>
+    <string name="expenses">Gastos aproximados</string>
+    <string name="charts" >Gráficos</string>
+    <string name="detail.chart2.cost_vs_kwh.title">Relacion costo-consumo</string>
+    <string name="discount">Descuento</string>
+    <string name="_taxes">Impuestos</string>
+    <string name="expense_detail">Detalles de gastos estimados</string>
 
 
 </resources>

@@ -1,0 +1,30 @@
+package com.nicrosoft.consumoelectrico.utils
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Log
+import com.github.mikephil.charting.components.MarkerView
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.utils.MPPointF
+import kotlinx.android.synthetic.main.marker.view.*
+
+@SuppressLint("ViewConstructor")
+class CostVsKwMarkerView(private val ctx:Context, private val layout:Int): MarkerView(ctx, layout){
+    var days:Float = 0f
+    @SuppressLint("SetTextI18n")
+    override fun refreshContent(e: Entry?, highlight: Highlight?) {
+        marker_kwh.text = "Gasto: C$ ${e!!.y.toTwoDecimalPlace()}"
+        marker_days.text = "Consumo: ${(e.x).toTwoDecimalPlace()} kWh"
+        days = (e.x/24)
+        super.refreshContent(e, highlight)
+    }
+
+    override fun getOffset(): MPPointF {
+        return if(days<10)
+            MPPointF(((width / 6)).toFloat(), (-height-100).toFloat())
+        else
+            MPPointF((-(width)).toFloat(), (-height).toFloat())
+    }
+}
+

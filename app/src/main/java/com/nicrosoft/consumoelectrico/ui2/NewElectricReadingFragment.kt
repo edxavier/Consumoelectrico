@@ -26,6 +26,7 @@ import java.util.*
 import androidx.lifecycle.Observer
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.utils.*
+import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import kotlinx.coroutines.delay
 import org.joda.time.LocalDate
 import org.joda.time.Period
