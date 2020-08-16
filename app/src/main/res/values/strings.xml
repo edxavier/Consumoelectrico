@@ -222,7 +222,7 @@
     <string name="datetime_am_pm" translatable="false">hh:mm a</string>
     <string name="datetime_day_month">MMM dd</string>
     <string name="datetime_year" translatable="false">yyyy</string>
-    <string name="period_consumption">Period Consumption</string>
+    <string name="period_consumption">Period consumption</string>
     <string name="end_period_notice">This period will close with the current reading, make sure that the date and the reading coincide with the data reflected on your electric bill.</string>
     <string name="title_activity_electric_details">MainActivity</string>
     <string name="title_home">Home</string>
@@ -250,6 +250,10 @@
     <string name="_taxes">Taxes</string>
     <string name="total">Total</string>
     <string name="expense_detail">Estimated expense details</string>
+    <string name="energy">Energy</string>
+    <string name="consumption">Consumption</string>
+    <string name="_expenses">Expenses</string>
+    <string name="export_readings_to_ocsv">"Export readings to CSV "</string>
 
 
 </resources>

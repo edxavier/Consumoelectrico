@@ -1,16 +1,21 @@
 package com.nicrosoft.consumoelectrico.ui2
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.OvershootInterpolator
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.list.listItems
+import com.nicrosoft.consumoelectrico.BuildConfig
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
@@ -25,6 +30,8 @@ import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import java.io.File
+import java.util.*
 
 class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
     override val kodein by kodein()
@@ -37,6 +44,7 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.emeter_list_fragment, container, false)
     }
 
@@ -126,6 +134,70 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
                 launch { viewModel.deleteElectricMeter(meter) }
             }
             negativeButton(R.string.cancel)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.emeter_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.ac_export_data->{
+                exportDialog()
+            }
+            R.id.action_export_readings_to_ocsv->{
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun exportDialog(){
+
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            //ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+            return
+        }
+        val initialPath = if(File("/storage/emulated/0/").exists())
+            File("/storage/emulated/0/")
+        else
+            null
+
+        MaterialDialog(requireContext()).show {
+            folderChooser(context,
+                    initialDirectory = initialPath,
+                    emptyTextRes = R.string.title_choose_folder,
+                    allowFolderCreation = true) { _, folder ->
+                // Folder selected
+                launch {
+                    //val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
+                    var name = "BACKUP CEH " + BuildConfig.VERSION_NAME + Date().formatDate(context)
+                    name = name.replace(" ", "_")
+                    JsonBackupHandler.createBackup(viewModel.getDao(), "${folder.path}/$name")
+                }
+
+            }
+        }
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK){
+            exportDialog()
+        }else{
+            showInfoDialog("No se concedieron los permisos")
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun showInfoDialog(message:String){
+        MaterialDialog(requireContext()).show {
+            title(R.string.notice)
+            message(text = message)
+            positiveButton(R.string.agree)
         }
     }
 

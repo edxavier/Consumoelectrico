@@ -101,7 +101,6 @@ public class CSVHelper {
         }
     }
 
-
     public static boolean saveActivePeriodReadings(String fullPath, String name, Context context, String medidor_id, boolean all)  {
         CSVWriter writer = null;
         try {

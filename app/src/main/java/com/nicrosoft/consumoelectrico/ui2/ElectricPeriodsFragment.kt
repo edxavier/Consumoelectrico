@@ -1,4 +1,4 @@
-package com.nicrosoft.consumoelectrico
+package com.nicrosoft.consumoelectrico.ui2
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.nicrosoft.consumoelectrico.R
+import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
-import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import com.nicrosoft.consumoelectrico.ui2.adapters.PeriodsAdapter
 import com.nicrosoft.consumoelectrico.utils.fadeZoomIn

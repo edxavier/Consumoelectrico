@@ -1,8 +1,9 @@
-package com.nicrosoft.consumoelectrico
+package com.nicrosoft.consumoelectrico.ui2
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
+import com.nicrosoft.consumoelectrico.R
+import com.nicrosoft.consumoelectrico.ScopeFragment
 
 class ElectricLoadFragment : ScopeFragment() {
 

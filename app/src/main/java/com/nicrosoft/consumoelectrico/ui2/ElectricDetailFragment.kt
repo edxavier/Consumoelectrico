@@ -1,4 +1,4 @@
-package com.nicrosoft.consumoelectrico
+package com.nicrosoft.consumoelectrico.ui2
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,8 @@ import androidx.activity.addCallback
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
+import com.nicrosoft.consumoelectrico.R
+import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import kotlinx.android.synthetic.main.fragment_electric_detail.*
 import org.kodein.di.KodeinAware

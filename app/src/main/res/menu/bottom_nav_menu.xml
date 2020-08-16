@@ -16,6 +16,7 @@
         android:title="@string/periods" />
 
     <item
+        android:visible="false"
         android:id="@+id/nav_electric_load"
         android:icon="@drawable/ic_plug"
         android:title="@string/electric_load" />

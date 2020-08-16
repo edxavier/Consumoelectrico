@@ -197,7 +197,7 @@
         android:label="@string/label_readings" />
     <fragment
         android:id="@+id/electricDetailFragment"
-        android:name="com.nicrosoft.consumoelectrico.ElectricDetailFragment"
+        android:name="com.nicrosoft.consumoelectrico.ui2.ElectricDetailFragment"
         android:label="@string/details"
         tools:layout="@layout/fragment_electric_detail" >
         <action
@@ -206,12 +206,12 @@
     </fragment>
     <fragment
         android:id="@+id/electricLoadFragment"
-        android:name="com.nicrosoft.consumoelectrico.ElectricLoadFragment"
+        android:name="com.nicrosoft.consumoelectrico.ui2.ElectricLoadFragment"
         android:label="fragment_electric_load"
         tools:layout="@layout/fragment_electric_load" />
     <fragment
         android:id="@+id/electricDetailsFragment"
-        android:name="com.nicrosoft.consumoelectrico.ElectricPeriodsFragment"
+        android:name="com.nicrosoft.consumoelectrico.ui2.ElectricPeriodsFragment"
         android:label="fragment_electric_details"
         tools:layout="@layout/fragment_electric_periods" />
 

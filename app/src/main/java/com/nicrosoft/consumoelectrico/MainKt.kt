@@ -1,5 +1,6 @@
 package com.nicrosoft.consumoelectrico
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -127,4 +128,7 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 }

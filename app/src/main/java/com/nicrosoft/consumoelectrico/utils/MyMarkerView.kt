@@ -7,6 +7,7 @@ import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
+import com.nicrosoft.consumoelectrico.R
 import kotlinx.android.synthetic.main.marker.view.*
 
 @SuppressLint("ViewConstructor")
@@ -14,8 +15,10 @@ class MyMarkerView(private val ctx:Context, private val layout:Int): MarkerView(
     var days:Float = 0f
     @SuppressLint("SetTextI18n")
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
-        marker_kwh.text = "Energia: ${e!!.y.toTwoDecimalPlace()} kWh"
-        marker_days.text = "Dias: ${(e.x/24).toTwoDecimalPlace()}"
+        val daysLabel = ctx.getString(R.string.label_days)
+        val energy = ctx.getString(R.string.energy)
+        marker_kwh.text = "$energy: ${e!!.y.toTwoDecimalPlace()} kWh"
+        marker_days.text = "$daysLabel: ${(e.x/24).toTwoDecimalPlace()}"
         days = (e.x/24)
         super.refreshContent(e, highlight)
     }

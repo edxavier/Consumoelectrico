@@ -30,7 +30,7 @@ fun Chart<*>.setupLineChartStyle(xFormatter: ValueFormatter, markerView: MarkerV
         setNoDataTextColor(black75)
         description.isEnabled = false
         setNoDataTextTypeface(typeFaceBold)
-        setExtraOffsets(5f, 15f, 0f, 0f);
+        setExtraOffsets(5f, 15f, 5f, 10f);
         setBackgroundColor(bgColor)
         setDrawBorders(false)
         setTouchEnabled(true)
@@ -70,12 +70,13 @@ fun Chart<*>.setupBarChartStyle(labels:List<String>){
 
         description.isEnabled = false
         setNoDataTextTypeface(typeFaceBold)
-        setExtraOffsets(5f, 15f, 0f, 10f);
+        setExtraOffsets(5f, 15f, 5f, 10f);
         setBackgroundColor(bgColor)
         setDrawBorders(false)
         setTouchEnabled(true)
         //setVisibleXRange(0f,12f)
-        setVisibleXRangeMaximum(12f)
+        setVisibleXRangeMaximum(10f)
+        animateX(500)
         setFitBars(true)
         //marker = markerView
         animateXY(500, 0);
@@ -90,7 +91,6 @@ fun Chart<*>.setupBarChartStyle(labels:List<String>){
             spaceMax = 1f
             granularity = 1f
             isGranularityEnabled = true
-            setCenterAxisLabels(true)
             typeface = typeFaceBold
             axisMinimum = -0.5f
         }

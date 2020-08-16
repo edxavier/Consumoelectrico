@@ -4,14 +4,15 @@
 
 
     <item
-        android:id="@+id/action_new_reading"
+        android:id="@+id/ac_export_data"
         android:orderInCategory="100"
-        android:title="@string/new_reading"
-        android:icon="@drawable/ic_add"
+        android:title="@string/export"
+        android:icon="@drawable/ic_file_upload"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_export_readings_to_ocsv"
+        android:icon="@drawable/ic_file_download"
+        android:id="@+id/ac_import_data"
         android:orderInCategory="100"
-        android:title="@string/export_readings_to_ocsv"
-        app:showAsAction="never" />
+        android:title="@string/_import"
+        app:showAsAction="ifRoom" />
 </menu>

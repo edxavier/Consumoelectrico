@@ -214,6 +214,10 @@
     <string name="discount">Descuento</string>
     <string name="_taxes">Impuestos</string>
     <string name="expense_detail">Detalles de gastos estimados</string>
+    <string name="energy">Energy</string>
+    <string name="consumption">Consumo</string>
+    <string name="_expenses">Gasto</string>
+    <string name="export_readings_to_ocsv">"Export readings to CSV "</string>
 
 
 </resources>

@@ -174,7 +174,7 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
                 .equalTo("medidor.id", medidor_id)
                 .findAll().sort("inicio", Sort.ASCENDING);
         try {
-            SimpleDateFormat time_format = new SimpleDateFormat("MMM", Locale.getDefault());
+            SimpleDateFormat time_format = new SimpleDateFormat("MMMyy", Locale.getDefault());
             ArrayList<BarEntry> BarEntry = new ArrayList<>();
             ArrayList<String> labels = new ArrayList<>();
             int x = 0;
@@ -204,12 +204,15 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
                 });*/
                 chart.setData(data);
                 chart.setVisibleXRangeMaximum(12);
+                chart.getXAxis().setAxisMinimum(-0.8f);
                 chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
                 chart.getXAxis().setGranularity(1.0f);
                 chart.getAxisLeft().setTextColor(this.context.getResources().getColor(R.color.md_black_1000_50));
                 chart.getAxisRight().setTextColor(this.context.getResources().getColor(R.color.md_black_1000_50));
                 chart.getAxisRight().setAxisMinimum(0);
                 chart.getAxisLeft().setAxisMinimum(0);
+                if(labels.size()>3)
+                    chart.moveViewToX(labels.size()-1);
             }
         } catch (Exception e) {
             //Log.e("EDER_Exception", e.getMessage());

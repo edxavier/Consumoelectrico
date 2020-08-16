@@ -64,6 +64,7 @@ interface ElectricMeterDAO {
     @Query("SELECT * FROM electric_meter order by id desc")
     fun getMeters(): LiveData<List<ElectricMeter>>
 
+
     @Query("SELECT * FROM electric_bill_period where meter_code=:meterCode order by id desc")
     fun getMeterPeriods(meterCode: String): LiveData<List<ElectricBillPeriod>>
 
@@ -126,5 +127,21 @@ interface ElectricMeterDAO {
 
     @Query("SELECT sum(kw_consumption) FROM electric_meter_reading where period_code=:periodCode")
     fun getTotalPeriodKw(periodCode: String): Float
+
+
+
+    //BACKUP RESTORE
+
+    @Query("SELECT * FROM electric_meter order by id desc")
+    suspend fun getForBackupMeterList(): List<ElectricMeter>
+
+    @Query("SELECT * FROM price_range order by id desc")
+    suspend fun getForBackupPricesList(): List<PriceRange>
+
+    @Query("SELECT * FROM electric_bill_period order by id desc")
+    suspend fun getForBackupPeriodList(): List<ElectricBillPeriod>
+
+    @Query("SELECT * FROM electric_meter_reading order by id desc")
+    suspend fun getForBackupReadingList(): List<ElectricReading>
 
 }

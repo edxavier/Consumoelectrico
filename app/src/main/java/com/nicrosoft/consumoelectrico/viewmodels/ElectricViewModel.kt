@@ -2,6 +2,7 @@ package com.nicrosoft.consumoelectrico.viewmodels
 
 import android.content.Context
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.*
@@ -27,6 +28,7 @@ import kotlin.time.ExperimentalTime
 
 class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) : ViewModel() {
 
+    fun getDao() = dao
     var meter = MutableLiveData<ElectricMeter>()
     fun selectedMeter(_meter: ElectricMeter) { meter.value = _meter }
 
@@ -429,19 +431,23 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         periods.sortedBy { it.fromDate }.forEachIndexed{ index, period ->
             entries.add(BarEntry(index.toFloat(), period.totalKw))
         }
+
         val pDataSet = BarDataSet(entries, context.getString(R.string.label_billing_period))
-        pDataSet.color = ContextCompat.getColor(context, R.color.md_blue_grey_500)
+        pDataSet.color = ContextCompat.getColor(context, R.color.primaryColor)
+        pDataSet.valueTypeface = ResourcesCompat.getFont(context, R.font.source_sans_pro_semibold)
+        pDataSet.valueTextSize = 10f
         val dataSets: MutableList<IBarDataSet> = ArrayList()
         dataSets.add(pDataSet)
         val data = BarData(dataSets)
         data.barWidth = 0.8f
+
         return  data
     }
 
     suspend fun getPeriodDataLabels(): MutableList<String>  = withContext(Dispatchers.IO){
         val periods = dao.getMeterAllPeriods(meter.value!!.code)
         val labels: MutableList<String> = ArrayList()
-        val timeFormat = SimpleDateFormat("MMM", Locale.getDefault())
+        val timeFormat = SimpleDateFormat("MMMyy", Locale.getDefault())
 
         periods.sortedBy { it.fromDate }.forEach{ period ->
             labels.add(timeFormat.format(period.fromDate))
