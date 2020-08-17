@@ -1,4 +1,4 @@
-package com.nicrosoft.consumoelectrico.utils
+package com.nicrosoft.consumoelectrico.utils.charts
 
 import android.content.Context
 import androidx.core.content.ContextCompat

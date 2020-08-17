@@ -1,12 +1,12 @@
-package com.nicrosoft.consumoelectrico.utils
+package com.nicrosoft.consumoelectrico.utils.charts
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
+import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
 import kotlinx.android.synthetic.main.marker.view.*
 
 @SuppressLint("ViewConstructor")

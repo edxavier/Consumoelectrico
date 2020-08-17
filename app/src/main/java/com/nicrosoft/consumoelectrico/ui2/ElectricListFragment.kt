@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.files.FileFilter
+import com.afollestad.materialdialogs.files.fileChooser
 import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.list.listItems
 import com.nicrosoft.consumoelectrico.BuildConfig
@@ -22,6 +24,7 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter.AdapterItemListener
 import com.nicrosoft.consumoelectrico.utils.*
+import com.nicrosoft.consumoelectrico.utils.handlers.JsonBackupHandler
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
@@ -30,7 +33,6 @@ import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.io.File
 import java.util.*
 
 class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
@@ -143,11 +145,16 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.ac_export_data->{
-                exportDialog()
-            }
-            R.id.action_export_readings_to_ocsv->{
-
+            R.id.ac_export_import_data->{
+                MaterialDialog(requireContext()).show {
+                    title(text = "Menu de base de datos")
+                    listItems(R.array.database_options) { _, index, _ ->
+                        when(index){
+                            0->{ exportDialog() }
+                            1->{ importDialog() }
+                        }
+                    }
+                }
             }
         }
         return super.onOptionsItemSelected(item)
@@ -161,28 +168,54 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
             requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
             return
         }
-        val initialPath = if(File("/storage/emulated/0/").exists())
-            File("/storage/emulated/0/")
-        else
-            null
-
+        //initialDirectory = el directorio inicial sera la carpeta data de la app
         MaterialDialog(requireContext()).show {
             folderChooser(context,
-                    initialDirectory = initialPath,
+                    //initialDirectory = initialPath,
                     emptyTextRes = R.string.title_choose_folder,
                     allowFolderCreation = true) { _, folder ->
                 // Folder selected
                 launch {
                     //val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
-                    var name = "BACKUP CEH " + BuildConfig.VERSION_NAME + Date().formatDate(context)
+                    var name = "BACKUP CEH " + BuildConfig.VERSION_NAME + " " + Date().formatDate(context)
                     name = name.replace(" ", "_")
-                    JsonBackupHandler.createBackup(viewModel.getDao(), "${folder.path}/$name")
+                    if(JsonBackupHandler.createBackup(viewModel.getDao(), "${folder.path}/$name")){
+                        MaterialDialog(requireContext()).show {
+                            title(R.string.notice)
+                            message(text = "Se ha creado un respaldo local de manera correcta. " +
+                                    "Sinembargo es recomendable mantener una copia de este respaldo en algun servicio externo como Google Drive, " +
+                                    "le gustaria guardar una copia de manera externa?")
+                            positiveButton(R.string.ok){}
+                            negativeButton(R.string.cancel)
+                        }
+                    }else{
+                        showInfoDialog("Ocurrio un error inesperado")
+                    }
+
                 }
 
             }
         }
 
     }
+
+    private fun importDialog(){
+
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+            return
+        }
+        //initialDirectory = el directorio inicial sera la carpeta data de la app
+        val myFilter: FileFilter = { it.isDirectory || it.name.endsWith(".json", true) }
+        MaterialDialog(requireContext()).show {
+            fileChooser(context, emptyTextRes = R.string.title_choose_file, filter = myFilter, waitForPositiveButton = false) { _ , file ->
+                launch {
+                    JsonBackupHandler.restoreBackup(viewModel.getDao(), file.path)
+                }
+            }
+        }
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK){

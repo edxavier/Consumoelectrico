@@ -4,6 +4,7 @@ import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.realm.Lectura
+import com.nicrosoft.consumoelectrico.utils.helpers.NotificationHelper
 import com.pixplicity.easyprefs.library.Prefs
 import io.realm.Realm
 import io.realm.Sort

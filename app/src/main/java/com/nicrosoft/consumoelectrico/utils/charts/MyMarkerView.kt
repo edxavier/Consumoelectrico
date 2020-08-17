@@ -1,32 +1,30 @@
-package com.nicrosoft.consumoelectrico.utils
+package com.nicrosoft.consumoelectrico.utils.charts
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import com.nicrosoft.consumoelectrico.R
-import com.pixplicity.easyprefs.library.Prefs
+import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
 import kotlinx.android.synthetic.main.marker.view.*
 
 @SuppressLint("ViewConstructor")
-class CostVsKwMarkerView(private val ctx:Context, private val layout:Int): MarkerView(ctx, layout){
+class MyMarkerView(private val ctx:Context, private val layout:Int): MarkerView(ctx, layout){
     var days:Float = 0f
     @SuppressLint("SetTextI18n")
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
-        val symbol = Prefs.getString("price_simbol", "$")
-        val exp = ctx.getString(R.string._expenses)
-        val cons = ctx.getString(R.string.consumption)
-        marker_kwh.text = "$exp: $symbol${e!!.y.toTwoDecimalPlace()}"
-        marker_days.text = "$cons: ${(e.x).toTwoDecimalPlace()} kWh"
-        days = (e.x)
+        val daysLabel = ctx.getString(R.string.label_days)
+        val energy = ctx.getString(R.string.energy)
+        marker_kwh.text = "$energy: ${e!!.y.toTwoDecimalPlace()} kWh"
+        marker_days.text = "$daysLabel: ${(e.x/24).toTwoDecimalPlace()}"
+        days = (e.x/24)
         super.refreshContent(e, highlight)
     }
 
     override fun getOffset(): MPPointF {
-        return if(days<2)
+        return if(days<10)
             MPPointF(((width / 6)).toFloat(), (-height-100).toFloat())
         else
             MPPointF((-(width)).toFloat(), (-height).toFloat())

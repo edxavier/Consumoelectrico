@@ -15,7 +15,7 @@ import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.input.input
 import com.nicrosoft.consumoelectrico.MainKt
 import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.utils.CSVHelper
+import com.nicrosoft.consumoelectrico.utils.helpers.CSVHelper
 import com.nicrosoft.consumoelectrico.utils.formatDate
 import com.pixplicity.easyprefs.library.Prefs
 import java.io.File

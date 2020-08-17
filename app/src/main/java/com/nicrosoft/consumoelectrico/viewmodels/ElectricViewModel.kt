@@ -18,7 +18,7 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
 import com.nicrosoft.consumoelectrico.utils.getConsumptionProjection
 import com.nicrosoft.consumoelectrico.utils.hoursSinceDate
-import com.nicrosoft.consumoelectrico.utils.setupAppStyle
+import com.nicrosoft.consumoelectrico.utils.charts.setupAppStyle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat

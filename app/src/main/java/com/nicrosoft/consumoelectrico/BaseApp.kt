@@ -3,14 +3,16 @@ package com.nicrosoft.consumoelectrico
 import android.content.ContextWrapper
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
+import androidx.work.*
 import com.firebase.jobdispatcher.*
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
 import com.nicrosoft.consumoelectrico.data.AppDataBase
-import com.nicrosoft.consumoelectrico.utils.DumpDataService
-import com.nicrosoft.consumoelectrico.utils.ReminderService
 import com.nicrosoft.consumoelectrico.realm.Migration
 import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
+import com.nicrosoft.consumoelectrico.utils.workers.BackupWorker
+import com.nicrosoft.consumoelectrico.utils.DumpDataService
+import com.nicrosoft.consumoelectrico.utils.ReminderService
 import com.pixplicity.easyprefs.library.Prefs
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -21,6 +23,8 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
+import java.util.concurrent.TimeUnit
+
 
 /**
  * Created by Eder Xavier Rojas on 06/12/2016.
@@ -90,5 +94,19 @@ class BaseApp : MultiDexApplication(), KodeinAware {
                 .build()
         dispatcher.mustSchedule(myJob)
         dispatcher.mustSchedule(myJob2)
+
+        val workManager = WorkManager.getInstance(this)
+        val constraints: Constraints = Constraints.Builder()
+                //.setRequiresBatteryNotLow(true)
+                //.setRequiresStorageNotLow(true)
+                .build()
+        //The minimum time interval between reruns of a task is 15 minute or 900000 seconds.
+        val myPeriodicWorkRequest = PeriodicWorkRequestBuilder<BackupWorker>(5, TimeUnit.SECONDS)
+                .setConstraints(constraints)
+                //.setInitialDelay(5, TimeUnit.SECONDS)
+                .build()
+
+
+        workManager.enqueue(myPeriodicWorkRequest)
     }
 }

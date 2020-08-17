@@ -14,7 +14,7 @@ import com.github.mikephil.charting.data.realm.implementation.RealmLineDataSet
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.realm.Lectura
-import com.nicrosoft.consumoelectrico.utils.KwValueFormatter
+import com.nicrosoft.consumoelectrico.utils.charts.KwValueFormatter
 import com.pixplicity.easyprefs.library.Prefs
 import io.realm.RealmResults
 import java.util.*

@@ -19,7 +19,7 @@ import com.anjlab.android.iab.v3.TransactionDetails
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.navigation.NavigationView
-import com.nicrosoft.consumoelectrico.utils.RestoreHelper
+import com.nicrosoft.consumoelectrico.utils.helpers.RestoreHelper
 import com.nicrosoft.consumoelectrico.utils.setHidden
 import com.nicrosoft.consumoelectrico.utils.setVisible
 import com.nicrosoft.consumoelectrico.ui.destinos.DestinoCompartirApp

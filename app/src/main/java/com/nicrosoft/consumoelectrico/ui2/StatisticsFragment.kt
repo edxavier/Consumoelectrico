@@ -14,6 +14,7 @@ import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.databinding.FragmentStatisticsBinding
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import com.nicrosoft.consumoelectrico.utils.*
+import com.nicrosoft.consumoelectrico.utils.charts.*
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.fragment_statistics.*
 import kotlinx.coroutines.launch

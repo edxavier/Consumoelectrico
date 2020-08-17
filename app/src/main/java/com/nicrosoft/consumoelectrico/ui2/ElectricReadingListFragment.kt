@@ -28,6 +28,7 @@ import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricReadingAdapter
 import com.nicrosoft.consumoelectrico.utils.*
+import com.nicrosoft.consumoelectrico.utils.handlers.CsvHandler
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator

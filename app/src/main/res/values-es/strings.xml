@@ -173,7 +173,7 @@
     <string name="settings.ac.reminder_afer">Recordatorio de lectura (días)</string>
     <string name="reminder_msg">Han pasado %1$s días desde el último registro de lectura</string>
     <string name="reminder">Recordatorio</string>
-    <string name="title_choose_folder">Seleccione un folder</string>
+    <string name="title_choose_folder">Seleccione un folder o presione aceptar para establecer el directorio actual</string>
     <string name="choose">Seleccionar</string>
     <string name="title_choose_file">Seleccione un archivo</string>
     <string name="folder_choose">Clic accept to choose current folder</string>
