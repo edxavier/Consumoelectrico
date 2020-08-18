@@ -29,8 +29,8 @@ class ElectricReadingAdapter(
         }
 
         override fun areContentsTheSame(oldItem: ElectricReading, newItem: ElectricReading): Boolean {
-            Log.e("EDER", oldItem.readingValue.toString())
-            Log.e("EDER", newItem.readingValue.toString())
+            //Log.e("EDER", oldItem.readingValue.toString())
+            //Log.e("EDER", newItem.readingValue.toString())
             return false
         }
     }

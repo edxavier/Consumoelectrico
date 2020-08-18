@@ -5,8 +5,10 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.animation.OvershootInterpolator
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -25,10 +27,12 @@ import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter.AdapterItemListener
 import com.nicrosoft.consumoelectrico.utils.*
 import com.nicrosoft.consumoelectrico.utils.handlers.JsonBackupHandler
+import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
 import kotlinx.android.synthetic.main.emeter_list_fragment.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -38,8 +42,11 @@ import java.util.*
 class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
     override val kodein by kodein()
     private val vmFactory by instance<ElectricVMFactory>()
+    private val backupHelper by instance<BackupDatabaseHelper>()
     private lateinit var viewModel: ElectricViewModel
 
+    private val EXPORT_REQUEST_RW_PERMISSIONS = 1
+    private val IMPORT_REQUEST_RW_PERMISSIONS = 2
 
     private lateinit var navController: NavController
     private lateinit var adapter:ElectricMeterAdapter
@@ -165,7 +172,7 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             //ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), EXPORT_REQUEST_RW_PERMISSIONS)
             return
         }
         //initialDirectory = el directorio inicial sera la carpeta data de la app
@@ -179,7 +186,7 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
                     //val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
                     var name = "BACKUP CEH " + BuildConfig.VERSION_NAME + " " + Date().formatDate(context)
                     name = name.replace(" ", "_")
-                    if(JsonBackupHandler.createBackup(viewModel.getDao(), "${folder.path}/$name")){
+                    if(JsonBackupHandler.createBackup(backupHelper, "${folder.path}/$name")){
                         MaterialDialog(requireContext()).show {
                             title(R.string.notice)
                             message(text = "Se ha creado un respaldo local de manera correcta. " +
@@ -202,7 +209,8 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
     private fun importDialog(){
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+            //ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), IMPORT_REQUEST_RW_PERMISSIONS)
             return
         }
         //initialDirectory = el directorio inicial sera la carpeta data de la app
@@ -210,21 +218,31 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
         MaterialDialog(requireContext()).show {
             fileChooser(context, emptyTextRes = R.string.title_choose_file, filter = myFilter, waitForPositiveButton = false) { _ , file ->
                 launch {
-                    JsonBackupHandler.restoreBackup(viewModel.getDao(), file.path)
+                    if(JsonBackupHandler.restoreBackup(backupHelper, file.path)){
+                        initLayout()
+                        loadData()
+                        showInfoDialog("Restauracion de respaldo exitosa")
+                    }else{
+                        showInfoDialog("Ocurrio un error inesperado, no se completo la restaturacion de datos")
+                    }
                 }
             }
         }
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK){
-            exportDialog()
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.isNotEmpty()){
+            if(requestCode == EXPORT_REQUEST_RW_PERMISSIONS)
+                exportDialog()
+            else
+                importDialog()
         }else{
             showInfoDialog("No se concedieron los permisos")
         }
-        super.onActivityResult(requestCode, resultCode, data)
     }
+
 
     private fun showInfoDialog(message:String){
         MaterialDialog(requireContext()).show {

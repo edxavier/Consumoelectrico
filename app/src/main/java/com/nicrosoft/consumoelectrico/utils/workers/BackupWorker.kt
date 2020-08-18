@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.nicrosoft.consumoelectrico.data.daos.ElectricMeterDAO
+import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
 import kotlinx.coroutines.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -17,7 +18,7 @@ class BackupWorker (ctx: Context, params: WorkerParameters) : CoroutineWorker(ct
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
 
-        val dao: ElectricMeterDAO by instance()
+        val backupHelper: BackupDatabaseHelper by instance()
         Log.e("EDER", "doWork BACKUP")
         return@withContext Result.success()
     }

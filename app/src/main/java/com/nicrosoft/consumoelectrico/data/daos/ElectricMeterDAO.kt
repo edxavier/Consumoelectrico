@@ -10,7 +10,7 @@ import java.util.*
 
 @Dao
 interface ElectricMeterDAO {
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveElectricMeter(meter: ElectricMeter)
 
     @Delete
@@ -31,12 +31,12 @@ interface ElectricMeterDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun savePriceRage(range: PriceRange)
 
-    //PRICE READING
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    //READING
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveReading(reading: ElectricReading)
 
-    //PRICE READING
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    //READING
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun savePeriod(period: ElectricBillPeriod)
 
     @Delete
@@ -45,7 +45,6 @@ interface ElectricMeterDAO {
     @Update
     fun updatePriceRage(range: PriceRange)
 
-    // QUERIES
     @Query("SELECT * FROM price_range where meter_code=:meterCode order by from_kw")
     fun getPriceRanges(meterCode:String): LiveData<List<PriceRange>>
 

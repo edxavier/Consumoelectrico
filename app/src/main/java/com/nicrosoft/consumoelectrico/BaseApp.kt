@@ -1,5 +1,6 @@
 package com.nicrosoft.consumoelectrico
 
+import android.app.backup.BackupHelper
 import android.content.ContextWrapper
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
@@ -13,6 +14,7 @@ import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
 import com.nicrosoft.consumoelectrico.utils.workers.BackupWorker
 import com.nicrosoft.consumoelectrico.utils.DumpDataService
 import com.nicrosoft.consumoelectrico.utils.ReminderService
+import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
 import com.pixplicity.easyprefs.library.Prefs
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -35,10 +37,12 @@ class BaseApp : MultiDexApplication(), KodeinAware {
         // BasedeDatos
         bind() from singleton { AppDataBase(instance()) }
         //Daos
-        bind() from singleton { instance<AppDataBase>().ElectricMeterDao() }
-
+        bind() from singleton { instance<AppDataBase>().electricMeterDAO() }
+        bind() from singleton { instance<AppDataBase>().backupDAO() }
         // ViewModelFactory
         bind() from provider { ElectricVMFactory(instance(), instance()) }
+        //Helper
+        bind() from singleton { BackupDatabaseHelper(instance(), instance()) }
     }
 
     override fun onCreate() {

@@ -1,5 +1,6 @@
 package com.nicrosoft.consumoelectrico.data
 
+import android.util.Log
 import com.squareup.moshi.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -13,18 +14,18 @@ class DateJsonAdapter: JsonAdapter<Date>() {
             val dateAsString = reader.nextString()
             dateFormat.parse(dateAsString)
         } catch (e: Exception) {
+            //Log.e("EDER_fromJson", e.toString())
             null
         }
     }
 
     @ToJson
     override fun toJson(writer: JsonWriter, value: Date?) {
-        if (value != null) {
-            writer.value(value.toString())
-        }
+        value?.let { writer.value(dateFormat.format(value)) }
     }
 
     companion object {
-        const val SERVER_FORMAT = ("yyyy-MM-dd HH:mm") // define your server format here
+        //MMMM dd, yyy hh:mm a
+        const val SERVER_FORMAT = ("MMMM dd, yyy hh:mm a") // define your server format here
     }
 }
