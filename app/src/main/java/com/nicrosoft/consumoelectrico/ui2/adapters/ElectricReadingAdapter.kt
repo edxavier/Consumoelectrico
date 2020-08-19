@@ -122,7 +122,7 @@ class ElectricReadingAdapter(
     }
 
     interface AdapterItemListener{
-        fun onItemClickListener(meter:ElectricReading)
+        fun onItemClickListener(reading:ElectricReading)
     }
 
 }

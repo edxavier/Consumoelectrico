@@ -22,9 +22,9 @@ class NotificationHelper(private val mContext: Context) {
     fun createNotification(title: String?, message: String?) {
         /**Creates an explicit intent for an Activity in your app */
         val resultIntent = Intent(mContext, MainKt::class.java)
-        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        //resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val resultPendingIntent = PendingIntent.getActivity(mContext,
-                0 /* Request code */, resultIntent,
+                10 /* Request code */, resultIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
         mBuilder = NotificationCompat.Builder(mContext)
         mBuilder!!.setSmallIcon(R.drawable.ic_bulb)
@@ -41,11 +41,9 @@ class NotificationHelper(private val mContext: Context) {
             notificationChannel.lightColor = Color.RED
             notificationChannel.enableVibration(true)
             notificationChannel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
-            assert(mNotificationManager != null)
             mBuilder!!.setChannelId(NOTIFICATION_CHANNEL_ID)
             mNotificationManager!!.createNotificationChannel(notificationChannel)
         }
-        assert(mNotificationManager != null)
         mNotificationManager!!.notify(0 /* Request Code */, mBuilder!!.build())
     }
 

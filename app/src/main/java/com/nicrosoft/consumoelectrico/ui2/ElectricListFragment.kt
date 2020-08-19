@@ -30,6 +30,7 @@ import com.nicrosoft.consumoelectrico.utils.*
 import com.nicrosoft.consumoelectrico.utils.handlers.JsonBackupHandler
 import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
+import com.pixplicity.easyprefs.library.Prefs
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
 import kotlinx.android.synthetic.main.emeter_list_fragment.*
@@ -200,6 +201,7 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
                             message(R.string.backup_suggestion)
                             positiveButton(R.string.ok){
                                 sendFileIntent("${folder.path}/$name.json")
+                                Prefs.putString("last_external_backup", Date().backupFormat(requireContext()))
                             }
                             negativeButton(R.string.no_thanks)
                         }

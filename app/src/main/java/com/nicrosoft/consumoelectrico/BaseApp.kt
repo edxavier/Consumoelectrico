@@ -15,6 +15,7 @@ import com.nicrosoft.consumoelectrico.utils.workers.BackupWorker
 import com.nicrosoft.consumoelectrico.utils.DumpDataService
 import com.nicrosoft.consumoelectrico.utils.ReminderService
 import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
+import com.nicrosoft.consumoelectrico.utils.workers.ExternalBackupWorker
 import com.pixplicity.easyprefs.library.Prefs
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -105,12 +106,17 @@ class BaseApp : MultiDexApplication(), KodeinAware {
                 //.setRequiresStorageNotLow(true)
                 .build()
         //The minimum time interval between reruns of a task is 15 minute or 900000 seconds.
-        val myPeriodicWorkRequest = PeriodicWorkRequestBuilder<BackupWorker>(5, TimeUnit.SECONDS)
+        val myPeriodicWorkRequest = PeriodicWorkRequestBuilder<BackupWorker>(5, TimeUnit.MINUTES)
                 .setConstraints(constraints)
                 //.setInitialDelay(5, TimeUnit.SECONDS)
+                .build()
+        val myPeriodicWorkRequest2 = PeriodicWorkRequestBuilder<ExternalBackupWorker>(30, TimeUnit.DAYS)
+                .setConstraints(constraints)
+                .setInitialDelay(30, TimeUnit.DAYS)
                 .build()
 
 
         workManager.enqueue(myPeriodicWorkRequest)
+        workManager.enqueue(myPeriodicWorkRequest2)
     }
 }

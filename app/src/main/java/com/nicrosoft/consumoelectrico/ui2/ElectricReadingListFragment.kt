@@ -180,9 +180,9 @@ class ElectricReadingListFragment : ScopeFragment(), KodeinAware, ElectricReadin
                     val fr = viewModel.getFirstMeterReading(reading.meterCode!!)
                     if(reading.code == fr.code){
                         MaterialDialog(requireContext()).show {
-                            title(text = "Aviso")
+                            title(R.string.notice)
                             message(text = "No es posible eliminar esta lectura, si se equivoco debe eliminar el periodo completo")
-                            positiveButton(R.string.ok){}
+                            positiveButton(R.string.ok)
                         }
                     }else
                         viewModel.deleteElectricReading(reading)
