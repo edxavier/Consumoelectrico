@@ -217,7 +217,11 @@
     <string name="energy">Energy</string>
     <string name="consumption">Consumo</string>
     <string name="_expenses">Gasto</string>
-    <string name="export_readings_to_ocsv">"Export readings to CSV "</string>
+    <string name="export_readings_to_ocsv">"Exportar lecturas a archivo CSV"</string>
+    <string name="no_thanks">No, gracias</string>
+    <string name="backup_restore_error">Ocurrio un error inesperado, no se completo la restauración de datos</string>
+    <string name="backup_suggestion">Se ha creado un respaldo local. Sin embargo es recomendable mantener una copia de este respaldo en un servicio externo como Google Drive, ¿te gustaría  guardar una copia de manera externa?</string>
+    <string name="database_menu">Menú base de dados</string>
 
 
 </resources>

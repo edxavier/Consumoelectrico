@@ -1,15 +1,16 @@
 package com.nicrosoft.consumoelectrico.ui2
 
 import android.Manifest
-import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.animation.OvershootInterpolator
-import androidx.core.app.ActivityCompat
+import android.webkit.MimeTypeMap
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -37,6 +38,7 @@ import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import java.io.File
 import java.util.*
 
 class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
@@ -73,7 +75,7 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
         })
     }
 
-    private fun toggleMessageVisibility(isEmpty:Boolean){
+    private fun toggleMessageVisibility(isEmpty: Boolean){
         if(isEmpty) {
             message_.setVisible()
             animation_view.fadeZoomIn()
@@ -104,13 +106,13 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
             title(text = meter.name)
             listItems(R.array.medidor_options) { _, index, _ ->
                 when(index){
-                    0->{
+                    0 -> {
                         val action = ElectricListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment(editingItem = true)
                         // ya que se comparte el VM se establece el objeto y asi evitar hacer consulta para cargarlo
                         viewModel.selectedMeter(meter)
                         navController.navigate(action)
                     }
-                    1->{
+                    1 -> {
                         showDeleteConfirmDialog(meter)
                     }
                 }
@@ -152,13 +154,17 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.ac_export_import_data->{
+            R.id.ac_export_import_data -> {
                 MaterialDialog(requireContext()).show {
-                    title(text = "Menu de base de datos")
+                    title(R.string.database_menu)
                     listItems(R.array.database_options) { _, index, _ ->
-                        when(index){
-                            0->{ exportDialog() }
-                            1->{ importDialog() }
+                        when (index) {
+                            0 -> {
+                                exportDialog()
+                            }
+                            1 -> {
+                                importDialog()
+                            }
                         }
                     }
                 }
@@ -175,28 +181,30 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
             requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), EXPORT_REQUEST_RW_PERMISSIONS)
             return
         }
+
+        //val docsDir = requireContext().filesDir
         //initialDirectory = el directorio inicial sera la carpeta data de la app
         MaterialDialog(requireContext()).show {
             folderChooser(context,
-                    //initialDirectory = initialPath,
+                    initialDirectory = requireContext().getExternalFilesDir("UserBackups"),
                     emptyTextRes = R.string.title_choose_folder,
-                    allowFolderCreation = true) { _, folder ->
+                    allowFolderCreation = false) { _, folder ->
                 // Folder selected
                 launch {
                     //val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
-                    var name = "BACKUP CEH " + BuildConfig.VERSION_NAME + " " + Date().formatDate(context)
+                    var name = "USER_BACKUP " + Date().backupFormat(context)
                     name = name.replace(" ", "_")
                     if(JsonBackupHandler.createBackup(backupHelper, "${folder.path}/$name")){
                         MaterialDialog(requireContext()).show {
                             title(R.string.notice)
-                            message(text = "Se ha creado un respaldo local de manera correcta. " +
-                                    "Sinembargo es recomendable mantener una copia de este respaldo en algun servicio externo como Google Drive, " +
-                                    "le gustaria guardar una copia de manera externa?")
-                            positiveButton(R.string.ok){}
-                            negativeButton(R.string.cancel)
+                            message(R.string.backup_suggestion)
+                            positiveButton(R.string.ok){
+                                sendFileIntent("${folder.path}/$name.json")
+                            }
+                            negativeButton(R.string.no_thanks)
                         }
                     }else{
-                        showInfoDialog("Ocurrio un error inesperado")
+                        showInfoDialog(getString(R.string.export_error))
                     }
 
                 }
@@ -216,14 +224,17 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
         //initialDirectory = el directorio inicial sera la carpeta data de la app
         val myFilter: FileFilter = { it.isDirectory || it.name.endsWith(".json", true) }
         MaterialDialog(requireContext()).show {
-            fileChooser(context, emptyTextRes = R.string.title_choose_file, filter = myFilter, waitForPositiveButton = false) { _ , file ->
+            fileChooser(context, emptyTextRes = R.string.title_choose_file,
+                    initialDirectory = requireContext().getExternalFilesDir(null),
+                    filter = myFilter, waitForPositiveButton = false) { _, file ->
                 launch {
                     if(JsonBackupHandler.restoreBackup(backupHelper, file.path)){
+                        delay(300)
                         initLayout()
                         loadData()
-                        showInfoDialog("Restauracion de respaldo exitosa")
+                        showInfoDialog(getString(R.string.import_succes))
                     }else{
-                        showInfoDialog("Ocurrio un error inesperado, no se completo la restaturacion de datos")
+                        showInfoDialog(getString(R.string.backup_restore_error))
                     }
                 }
             }
@@ -244,11 +255,30 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
     }
 
 
-    private fun showInfoDialog(message:String){
+    private fun showInfoDialog(message: String){
         MaterialDialog(requireContext()).show {
             title(R.string.notice)
             message(text = message)
             positiveButton(R.string.agree)
+        }
+    }
+
+    private fun sendFileIntent(filePath: String){
+        val myMime = MimeTypeMap.getSingleton()
+        val file = File(filePath)
+        val mimeType = myMime.getMimeTypeFromExtension("json")
+        val uri: Uri = FileProvider.getUriForFile(requireActivity(), BuildConfig.APPLICATION_ID + ".provider", file)
+        val newIntent = Intent(Intent.ACTION_SEND)
+        newIntent.setDataAndType(uri, mimeType)
+        newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        newIntent.putExtra(Intent.EXTRA_STREAM, uri)
+        newIntent.putExtra(Intent.EXTRA_TEXT, "BACKUP ${getString(R.string.app_name)}")
+
+        try {
+            requireContext().startActivity(Intent.createChooser(newIntent, "Guardar en:"))
+        } catch (e: ActivityNotFoundException) {
+            showInfoDialog("No Application handler for this type of file.")
         }
     }
 

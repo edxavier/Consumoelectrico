@@ -153,7 +153,7 @@
     <string name="settings.ac.reminder_afer">Lembrete de leitura (dias)</string>
     <string name="reminder_msg">Já se passaram %1$s dias desde a última leitura</string>
     <string name="reminder">Lembrete</string>
-    <string name="title_choose_folder">Selecione uma pasta</string>
+    <string name="title_choose_folder">Selecione uma pasta ou pressione aceitar para definir o diretório atual</string>
     <string name="choose">Selecione</string>
     <string name="title_choose_file">Selecione um arquivo</string>
     <string name="folder_choose">Clic accept to choose current folder</string>
@@ -195,7 +195,11 @@
     <string name="energy">Energy</string>
     <string name="consumption">Consumo</string>
     <string name="_expenses">Despesas</string>
-    <string name="export_readings_to_ocsv">"Export readings to CSV "</string>
+    <string name="export_readings_to_ocsv">"Exportar leituras para arquivo CSV"</string>
+    <string name="no_thanks">Não, obrigado</string>
+    <string name="backup_restore_error">Ocorreu um erro inesperado, a restauração dos dados não foi concluída</string>
+    <string name="backup_suggestion">Um backup local foi criado. No entanto, é aconselhável manter uma cópia desse backup em um serviço externo como o Google Drive, gostaria de salvar uma cópia externamente?</string>
+    <string name="database_menu">Menú base de dados</string>
 
 
 </resources>

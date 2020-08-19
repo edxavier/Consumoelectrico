@@ -183,7 +183,7 @@
     <string name="settings.ac.reminder_afer">Reading reminder (days)</string>
     <string name="reminder_msg">it\'s been %1$s days since last reading record</string>
     <string name="reminder">Reminder</string>
-    <string name="title_choose_folder">Select a folder</string>
+    <string name="title_choose_folder">Select a folder or press accept to set the current directory</string>
     <string name="choose">Choose</string>
     <string name="title_choose_file">Select a file</string>
     <string name="title_activity_mainkt">Mainkt</string>
@@ -254,6 +254,11 @@
     <string name="consumption">Consumption</string>
     <string name="_expenses">Expenses</string>
     <string name="export_readings_to_ocsv">"Export readings to CSV "</string>
+    <string name="backup_date_format">yy.MM.dd</string>
+    <string name="no_thanks">No thanks</string>
+    <string name="backup_restore_error">An unexpected error occurred, data restoration did not complete</string>
+    <string name="backup_suggestion">A local backup has been created. However, it is advisable to keep a copy of this backup in an external service such as Google Drive, would you like to save a copy externally?</string>
+    <string name="database_menu">Database menu</string>
 
 
 </resources>

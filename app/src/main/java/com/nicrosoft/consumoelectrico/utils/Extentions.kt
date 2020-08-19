@@ -59,6 +59,11 @@ fun Date.formatDate(context: Context): String{
     val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
     return sdf.format(this.time)
 }
+fun Date.backupFormat(context: Context): String{
+    val myFormat = context.getString(R.string.backup_date_format)
+    val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
+    return sdf.format(this.time)
+}
 
 fun Date.formatDate(context: Context, includeTime:Boolean): String{
     val myFormat = context.getString(R.string.datetime_format)

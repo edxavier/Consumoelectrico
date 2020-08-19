@@ -59,7 +59,7 @@ object JsonBackupHandler {
                 backup.savePrices(it.prices)
                 backup.savePeriods(it.periods)
                 backup.saveReadings(it.readings)
-                Log.e("EDER", "RESTORE COMPLETED")
+                //Log.e("EDER", "RESTORE COMPLETED")
             }
             //Log.e("EDER", data?.meters.toString())
             return true
