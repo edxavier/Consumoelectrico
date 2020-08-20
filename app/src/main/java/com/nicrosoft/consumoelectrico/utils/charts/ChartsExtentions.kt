@@ -75,7 +75,7 @@ fun Chart<*>.setupBarChartStyle(labels:List<String>){
         setDrawBorders(false)
         setTouchEnabled(true)
         //setVisibleXRange(0f,12f)
-        setVisibleXRangeMaximum(10f)
+        setVisibleXRangeMaximum(12f)
         animateX(500)
         setFitBars(true)
         //marker = markerView

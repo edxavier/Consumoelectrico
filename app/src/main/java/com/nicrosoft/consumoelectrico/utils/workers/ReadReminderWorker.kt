@@ -30,7 +30,7 @@ class ReadReminderWorker (private val ctx: Context, params: WorkerParameters) : 
     override val kodein by kodein { ctx }
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        Log.e("EDER", "ReadReminderWorker")
+        //Log.e("EDER", "ReadReminderWorker")
         launch {
             val backupHelper: BackupDatabaseHelper by instance()
             val dao = backupHelper.getDao()

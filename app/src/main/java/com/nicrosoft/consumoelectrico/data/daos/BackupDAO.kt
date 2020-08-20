@@ -48,4 +48,9 @@ interface BackupDAO {
     @Query("SELECT * FROM electric_meter_reading where meter_code=:meterCode order by reading_date desc limit 1")
     suspend fun getLatestReading(meterCode: String): ElectricReading?
 
+    @Query("SELECT sum(kw_consumption) FROM electric_meter_reading where period_code=:periodCode")
+    fun getTotalPeriodKw(periodCode: String): Float
+
+    @Update
+    fun updatePeriod(period: ElectricBillPeriod):Int
 }

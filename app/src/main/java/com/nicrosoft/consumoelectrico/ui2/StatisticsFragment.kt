@@ -120,8 +120,12 @@ class StatisticsFragment : ScopeFragment(), KodeinAware {
                 cost_vs_day_chart.data = lineData.costPerDayDs
                 cost_vs_kwh_chart.data = lineData.costPerKwDs
                 periods_chart.data = lineData.periodDs
-                if(barLabels.size>2)
-                    periods_chart.moveViewToX((barLabels.size-1).toFloat())
+                if(barLabels.size>2) {
+                    periods_chart.setVisibleXRangeMaximum(12f)
+                    periods_chart.setMaxVisibleValueCount(12)
+                    periods_chart.moveViewToX((barLabels.size - 1).toFloat())
+                    periods_chart.invalidate()
+                }
 
             }
         }

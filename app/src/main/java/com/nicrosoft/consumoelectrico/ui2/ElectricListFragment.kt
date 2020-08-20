@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.animation.OvershootInterpolator
 import android.webkit.MimeTypeMap
@@ -34,12 +35,14 @@ import com.pixplicity.easyprefs.library.Prefs
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
 import kotlinx.android.synthetic.main.emeter_list_fragment.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.io.File
+import java.sql.Time
 import java.util.*
 
 class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
@@ -64,11 +67,34 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
         super.onActivityCreated(savedInstanceState)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
-
+        migrate()
         initLayout()
         loadData()
     }
-    
+
+    private fun migrate() {
+        if(!Prefs.getBoolean("migrated", false) and backupHelper.migrationDataAvailable()){
+            MaterialDialog(requireContext()).show {
+                title(R.string.notice)
+                message(text = "We found some data to migrate, would you like to try migrate data to new database version?")
+                positiveButton(R.string.ok){
+                    launch{
+                        try {
+                            backupHelper.tryMigration()
+                            Prefs.putBoolean("migrated", true)
+                            initLayout()
+                            loadData()
+                        }catch (e:Exception){
+                            showInfoDialog("No se pudo realizar la migracion de datos")
+                        }
+                    }
+                }
+                negativeButton(R.string.no_thanks){  }
+            }
+        }
+    }
+
+
     private fun loadData(){
         viewModel.getElectricMeterList().observe(viewLifecycleOwner, Observer {
             toggleMessageVisibility(it.isEmpty())
