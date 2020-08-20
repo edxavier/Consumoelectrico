@@ -17,7 +17,7 @@ object AppNotificationHelper {
     const val CHANNEL_ID = "10001"
     const val CHANNEL_NAME = "CEH"
 
-    fun sendNotification(ctx:Context, title:String, message:String){
+    fun sendNotification(ctx:Context, notificationId:Int, title:String, message:String){
         val resultIntent = Intent(ctx, MainKt::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -49,7 +49,6 @@ object AppNotificationHelper {
             notificationManager.createNotificationChannel(channel)
             builder.setChannelId(CHANNEL_ID)
         }
-        val notificationId =  100
         notificationManager.notify(notificationId, builder.build())
         //val notificationId =  System.currentTimeMillis().toInt()
 

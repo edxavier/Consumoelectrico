@@ -44,4 +44,8 @@ interface BackupDAO {
     @Query("SELECT * FROM electric_meter_reading order by id desc")
     suspend fun getReadingList(): List<ElectricReading>
 
+
+    @Query("SELECT * FROM electric_meter_reading where meter_code=:meterCode order by reading_date desc limit 1")
+    suspend fun getLatestReading(meterCode: String): ElectricReading?
+
 }

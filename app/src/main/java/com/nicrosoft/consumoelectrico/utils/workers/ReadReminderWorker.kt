@@ -17,6 +17,9 @@ import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
 import com.nicrosoft.consumoelectrico.utils.helpers.NotificationHelper
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.coroutines.*
+import org.joda.time.Days
+import org.joda.time.LocalDate
+import org.joda.time.LocalDateTime
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -28,9 +31,29 @@ class ReadReminderWorker (private val ctx: Context, params: WorkerParameters) : 
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         Log.e("EDER", "ReadReminderWorker")
-        val backupHelper: BackupDatabaseHelper by instance()
-        
-
+        launch {
+            val backupHelper: BackupDatabaseHelper by instance()
+            val dao = backupHelper.getDao()
+            val meters = dao.getMeterList()
+            if (meters.isNotEmpty()){
+                meters.forEach {m->
+                    val latestReading = dao.getLatestReading(m.code)
+                    latestReading?.let{ r->
+                        val timePassed = Days.daysBetween(LocalDate(r.readingDate), LocalDate(Date()))
+                        if (timePassed.days > m.readReminder){
+                            val hour = LocalDateTime.now().hourOfDay
+                            //Si estamos entre las 7 am y las 9 pm
+                            if (hour in 7..21) {
+                                val title = ctx.getString(R.string.reminder) + " " + m.name
+                                AppNotificationHelper
+                                        .sendNotification(ctx, m.id!!,  title,
+                                                ctx.getString(R.string.reminder_msg, timePassed.days.toString()))
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return@withContext Result.success()
     }
 

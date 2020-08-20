@@ -200,6 +200,8 @@
     <string name="backup_restore_error">Ocorreu um erro inesperado, a restauração dos dados não foi concluída</string>
     <string name="backup_suggestion">Um backup local foi criado. No entanto, é aconselhável manter uma cópia desse backup em um serviço externo como o Google Drive, gostaria de salvar uma cópia externamente?</string>
     <string name="database_menu">Menú base de dados</string>
+    <string name="backup_notification_suggestion1">Já se passaram muitos dias desde que você salvou uma cópia de backup em um serviço externo como o Google Drive ou similar, é aconselhável manter uma cópia dos dados fora do dispositivo.</string>
+    <string name="backup_notification_suggestion2">Parece que você nunca salvou uma cópia de backup em nenhum serviço externo como o Google Drive ou similar, é aconselhável manter uma cópia dos dados fora do dispositivo.</string>
 
 
 </resources>

@@ -259,6 +259,8 @@
     <string name="backup_restore_error">An unexpected error occurred, data restoration did not complete</string>
     <string name="backup_suggestion">A local backup has been created. However, it is advisable to keep a copy of this backup in an external service such as Google Drive, would you like to save a copy externally?</string>
     <string name="database_menu">Database menu</string>
+    <string name="backup_notification_suggestion1">It has been many days since you have saved a backup copy in an external service such as Google drive or similar, it is advisable to keep a copy of the data outside the device.</string>
+    <string name="backup_notification_suggestion2">It seems that you have never saved a backup copy in any external service such as Google drive or similar, it is advisable to keep a copy of the data outside the device.</string>
 
 
 </resources>
