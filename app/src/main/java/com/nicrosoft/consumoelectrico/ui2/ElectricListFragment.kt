@@ -67,7 +67,10 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
         super.onActivityCreated(savedInstanceState)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
-        migrate()
+        launch {
+            delay(1500)
+            migrate()
+        }
         initLayout()
         loadData()
     }
@@ -76,7 +79,7 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
         if(!Prefs.getBoolean("migrated", false) and backupHelper.migrationDataAvailable()){
             MaterialDialog(requireContext()).show {
                 title(R.string.notice)
-                message(text = "We found some data to migrate, would you like to try migrate data to new database version?")
+                message(R.string.migration_message)
                 positiveButton(R.string.ok){
                     launch{
                         try {
@@ -85,7 +88,7 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
                             initLayout()
                             loadData()
                         }catch (e:Exception){
-                            showInfoDialog("No se pudo realizar la migracion de datos")
+                            showInfoDialog(getString(R.string.migration_error))
                         }
                     }
                 }

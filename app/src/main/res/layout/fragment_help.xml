@@ -1,0 +1,86 @@
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_margin="8dp">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_marginTop="8dp"
+            style="@style/AppTheme.Title"
+            android:textSize="16sp"
+            android:text="@string/help.how.read"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                app:srcCompat="@drawable/medidor_reloj"
+                android:layout_width="99dp"
+                android:layout_height="99dp"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                app:srcCompat="@drawable/medidor_reloj_lectura"
+                android:layout_width="wrap_content"
+                android:layout_height="99dp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:text="@string/help_medidor_reloj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                app:srcCompat="@drawable/medidor_ciclometrico"
+                android:layout_width="wrap_content"
+                android:layout_height="99dp"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                app:srcCompat="@drawable/medidor_digital"
+                android:layout_width="wrap_content"
+                android:layout_height="99dp"/>
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            app:srcCompat="@drawable/lecturas"
+            android:layout_width="wrap_content"
+            android:layout_height="99dp"/>
+
+        <TextView
+            android:text="@string/help_medidor_digital"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginTop="18dp"
+            style="@style/AppTheme.Title"
+            android:textSize="16sp"
+            android:text="@string/help_advise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/help_reading_control"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

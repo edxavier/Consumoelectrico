@@ -22,7 +22,8 @@ class ExternalBackupWorker (private val ctx: Context, params: WorkerParameters) 
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         val lastExternal =  Prefs.getString("last_external_backup", "")
-        if (lastExternal.isNotEmpty()){
+        val reminderEnabled =  Prefs.getBoolean("backup_reminder_enabled", true)
+        if (lastExternal.isNotEmpty() and reminderEnabled){
             try {
                 val sdf = SimpleDateFormat(ctx.getString(R.string.backup_date_format), Locale.getDefault())
                 val lastBackup = sdf.parse(lastExternal)

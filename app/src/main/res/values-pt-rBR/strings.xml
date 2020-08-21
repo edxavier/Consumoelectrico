@@ -59,9 +59,10 @@
     <string name="no_data_chart">Não há dados para mostrar</string>
     <string name="first_reading_notice">Este é o seu primeiro registro, certifique-se sempre que possível que o primeiro registro corresponda à leitura refletida em sua última fatura para obter uma estimativa melhor, caso contrário, a aplicação terá a data atual como o início do período e fazer estimativas a partir de hoje até o fim do período aproximado</string>
     <string name="not_show_again">Não mostrar novamente</string>
-    <string name="help">Socorro</string>
+    <string name="help">Ajuda</string>
     <string name="settings.ac.price.kwh">Preço por kWh</string>
     <string name="settings.ac.discount.kwh">Desconto por kWh (%)</string>
+    <string name="settings.ac.discount.kwh.old">Desconto por kWh</string>
     <string name="settings.ac.currency">moeda</string>
     <string name="energy_meter_name">Medidor de energia</string>
     <string name="initial_reading">Leitura inicial</string>
@@ -202,6 +203,30 @@
     <string name="database_menu">Menú base de dados</string>
     <string name="backup_notification_suggestion1">Já se passaram muitos dias desde que você salvou uma cópia de backup em um serviço externo como o Google Drive ou similar, é aconselhável manter uma cópia dos dados fora do dispositivo.</string>
     <string name="backup_notification_suggestion2">Parece que você nunca salvou uma cópia de backup em nenhum serviço externo como o Google Drive ou similar, é aconselhável manter uma cópia dos dados fora do dispositivo.</string>
+    <string name="migration_message">Encontramos dados para migrar. Você gostaria de tentar migrar os dados para a nova versão do banco de dados?</string>
+    <string name="migration_error">A migração de dados falhou</string>
+    <string name="deprecated">*Obsoleto, use a nova versão em seu lugar</string>
+    <string name="backup_reminder">Lembrete de backup</string>
+    <string name="backup_reminder_hint">Notifica se nenhum backup foi criado nos últimos 30 dias.</string>
+    <string name="help_medidor_reloj">
+        Faça a sua leitura anotando o número que indica a agulha de cada relógio, começando pelo relógio da direita até chegar ao último (relógio da esquerda) e levando em consideração as seguintes indicações:\n\n
+
+        <b>*</b>  O ponteiro de cada relógio se move na direção da numeração, do menor para o maior.\n
+        <b>*</b>  Se a agulha estiver entre dois números, o menor será registrado, exceto quando a agulha estiver entre 0 e 9, o 9 será registrado.\n
+        <b>*</b>  Quando o ponteiro de um dos relógios não marca exatamente o número, devemos prestar atenção se o ponteiro do relógio que o segue à esquerda ainda não atingiu o zero. Se a agulha não chegar a zero, o número inferior é registrado, se a agulha já atingiu o zero, o número superior é registrado.\n\n
+        No exemplo: o primeiro relógio da direita para a esquerda não está exatamente às três, e no relógio da esquerda o ponteiro não atingiu zero, então o número que é escrito a partir do primeiro é 2.
+    </string>
+    <string name="help_medidor_digital">A leitura destes medidores é feita observando os números que aparecem nas janelas ou na tela, como o da imagem anterior</string>
+
+    <string name="help_advise">Dicas para fazer sua leitura corretamente</string>
+    <string name="help_reading_control">
+      Certifique-se de que a leitura do dia 1 (início do período) coincide com o dia em que o leitor passa fazendo a leitura dos dados do seu medidor ou que coincide com a última leitura refletida na sua última fatura.\n\n
+
+Fazer a leitura ao mesmo tempo permitirá calcular seu consumo diário e verificar a variação do consumo a cada dia.\n\n
+
+Você pode encerrar o período registrando uma nova leitura ou selecionar da lista de leituras aquela em que o período atual termina, certifique-se de que corresponda ao refletido em sua nova fatura, se não corresponderem, você pode editar o valor para corrigir isto.\n\n
+    </string>
+    <string name="help.how.read">Como ler o medidor?</string>
 
 
 </resources>

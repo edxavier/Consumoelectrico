@@ -99,9 +99,10 @@
         \n\n(Ej. 1600 imp / kWh. o sea, que por cada kilowatt-hora (kWh) de consumo de energía, tu contador emite 1 600 destellos de luz.)
         \n\n <b>Para un mejor calculo inicia el cronometro con el primer impulso y detenlo con el último, los pulsos mínimos requeridos son dos, sin embargo para un cálculo más acertado ingresa de 5 a 10 destellos mínimo haciendo clic por cada uno en la parte consumo de la pantalla.</b></string>
     <string name="not_show_again">No volver a mostrar</string>
-    <string name="help">Help</string>
+    <string name="help">Ayuda</string>
     <string name="settings.ac.price.kwh">Precio por kWh</string>
     <string name="settings.ac.discount.kwh">Descuento por kWh (%)</string>
+    <string name="settings.ac.discount.kwh.old">Descuento por kWh</string>
     <string name="settings.ac.currency">Moneda</string>
     <string name="energy_meter_name">Medidor de energía</string>
     <string name="initial_reading">Lectura inicial</string>
@@ -222,8 +223,30 @@
     <string name="backup_restore_error">Ocurrio un error inesperado, no se completo la restauración de datos</string>
     <string name="backup_suggestion">Se ha creado un respaldo local. Sin embargo es recomendable mantener una copia de este respaldo en un servicio externo como Google Drive, ¿te gustaría  guardar una copia de manera externa?</string>
     <string name="database_menu">Menú base de dados</string>
-    <string name="backup_notification_suggestion1">Hace muchos días que no has guardado copia de respaldo en algun servicio externo como Google drive o similares, es recomendable matener una copia de los datos fuera del dispositivo.</string>
-    <string name="backup_notification_suggestion2">Parece que nunca has guardado copia de respaldo en algun servicio externo como Google drive o similares, es recomendable matener una copia de los datos fuera del dispositivo.</string>
+    <string name="backup_notification_suggestion1">Hace muchos días que no has guardado copia de respaldo en un servicio externo como Google drive o similares, es recomendable matener una copia de los datos fuera del dispositivo.</string>
+    <string name="backup_notification_suggestion2">Parece que nunca has guardado copia de respaldo en un servicio externo como Google drive o similares, es recomendable matener una copia de los datos fuera del dispositivo.</string>
+    <string name="migration_message">Encontramos datos para migrar, ¿le gustaría intentar migrar los datos a la nueva versión de base de datos?</string>
+    <string name="migration_error">No se pudo realizar la migración de datos</string>
+    <string name="deprecated">*En desuso, use la nueva versión en su lugar.</string>
+    <string name="backup_reminder">Recordatorio de respaldo</string>
+    <string name="backup_reminder_hint">Notifica si no se ha creado una copia de seguridad en los últimos 30 días.</string>
+    <string name="help_medidor_reloj">
+        Tome su lectura anotando el número que señala la aguja de cada reloj, iniciando por el reloj de la derecha hasta llegar al último (reloj izquierdo) y tomando en consideración las siguientes indicaciones: \n\n
 
+    <b>*</b> La aguja de cada reloj se mueve siguiendo el sentido de la numeración en un orden de menor a mayor.\n
+    <b>*</b> Si la aguja se encuentra entre dos números se anota el menor, excepto cuando la aguja se encuentra entre 0 y 9 se anotará el 9.\n
+    <b>*</b> Cuando la aguja de uno de los relojes no marca excatamente el número, debemos fijarnos bien si la aguja del reloj que le sigue a la izquierda aún no ha llegado a cero. Si la aguja no llega a cero se anota el número menor, si la aguja ya llegó a cero se anota el número mayor.\n\n
+    En el ejemplo: el primer reloj de derecha a izquierda no está exactamente en el tres, y en el reloj de la izquierda la aguja no ha llegado a cero, entonces el número que se anota del primero es el 2.
+    </string>
+    <string name="help_medidor_digital">La toma de lectura de lectura en estos medidores se realiza anotando los números que aparecen en las ventanillas o pantalla, como la de la imagen anterior:</string>
+    <string name="help_advise">Consejos para realizar correctamente tu lectura</string>
+    <string name="help_reading_control">
+        Asegúrese de que la lectura del día 1 (inicio del período) coincida con el día que el lector pasa tomando los datos de lectura de su medidor o que coincide con la última lectura reflejada en su última factura.\n\n
+
+        Tomar la lectura a la misma hora te permitirá calcular tu consumo diario y verificar la variación en el consumo cada día.\n\n
+
+        Puedes finalizar el periodo registrando una nueva lectura o seleccionar de la lista de lecturas aquella en la que finaliza el periodo actual, asegúrate de que coincida con la reflejada en tu nueva factura, si no coinciden puedes editar el valor para corregir eso.\n\n
+    </string>
+    <string name="help.how.read">¿Cómo leer el medidor?</string>
 
 </resources>

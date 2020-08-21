@@ -34,7 +34,7 @@
 
     <style name="AppTheme.Title" parent="AppTheme">
         <item name="fontFamily">@font/source_sans_pro_semibold</item>
-        <item name="textColor">@color/md_black_1000_75</item>
+        <item name="android:textColor">@color/md_black_1000_75</item>
     </style>
 
     <style name="AppTheme.Section" parent="TextAppearance.MaterialComponents.Overline">

@@ -1,10 +1,11 @@
 package com.nicrosoft.consumoelectrico.ui2
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.text.Html
+import android.util.Log
+import android.view.*
 import android.view.animation.OvershootInterpolator
+import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -19,6 +20,9 @@ import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.list.listItems
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
@@ -36,12 +40,17 @@ import jp.wasabeef.recyclerview.animators.FadeInRightAnimator
 import kotlinx.android.synthetic.main.app_bar_mainkt.*
 import kotlinx.android.synthetic.main.dlg_prices.*
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
 
 class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.PriceItemListener {
+    private var cargosFijos: String = "----"
+    private var impuestos: String = "----"
+    private var precios: String = "----"
+
     override val kodein by kodein()
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
@@ -56,6 +65,7 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_electric_meter, container, false)
         //return inflater.inflate(R.layout.fragment_new_electric_meter, container, false)
         return binding.root
@@ -69,6 +79,7 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
         //form_container.fadeIn()
         initLayout()
+        getRemoteConfig()
         if(params.editingItem)
             loadPrices()
         else {
@@ -351,5 +362,63 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
             return false
         }
         return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.new_meter_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.ac_new_meter_help -> {
+                val dlg = MaterialDialog(requireContext()).show {
+                    title(R.string.help)
+                    customView(R.layout.new_meter_help, scrollable = true, noVerticalPadding = false, horizontalPadding = true)
+                    positiveButton(R.string.ok)
+                }
+                try {
+                    val txtPriceKw = dlg.getCustomView().findViewById(R.id.txt_help_kw_price) as TextView
+                    txtPriceKw.text = Html.fromHtml(precios)
+                } catch (e:Exception) { }
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun getRemoteConfig(){
+        try {
+            val remoteConfig = Firebase.remoteConfig
+            val configSettings = remoteConfigSettings { minimumFetchIntervalInSeconds = 60 }
+            remoteConfig.setConfigSettingsAsync(configSettings)
+            remoteConfig.setDefaultsAsync(
+                    mapOf(
+                            "cargos_fijos" to "['Informacion no disponible']",
+                            "impuestos" to "['Datos no disponibles']",
+                            "precios" to "['Datos no disponibles']"
+                    )
+            )
+
+            cargosFijos = processJson(remoteConfig.getString("cargos_fijos"))
+            impuestos = processJson(remoteConfig.getString("impuestos"))
+            precios = processJson(remoteConfig.getString("precios"))
+
+            remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    cargosFijos = processJson(remoteConfig.getString("cargos_fijos"))
+                    impuestos = processJson(remoteConfig.getString("impuestos"))
+                    precios = processJson(remoteConfig.getString("precios"))
+                }
+            }
+        }catch (e:Exception){}
+    }
+
+    private fun processJson(json:String): String{
+        val jsonArray = JSONArray(json)
+        var str = ""
+        for (i in 0 until jsonArray.length()) {
+            str += jsonArray.getString(i) + "\n"
+        }
+        return str
     }
 }

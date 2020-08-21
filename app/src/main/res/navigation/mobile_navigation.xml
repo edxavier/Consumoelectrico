@@ -214,5 +214,9 @@
         android:name="com.nicrosoft.consumoelectrico.ui2.ElectricPeriodsFragment"
         android:label="fragment_electric_details"
         tools:layout="@layout/fragment_electric_periods" />
+    <fragment
+        android:id="@+id/nav_help"
+        android:name="com.nicrosoft.consumoelectrico.ui2.HelpFragment"
+        android:label="@string/help" />
 
 </navigation>

@@ -40,6 +40,7 @@
 
     <string name="settings.ac.price.kwh">Price per kWh</string>
     <string name="settings.ac.discount.kwh">Discount per kWh (%)</string>
+    <string name="settings.ac.discount.kwh.old">Discount per kWh</string>
     <string name="settings.ac.currency">Currency</string>
 
     <string name="chart.legend.accumulated">Cumulative consumption (kWh)</string>
@@ -145,7 +146,6 @@
     </string-array>
 
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="not_show_again">Not show again</string>
     <string name="help">Help</string>
@@ -261,6 +261,29 @@
     <string name="database_menu">Database menu</string>
     <string name="backup_notification_suggestion1">It has been many days since you have saved a backup copy in an external service such as Google drive or similar, it is advisable to keep a copy of the data outside the device.</string>
     <string name="backup_notification_suggestion2">It seems that you have never saved a backup copy in any external service such as Google drive or similar, it is advisable to keep a copy of the data outside the device.</string>
+    <string name="migration_message">We found data to migrate, would you like to try migrating the data to the new database version?</string>
+    <string name="migration_error">Data migration failed</string>
+    <string name="deprecated">*Deprecated, use the new version instead.</string>
+    <string name="backup_reminder">Backup reminder</string>
+    <string name="backup_reminder_hint">It Notify  if no backup has been created in the last 30 days.</string>
+    <string name="help_medidor_reloj">
+        Take your reading noting the number that indicates the hand of each clock, starting with the clock on the right until reaching the last one (left clock) and taking into account the following indications: \n\n
+        <b>*</b>  The hand of each clock moves in the direction of the numbering in order from smallest to largest. \n
+        <b>*</b>  If the needle is between two numbers, the lesser is recorded, except when the needle is between 0 and 9, 9 will be recorded. \n
+        <b>*</b>  When the needle of one of the clocks does not exactly mark the number, we must pay attention to whether the hand of the clock that follows it to the left has not yet reached zero. If the needle does not reach zero the lower number is recorded, if the needle has already reached zero the higher number is recorded. \n\n
+        In the example: the first clock from right to left is not exactly at three, and in the clock to the left the hand has not reached zero, so the number that is noted from the first is 2.
+
+    </string>
+    <string name="help_medidor_digital">
+        The reading of these meters is taken by noting the numbers that appear in the windows or screen, like the one in the previous image</string>
+    <string name="help_advise">Tips to correctly take your reading</string>
+    <string name="help_reading_control">
+        Make sure that the reading on day 1 (beginning of the period) coincides with the day the reader spends taking the reading data from your meter or that it coincides with the last reading reflected on your last bill.\n\n
+    Taking the reading at the same time will allow you to calculate your daily consumption and verify the variation in consumption each day.\n\n
+
+    You can end the period by registering a new reading or select from the list of readings the one on which the current period ends, make sure it matches the one reflected on your new invoice, if they do not match you can edit the value to correct it.\n\n
+    </string>
+    <string name="help.how.read">How to read the meter?</string>
 
 
 </resources>

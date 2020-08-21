@@ -70,7 +70,9 @@ class SettingsFragment : ScopeFragment() {
             val defValue = Prefs.getString("reminder_after", "14")
             showDialog(title, "reminder_after", defValue, typeNumber)
         }
-
+        backup_reminder.setOnCheckedChangeListener { _, isChecked ->
+            Prefs.putBoolean("backup_reminder_enabled", isChecked)
+        }
     }
 
     private fun showDialog(title:String, setCode:String, default:String, inputType: Int){
