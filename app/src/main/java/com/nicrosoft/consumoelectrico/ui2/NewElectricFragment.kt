@@ -8,6 +8,7 @@ import android.view.animation.OvershootInterpolator
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -378,7 +379,11 @@ class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.Pric
                 }
                 try {
                     val txtPriceKw = dlg.getCustomView().findViewById(R.id.txt_help_kw_price) as TextView
-                    txtPriceKw.text = Html.fromHtml(precios)
+                    val txtFixedPrices = dlg.getCustomView().findViewById(R.id.txt_help_fixed_prices) as TextView
+                    val txtTaxes = dlg.getCustomView().findViewById(R.id.txt_help_taxes) as TextView
+                    txtPriceKw.text = HtmlCompat.fromHtml(precios, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                    txtFixedPrices.text = HtmlCompat.fromHtml(cargosFijos, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                    txtTaxes.text = HtmlCompat.fromHtml(impuestos, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 } catch (e:Exception) { }
 
             }
