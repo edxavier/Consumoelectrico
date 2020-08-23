@@ -1,20 +1,19 @@
 package com.nicrosoft.consumoelectrico
 
-import android.app.backup.BackupHelper
 import android.content.ContextWrapper
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.firebase.jobdispatcher.*
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
 import com.nicrosoft.consumoelectrico.data.AppDataBase
 import com.nicrosoft.consumoelectrico.realm.Migration
 import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
-import com.nicrosoft.consumoelectrico.utils.workers.BackupWorker
-import com.nicrosoft.consumoelectrico.utils.DumpDataService
-import com.nicrosoft.consumoelectrico.utils.ReminderService
 import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
+import com.nicrosoft.consumoelectrico.utils.workers.BackupWorker
 import com.nicrosoft.consumoelectrico.utils.workers.ExternalBackupWorker
 import com.nicrosoft.consumoelectrico.utils.workers.ReadReminderWorker
 import com.pixplicity.easyprefs.library.Prefs
@@ -49,10 +48,10 @@ class BaseApp : MultiDexApplication(), KodeinAware {
 
     override fun onCreate() {
         super.onCreate()
-        //Fabric.with(this, Crashlytics())
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        MobileAds.initialize(this, getString(R.string.admob_app_id))
+        //MobileAds.initialize(this, getString(R.string.admob_app_id))
         FirebaseApp.initializeApp(this)
+        MobileAds.initialize(this)
         Realm.init(this)
         val config = RealmConfiguration.Builder()
                 .schemaVersion(1) // Must be bumped when the schema changes
@@ -77,29 +76,6 @@ class BaseApp : MultiDexApplication(), KodeinAware {
         }else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }*/
-        val dayly = 3600 * 24
-        val hourly = 3600
-        val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(this))
-        val myJob = dispatcher.newJobBuilder()
-                .setService(DumpDataService::class.java) // the JobService that will be called
-                .setTag(DumpDataService.JOB_TAG) // uniquely identifies the job
-                .setLifetime(Lifetime.FOREVER)
-                .setRecurring(true)
-                .setTrigger(Trigger.executionWindow(0, dayly)) // Start after, Repeat every
-                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
-                .setReplaceCurrent(false)
-                .build()
-        val myJob2 = dispatcher.newJobBuilder()
-                .setService(ReminderService::class.java) // the JobService that will be called
-                .setTag(ReminderService.JOB_TAG) // uniquely identifies the job
-                .setLifetime(Lifetime.FOREVER)
-                .setRecurring(true)
-                .setTrigger(Trigger.executionWindow(0, hourly)) // Start after, Repeat every
-                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
-                .setReplaceCurrent(false)
-                .build()
-        dispatcher.mustSchedule(myJob)
-        dispatcher.mustSchedule(myJob2)
 
         val workManager = WorkManager.getInstance(this)
         val constraints: Constraints = Constraints.Builder()

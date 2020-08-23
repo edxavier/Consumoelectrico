@@ -1,6 +1,7 @@
 package com.nicrosoft.consumoelectrico.ui2
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,19 +9,27 @@ import androidx.activity.addCallback
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
+import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.fragment_electric_detail.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import java.util.*
 
 
 class ElectricDetailFragment : ScopeFragment(), KodeinAware {
     override val kodein by kodein()
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
+    private var mInterstitialAd: InterstitialAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,5 +52,45 @@ class ElectricDetailFragment : ScopeFragment(), KodeinAware {
         //val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         bottom_nav_details.setupWithNavController(navController2)
         //NavigationUI.setupWithNavController(bottom_nav_details, navController2)
+        if(!Prefs.getBoolean("isPurchased", false))
+            requestInterstitialAds()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        showInterstitial()
+    }
+
+    private fun showInterstitial() {
+        val ne = Prefs.getInt("exec_count", 0)
+        Prefs.putInt("exec_count", ne + 1)
+        //Log.d("EDERne", "${ne+1}")
+        //Log.d("EDERsh", "${Prefs.getInt("show_after", 3)}")
+        if (ne + 1 == Prefs.getInt("show_after", 3)) {
+            Prefs.putInt("exec_count", 0)
+            val r = Random()
+            val min = 3
+            val max = 6
+            val rnd = r.nextInt(max - min) + min
+            Prefs.putInt("show_after", rnd)
+            mInterstitialAd?.let {
+                if(it.isLoaded)
+                    it.show()
+            }
+        }
+
+    }
+
+    private fun requestInterstitialAds() {
+
+        mInterstitialAd = InterstitialAd(activity)
+        mInterstitialAd?.adUnitId = resources.getString(R.string.admob_interstical)
+        mInterstitialAd?.loadAd(AdRequest.Builder().build())
+        mInterstitialAd?.adListener = object : AdListener() {
+            override fun onAdClosed() {
+                super.onAdClosed()
+                requestInterstitialAds()
+            }
+        }
     }
 }

@@ -387,7 +387,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         hourlyDataSet.color = ContextCompat.getColor(context, R.color.md_teal_500)
         val dataSets: MutableList<ILineDataSet> = ArrayList()
         dataSets.add(dailyDataSet)
-        dataSets.add(hourlyDataSet)
+        //dataSets.add(hourlyDataSet)
         return LineData(dataSets)
     }
 

@@ -18,6 +18,8 @@ import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.material.navigation.NavigationView
 import com.nicrosoft.consumoelectrico.utils.helpers.RestoreHelper
 import com.nicrosoft.consumoelectrico.utils.setHidden
@@ -52,6 +54,7 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
         bp = BillingProcessor(this, BuildConfig.APP_BILLING_PUB_KEY, BuildConfig.MERCHANT_ID, this)
         setSupportActionBar(toolbar)
+        setupGlobalAdsConfig()
         setupBanner()
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -75,6 +78,16 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
     }
 
+    private fun setupGlobalAdsConfig() {
+        val adRequest = RequestConfiguration.Builder()
+                .setTestDeviceIds(arrayOf(
+                        "AC5F34885B0FE7EF03A409EB12A0F949",
+                        AdRequest.DEVICE_ID_EMULATOR
+                ).toList())
+                .build()
+        MobileAds.setRequestConfiguration(adRequest)
+    }
+
     /*
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -86,10 +99,8 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
     private fun setupBanner() {
         adView.setHidden()
-        val adRequest = AdRequest.Builder()
-                .addTestDevice("B48A47589EE977D85159EDC0E8B15AB9")
-                .build()
-        adView.loadAd(adRequest)
+
+        adView.loadAd(AdRequest.Builder().build())
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 super.onAdLoaded()

@@ -2,11 +2,11 @@
 <layer-list
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@color/primaryColor" />
+    <item android:drawable="@color/md_grey_100" />
 
     <item
         android:gravity="center"
-        android:drawable="@drawable/ic_bulb_logo">
+        android:drawable="@drawable/ic_personal_logo">
     </item>
     <!--
 -->
