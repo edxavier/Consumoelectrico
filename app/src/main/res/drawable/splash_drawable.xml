@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@color/md_orange_500" />
+    <item android:drawable="@color/primaryColor" />
 
-    <item>
-        <bitmap
-            android:gravity="center"
-            android:src="@drawable/logo_192" />
-    </item><!--
+    <item
+        android:gravity="center"
+        android:drawable="@drawable/ic_bulb_logo">
+    </item>
+    <!--
 -->
  </layer-list>
