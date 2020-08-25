@@ -83,9 +83,9 @@ class BaseApp : MultiDexApplication(), KodeinAware {
                 //.setRequiresStorageNotLow(true)
                 .build()
         //The minimum time interval between reruns of a task is 15 minute or 900000 seconds.
-        val backupWorker = PeriodicWorkRequestBuilder<BackupWorker>(5, TimeUnit.MINUTES)
+        val backupWorker = PeriodicWorkRequestBuilder<BackupWorker>(24, TimeUnit.HOURS)
                 .setConstraints(constraints)
-                //.setInitialDelay(5, TimeUnit.SECONDS)
+                .setInitialDelay(24, TimeUnit.HOURS)
                 .build()
         val externalBackupWorker = PeriodicWorkRequestBuilder<ExternalBackupWorker>(4, TimeUnit.HOURS)
                 .setConstraints(constraints)
