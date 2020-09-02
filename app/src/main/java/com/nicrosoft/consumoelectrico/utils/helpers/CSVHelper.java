@@ -72,13 +72,16 @@ public class CSVHelper {
 
         try {
             InputStream inputStream = new FileInputStream(fullPath);
+            Log.e("EDER", fullPath);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String csvLine;
             reader.readLine();
              while ((csvLine = reader.readLine()) != null) {
-                csvLine = csvLine.replace('"', ' ');
-                //Log.e("EDER", csvLine);
+
+                 csvLine = csvLine.replace('"', ' ');
+                 //Log.e("EDER", csvLine);
                 String[] row = csvLine.split(",");
+
                 realm.executeTransaction(realm1 -> {
                     String observ = "";
                     if(row.length>15)
@@ -95,7 +98,8 @@ public class CSVHelper {
             return true;
         }
         catch (Exception ex) {
-            Log.e("EDER", ex.getMessage());
+            Log.e("EDER", ex.toString());
+            ex.printStackTrace();
             if(!realm.isClosed())
                 realm.close();
             return false;

@@ -34,17 +34,17 @@ import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.android.synthetic.main.emeter_list_fragment.*
 import kotlinx.coroutines.launch
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.kodein
-import org.kodein.di.generic.instance
+import org.kodein.di.DIAware
+import org.kodein.di.android.x.closestDI
+import org.kodein.di.instance
 import java.io.File
 import java.util.*
 import kotlin.time.ExperimentalTime
 
 
-class ElectricReadingListFragment : ScopeFragment(), KodeinAware, ElectricReadingAdapter.AdapterItemListener {
+class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAdapter.AdapterItemListener {
     private var tempReadings: List<ElectricReading>? = null
-    override val kodein by kodein()
+    override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
 

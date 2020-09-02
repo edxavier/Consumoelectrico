@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.animation.OvershootInterpolator
 import android.webkit.MimeTypeMap
@@ -21,6 +20,7 @@ import com.afollestad.materialdialogs.files.FileFilter
 import com.afollestad.materialdialogs.files.fileChooser
 import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.list.listItems
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.BuildConfig
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
@@ -35,18 +35,16 @@ import com.pixplicity.easyprefs.library.Prefs
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
 import kotlinx.android.synthetic.main.emeter_list_fragment.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.kodein
-import org.kodein.di.generic.instance
+import org.kodein.di.DIAware
+import org.kodein.di.android.x.closestDI
+import org.kodein.di.instance
 import java.io.File
-import java.sql.Time
 import java.util.*
 
-class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
-    override val kodein by kodein()
+class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
+    override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
     private val backupHelper by instance<BackupDatabaseHelper>()
     private lateinit var viewModel: ElectricViewModel
@@ -88,7 +86,10 @@ class ElectricListFragment : ScopeFragment(), KodeinAware, AdapterItemListener {
                             initLayout()
                             loadData()
                         }catch (e:Exception){
-                            showInfoDialog(getString(R.string.migration_error))
+                            val msg = "${getString(R.string.migration_error)} ---> ${e.message}"
+                            showInfoDialog(msg)
+                            FirebaseCrashlytics.getInstance().log("FALLO DE MIGRACION")
+                            FirebaseCrashlytics.getInstance().recordException(e)
                         }
                     }
                 }

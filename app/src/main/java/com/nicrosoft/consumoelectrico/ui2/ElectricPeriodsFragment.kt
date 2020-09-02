@@ -19,13 +19,13 @@ import com.nicrosoft.consumoelectrico.utils.slideIn
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
 import kotlinx.android.synthetic.main.fragment_electric_periods.*
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.kodein
-import org.kodein.di.generic.instance
+import org.kodein.di.DIAware
+import org.kodein.di.android.x.closestDI
+import org.kodein.di.instance
 
-class ElectricPeriodsFragment : ScopeFragment(), KodeinAware, PeriodsAdapter.PeriodItemListener {
+class ElectricPeriodsFragment : ScopeFragment(), DIAware, PeriodsAdapter.PeriodItemListener {
 
-    override val kodein by kodein()
+    override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
     private lateinit var adapter: PeriodsAdapter

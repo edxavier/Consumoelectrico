@@ -12,13 +12,13 @@ import kotlinx.coroutines.withContext
 import org.joda.time.Days
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.kodein
+import org.kodein.di.DIAware
+import org.kodein.di.android.closestDI
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ExternalBackupWorker (private val ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params), KodeinAware {
-    override val kodein by kodein { ctx }
+class ExternalBackupWorker (private val ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params), DIAware {
+    override val di by closestDI { ctx }
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         val lastExternal =  Prefs.getString("last_external_backup", "")

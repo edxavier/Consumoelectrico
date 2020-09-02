@@ -78,7 +78,7 @@ dependencies {
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$room_version"
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation 'androidx.multidex:multidex:2.0.1'
@@ -113,7 +113,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:20.2.4'
     implementation 'com.google.firebase:firebase-config-ktx:19.2.0'
 
-    implementation 'com.opencsv:opencsv:4.6'
+    implementation 'com.opencsv:opencsv:5.1'
     //implementation 'com.obsez.android.lib.filechooser:filechooser:1.2.0'
 
     // progreso circular que se muestra en la lista
@@ -152,15 +152,15 @@ dependencies {
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
 
     // Kodein
-    implementation "org.kodein.di:kodein-di-generic-jvm:6.5.5"
-    implementation "org.kodein.di:kodein-di-framework-android-x:6.5.5"
+    implementation "org.kodein.di:kodein-di:7.0.0"
+    implementation "org.kodein.di:kodein-di-framework-android-x:7.0.0"
 
     // DATE TIME
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.2'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
 
     // JSON PARSING
-    implementation "com.squareup.moshi:moshi:1.6.0"
-    implementation "com.squareup.moshi:moshi-kotlin:1.6.0"
+    implementation "com.squareup.moshi:moshi:1.8.0"
+    implementation "com.squareup.moshi:moshi-kotlin:1.8.0"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.6.0"
 
     //WORK MANAGER

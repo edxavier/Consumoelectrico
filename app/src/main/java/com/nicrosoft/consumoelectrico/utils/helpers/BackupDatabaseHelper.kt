@@ -57,9 +57,11 @@ class BackupDatabaseHelper(val context: Context, private val dao:BackupDAO){
         val tempList:MutableList<ElectricBillPeriod> = ArrayList()
         tempList.addAll(periods)
         periods.forEach {
+            //Log.w("EDER", it.toString())
             if(periodExist(it.code))
                 tempList.remove(it)
         }
+        Log.e("EDER",  Locale.getDefault().toString())
         dao.savePeriods(tempList)
     }
     suspend fun saveReadings(readings: List<ElectricReading>)= withContext(Dispatchers.IO){

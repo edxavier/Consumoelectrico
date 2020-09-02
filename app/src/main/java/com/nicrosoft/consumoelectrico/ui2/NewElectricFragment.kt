@@ -1,8 +1,6 @@
 package com.nicrosoft.consumoelectrico.ui2
 
 import android.os.Bundle
-import android.text.Html
-import android.util.Log
 import android.view.*
 import android.view.animation.OvershootInterpolator
 import android.widget.TextView
@@ -42,17 +40,17 @@ import kotlinx.android.synthetic.main.app_bar_mainkt.*
 import kotlinx.android.synthetic.main.dlg_prices.*
 import kotlinx.coroutines.launch
 import org.json.JSONArray
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.kodein
-import org.kodein.di.generic.instance
+import org.kodein.di.DIAware
+import org.kodein.di.android.x.closestDI
+import org.kodein.di.instance
 
 
-class NewElectricFragment : ScopeFragment(), KodeinAware, PriceRangeAdapter.PriceItemListener {
+class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceItemListener {
     private var cargosFijos: String = "----"
     private var impuestos: String = "----"
     private var precios: String = "----"
 
-    override val kodein by kodein()
+    override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
     private lateinit var binding: FragmentNewElectricMeterBinding

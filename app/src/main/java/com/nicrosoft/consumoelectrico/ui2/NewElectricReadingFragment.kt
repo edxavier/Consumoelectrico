@@ -19,9 +19,7 @@ import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.databinding.FragmentNewEmeterReadingBinding
 import kotlinx.coroutines.launch
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.kodein
-import org.kodein.di.generic.instance
+import org.kodein.di.instance
 import java.util.*
 import androidx.lifecycle.Observer
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
@@ -31,12 +29,14 @@ import kotlinx.coroutines.delay
 import org.joda.time.LocalDate
 import org.joda.time.Period
 import org.joda.time.PeriodType
+import org.kodein.di.DIAware
+import org.kodein.di.android.x.closestDI
 import kotlin.time.ExperimentalTime
 
 
-class NewElectricReadingFragment : ScopeFragment(), KodeinAware {
+class NewElectricReadingFragment : ScopeFragment(), DIAware {
     private var period: ElectricBillPeriod? = null
-    override val kodein by kodein()
+    override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
 

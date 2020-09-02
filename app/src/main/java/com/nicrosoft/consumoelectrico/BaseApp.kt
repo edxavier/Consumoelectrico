@@ -6,9 +6,9 @@ import androidx.multidex.MultiDexApplication
 import androidx.work.Constraints
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.firebase.jobdispatcher.*
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.nicrosoft.consumoelectrico.data.AppDataBase
 import com.nicrosoft.consumoelectrico.realm.Migration
 import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
@@ -19,21 +19,21 @@ import com.nicrosoft.consumoelectrico.utils.workers.ReadReminderWorker
 import com.pixplicity.easyprefs.library.Prefs
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import org.kodein.di.Kodein
-import org.kodein.di.KodeinAware
+import org.kodein.di.DI
+import org.kodein.di.DIAware
 import org.kodein.di.android.x.androidXModule
-import org.kodein.di.generic.bind
-import org.kodein.di.generic.instance
-import org.kodein.di.generic.provider
-import org.kodein.di.generic.singleton
+import org.kodein.di.bind
+import org.kodein.di.instance
+import org.kodein.di.provider
+import org.kodein.di.singleton
 import java.util.concurrent.TimeUnit
 
 
 /**
  * Created by Eder Xavier Rojas on 06/12/2016.
  */
-class BaseApp : MultiDexApplication(), KodeinAware {
-    override val kodein = Kodein.lazy {
+class BaseApp : MultiDexApplication(), DIAware {
+    override val di = DI.lazy {
         import(androidXModule(this@BaseApp))
         // BasedeDatos
         bind() from singleton { AppDataBase(instance()) }
@@ -49,7 +49,7 @@ class BaseApp : MultiDexApplication(), KodeinAware {
     override fun onCreate() {
         super.onCreate()
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        //MobileAds.initialize(this, getString(R.string.admob_app_id))
+        AndroidThreeTen.init(this)
         FirebaseApp.initializeApp(this)
         MobileAds.initialize(this)
         Realm.init(this)
@@ -87,13 +87,13 @@ class BaseApp : MultiDexApplication(), KodeinAware {
                 .setConstraints(constraints)
                 .setInitialDelay(24, TimeUnit.HOURS)
                 .build()
-        val externalBackupWorker = PeriodicWorkRequestBuilder<ExternalBackupWorker>(4, TimeUnit.HOURS)
+        val externalBackupWorker = PeriodicWorkRequestBuilder<ExternalBackupWorker>(6, TimeUnit.HOURS)
                 .setConstraints(constraints)
                 .setInitialDelay(30, TimeUnit.DAYS)
                 .build()
-        val readReminderWork = PeriodicWorkRequestBuilder<ReadReminderWorker>(5, TimeUnit.MINUTES)
+        val readReminderWork = PeriodicWorkRequestBuilder<ReadReminderWorker>(4, TimeUnit.HOURS)
                 .setConstraints(constraints)
-                //.setInitialDelay(5, TimeUnit.SECONDS)
+                .setInitialDelay(4, TimeUnit.HOURS)
                 .build()
 
         workManager.enqueue(readReminderWork)

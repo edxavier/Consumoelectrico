@@ -18,12 +18,12 @@ import com.nicrosoft.consumoelectrico.utils.charts.*
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.fragment_statistics.*
 import kotlinx.coroutines.launch
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.kodein
-import org.kodein.di.generic.instance
+import org.kodein.di.DIAware
+import org.kodein.di.android.x.closestDI
+import org.kodein.di.instance
 
-class StatisticsFragment : ScopeFragment(), KodeinAware {
-    override val kodein by kodein()
+class StatisticsFragment : ScopeFragment(), DIAware {
+    override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
     private lateinit var navController: NavController

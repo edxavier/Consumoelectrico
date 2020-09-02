@@ -3,6 +3,7 @@
 package com.nicrosoft.consumoelectrico.utils.handlers
 
 import android.util.Log
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.data.BackupSkeleton
 import com.nicrosoft.consumoelectrico.data.DateJsonAdapter
 import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
@@ -19,7 +20,7 @@ object JsonBackupHandler {
             val moshi = Moshi.Builder()
                     .add(Date::class.java, DateJsonAdapter())
                     .build()
-            val jsonAdapter: JsonAdapter<BackupSkeleton> = moshi.adapter<BackupSkeleton>(BackupSkeleton::class.java)
+            val jsonAdapter: JsonAdapter<BackupSkeleton> = moshi.adapter(BackupSkeleton::class.java)
 
             val backup  = BackupSkeleton()
             backup.meters = dao.getMeterList()
@@ -64,6 +65,10 @@ object JsonBackupHandler {
             //Log.e("EDER", data?.meters.toString())
             return true
         }catch (e:Exception){
+            Log.e("EDER -->", e.stackTraceToString())
+
+            //FirebaseCrashlytics.getInstance().log("FALLO DE IMPORTACION")
+            //FirebaseCrashlytics.getInstance().recordException(e)
             return false
         }
     }
