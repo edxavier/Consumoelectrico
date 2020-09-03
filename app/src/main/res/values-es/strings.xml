@@ -220,7 +220,7 @@
     <string name="_expenses">Gasto</string>
     <string name="export_readings_to_ocsv">"Exportar lecturas a archivo CSV"</string>
     <string name="no_thanks">No, gracias</string>
-    <string name="backup_restore_error">Ocurrio un error inesperado, no se completo la restauración de datos</string>
+    <string name="backup_restore_error">Ocurrio un error inesperado, no se completo la restauración de datos, intentalo una vez mas o prueba con otro archivo</string>
     <string name="backup_suggestion">Se ha creado un respaldo local. Sin embargo es recomendable mantener una copia de este respaldo en un servicio externo como Google Drive, ¿te gustaría  guardar una copia de manera externa?</string>
     <string name="database_menu">Menú base de dados</string>
     <string name="backup_notification_suggestion1">Hace muchos días que no has guardado copia de respaldo en un servicio externo como Google drive o similares, es recomendable matener una copia de los datos fuera del dispositivo.</string>

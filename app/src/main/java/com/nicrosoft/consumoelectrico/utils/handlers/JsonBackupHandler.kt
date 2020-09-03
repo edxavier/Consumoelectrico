@@ -60,15 +60,13 @@ object JsonBackupHandler {
                 backup.savePrices(it.prices)
                 backup.savePeriods(it.periods)
                 backup.saveReadings(it.readings)
-                //Log.e("EDER", "RESTORE COMPLETED")
             }
             //Log.e("EDER", data?.meters.toString())
             return true
         }catch (e:Exception){
             Log.e("EDER -->", e.stackTraceToString())
-
-            //FirebaseCrashlytics.getInstance().log("FALLO DE IMPORTACION")
-            //FirebaseCrashlytics.getInstance().recordException(e)
+            FirebaseCrashlytics.getInstance().log("FALLO DE IMPORTACION")
+            FirebaseCrashlytics.getInstance().recordException(e)
             return false
         }
     }

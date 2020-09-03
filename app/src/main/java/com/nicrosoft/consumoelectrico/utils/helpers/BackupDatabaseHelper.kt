@@ -61,7 +61,7 @@ class BackupDatabaseHelper(val context: Context, private val dao:BackupDAO){
             if(periodExist(it.code))
                 tempList.remove(it)
         }
-        Log.e("EDER",  Locale.getDefault().toString())
+        //Log.e("EDER",  Locale.getDefault().toString())
         dao.savePeriods(tempList)
     }
     suspend fun saveReadings(readings: List<ElectricReading>)= withContext(Dispatchers.IO){

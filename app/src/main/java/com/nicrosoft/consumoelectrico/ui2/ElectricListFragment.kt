@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.*
 import android.view.animation.OvershootInterpolator
 import android.webkit.MimeTypeMap
@@ -44,6 +45,8 @@ import java.io.File
 import java.util.*
 
 class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
+    private lateinit var userBackupDir: File
+    private lateinit var appBackupsDir: File
     override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
     private val backupHelper by instance<BackupDatabaseHelper>()
@@ -86,6 +89,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
                             initLayout()
                             loadData()
                         }catch (e:Exception){
+                            Prefs.putBoolean("migrated", true)
                             val msg = "${getString(R.string.migration_error)} ---> ${e.message}"
                             showInfoDialog(msg)
                             FirebaseCrashlytics.getInstance().log("FALLO DE MIGRACION")
@@ -118,6 +122,15 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
     }
 
     private fun initLayout() {
+        val appName = getString(R.string.app_name).replace(" ", "_")
+        val documents = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+        userBackupDir = File("$documents/$appName", "UserBackups")
+        appBackupsDir = File("$documents/$appName")
+        if (!userBackupDir.exists())
+            userBackupDir.mkdirs()
+        if(!appBackupsDir.exists())
+            appBackupsDir.mkdirs()
+
         adapter = ElectricMeterAdapter(this, viewModel, this)
         val animAdapter = ScaleInAnimationAdapter(adapter)
         animAdapter.setFirstOnly(false)
@@ -190,12 +203,9 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
                     title(R.string.database_menu)
                     listItems(R.array.database_options) { _, index, _ ->
                         when (index) {
-                            0 -> {
-                                exportDialog()
-                            }
-                            1 -> {
-                                importDialog()
-                            }
+                            0 -> { exportDialog() }
+                            1 -> { importDialog() }
+                            2 -> { migrate() }
                         }
                     }
                 }
@@ -213,11 +223,11 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
             return
         }
 
-        //val docsDir = requireContext().filesDir
         //initialDirectory = el directorio inicial sera la carpeta data de la app
         MaterialDialog(requireContext()).show {
             folderChooser(context,
-                    initialDirectory = requireContext().getExternalFilesDir("UserBackups"),
+                    //initialDirectory = requireContext().getExternalFilesDir("UserBackups"),
+                    initialDirectory = userBackupDir,
                     emptyTextRes = R.string.title_choose_folder,
                     allowFolderCreation = false) { _, folder ->
                 // Folder selected
@@ -257,7 +267,8 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
         val myFilter: FileFilter = { it.isDirectory || it.name.endsWith(".json", true) }
         MaterialDialog(requireContext()).show {
             fileChooser(context, emptyTextRes = R.string.title_choose_file,
-                    initialDirectory = requireContext().getExternalFilesDir(null),
+                    //initialDirectory = requireContext().getExternalFilesDir(null),
+                    initialDirectory = appBackupsDir,
                     filter = myFilter, waitForPositiveButton = false) { _, file ->
                 launch {
                     if(JsonBackupHandler.restoreBackup(backupHelper, file.path)){

@@ -3,5 +3,6 @@
     <string-array name="database_options" >
         <item>Create backup</item>
         <item>Restore backup</item>
+        <item>Migrate old database</item>
     </string-array>
 </resources>

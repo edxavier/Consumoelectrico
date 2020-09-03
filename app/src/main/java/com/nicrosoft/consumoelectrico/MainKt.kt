@@ -2,6 +2,7 @@ package com.nicrosoft.consumoelectrico
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -21,6 +22,9 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.material.navigation.NavigationView
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.nicrosoft.consumoelectrico.utils.helpers.RestoreHelper
 import com.nicrosoft.consumoelectrico.utils.setHidden
 import com.nicrosoft.consumoelectrico.utils.setVisible
@@ -30,6 +34,8 @@ import com.nicrosoft.consumoelectrico.ui.destinos.DestinoImport
 import com.nicrosoft.consumoelectrico.ui.destinos.DestinoValorarApp
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.content_mainkt.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
@@ -38,8 +44,12 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
     var bp: BillingProcessor? = null
     private lateinit var navController: NavController
 
+    private var reviewInfo: ReviewInfo? = null
+    private lateinit var manager: ReviewManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        manager = ReviewManagerFactory.create(this)
         setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_mainkt)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -76,6 +86,34 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
         //StringBuilder path = new StringBuilder(getFilesDir().getAbsolutePath());
         RestoreHelper.getInternalStoragePath(this)
 
+        /*val request = manager.requestReviewFlow()
+        request.addOnCompleteListener { it ->
+            reviewInfo = if (it.isSuccessful) {
+                //Received ReviewInfo object
+                Log.w("EDER", "reviewInfo isSuccessful ")
+                it.result
+            } else {
+                //Problem in receiving object
+                Log.w("EDER", "ERROR REVIEW ")
+                it.exception?.printStackTrace()
+                null
+            }
+        }
+
+        launch {
+            delay(5000)
+            requestReview()
+        }
+        */
+    }
+
+    private fun requestReview() {
+        reviewInfo?.let {
+            val flow = manager.launchReviewFlow(this, it)
+            flow.addOnCompleteListener { task ->
+                //Irrespective of the result, the app flow should continue
+            }
+        }
     }
 
     private fun setupGlobalAdsConfig() {

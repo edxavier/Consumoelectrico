@@ -28,8 +28,8 @@ android {
         applicationId "com.nicrosoft.consumoelectrico"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1007
-        versionName "3.0.0.20.8"
+        versionCode 1008
+        versionName "2020.9.3.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -165,5 +165,8 @@ dependencies {
 
     //WORK MANAGER
     implementation "androidx.work:work-runtime-ktx:2.4.0"
+
+    // IN APP REVIEW
+    implementation 'com.google.android.play:core:1.8.0'
 }
 apply plugin: 'com.google.gms.google-services'
