@@ -44,7 +44,7 @@ class ElectricReadingAdapter(
                 this.setOnClickListener { listener?.onItemClickListener(reading) }
                 with(this){
                     this.r_txt_reading.text = reading.readingValue.toInt().toString()
-                    this.r_txt_hourly_avg.text = String.format(Locale.getDefault(), "%.2f kWh", reading.kwAvgConsumption)
+                    this.r_txt_hourly_avg.text = String.format(Locale.getDefault(), "%.3f kWh", reading.kwAvgConsumption)
                     this.r_txt_daily_avg.text = String.format(Locale.getDefault(), "%.2f kWh", (reading.kwAvgConsumption*24))
 
                     this.r_txt_consumption.text = String.format(Locale.getDefault(), "%.2f kWh", reading.kwConsumption)
