@@ -6,6 +6,7 @@ import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.data.BackupSkeleton
 import com.nicrosoft.consumoelectrico.data.DateJsonAdapter
+import com.nicrosoft.consumoelectrico.utils.AppResult
 import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -14,7 +15,7 @@ import java.util.*
 
 
 object JsonBackupHandler {
-    suspend fun createBackup(backupHelper:BackupDatabaseHelper, filePathName:String): Boolean {
+    suspend fun createBackup(backupHelper:BackupDatabaseHelper, filePathName:String): AppResult {
         try{
             val dao = backupHelper.getDao()
             val moshi = Moshi.Builder()
@@ -35,12 +36,12 @@ object JsonBackupHandler {
             bufferedWriter.write(json)
             bufferedWriter.flush()
             bufferedWriter.close()
-            return true
+            return AppResult.OK
         }
-        catch (e:Exception){ return false }
+        catch (e:Exception){ return AppResult.AppException(e) }
     }
 
-    suspend fun restoreBackup(backup:BackupDatabaseHelper, filePathName:String): Boolean {
+    suspend fun restoreBackup(backup:BackupDatabaseHelper, filePathName:String): AppResult {
         try{
             val fileReader = FileReader(filePathName)
             val outputStringBuffer = StringBuffer()
@@ -62,12 +63,12 @@ object JsonBackupHandler {
                 backup.saveReadings(it.readings)
             }
             //Log.e("EDER", data?.meters.toString())
-            return true
+            return AppResult.OK
         }catch (e:Exception){
-            Log.e("EDER -->", e.stackTraceToString())
-            FirebaseCrashlytics.getInstance().log("FALLO DE IMPORTACION")
-            FirebaseCrashlytics.getInstance().recordException(e)
-            return false
+            //Log.e("EDER -->", e.stackTraceToString())
+            //FirebaseCrashlytics.getInstance().log("FALLO DE IMPORTACION")
+            //FirebaseCrashlytics.getInstance().recordException(e)
+            return AppResult.AppException(e)
         }
     }
 }

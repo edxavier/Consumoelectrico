@@ -61,8 +61,8 @@ class ElectricMeterAdapter(
 
                             item_circular_progress.setCurrentProgress(lastReadings.kwAggConsumption.toDouble())
                             item_circular_progress2.setCurrentProgress((lastReadings.consumptionHours/24).toDouble())
-                            val avgLimit = meter.maxKwLimit / meter.periodLength
-                            if(lastReadings.kwAvgConsumption*24>avgLimit){
+                            val avgLimit = try { meter.maxKwLimit.toFloat() / meter.periodLength.toFloat() }catch (e:Exception){0f}
+                            if(lastReadings.kwAvgConsumption*24 > avgLimit){
                                 item_warning_msg.setVisible()
                                 item_warning_icon.setVisible()
                             }else{

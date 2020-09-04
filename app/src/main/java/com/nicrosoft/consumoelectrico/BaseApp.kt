@@ -1,6 +1,7 @@
 package com.nicrosoft.consumoelectrico
 
 import android.content.ContextWrapper
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import androidx.work.Constraints
@@ -8,6 +9,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.nicrosoft.consumoelectrico.data.AppDataBase
 import com.nicrosoft.consumoelectrico.realm.Migration
@@ -51,6 +53,12 @@ class BaseApp : MultiDexApplication(), DIAware {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         AndroidThreeTen.init(this)
         FirebaseApp.initializeApp(this)
+        if(BuildConfig.DEBUG) {
+            //Log.w("EDER", "REPORTE DE ERRORES DESABILITADO")
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+        }else
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+
         MobileAds.initialize(this)
         Realm.init(this)
         val config = RealmConfiguration.Builder()

@@ -49,7 +49,7 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        manager = ReviewManagerFactory.create(this)
+        //manager = ReviewManagerFactory.create(this)
         setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_mainkt)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -107,14 +107,14 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
         */
     }
 
-    private fun requestReview() {
+    /*private fun requestReview() {
         reviewInfo?.let {
             val flow = manager.launchReviewFlow(this, it)
             flow.addOnCompleteListener { task ->
                 //Irrespective of the result, the app flow should continue
             }
         }
-    }
+    }*/
 
     private fun setupGlobalAdsConfig() {
         val adRequest = RequestConfiguration.Builder()

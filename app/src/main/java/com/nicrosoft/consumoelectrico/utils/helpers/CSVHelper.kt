@@ -1,154 +1,132 @@
-package com.nicrosoft.consumoelectrico.utils.helpers;
+package com.nicrosoft.consumoelectrico.utils.helpers
 
-import android.content.Context;
-import android.util.Log;
-
-import com.nicrosoft.consumoelectrico.R;
-import com.nicrosoft.consumoelectrico.realm.Lectura;
-import com.nicrosoft.consumoelectrico.realm.Medidor;
-import com.nicrosoft.consumoelectrico.realm.Periodo;
-import com.nicrosoft.consumoelectrico.utils.helpers.RestoreHelper;
-import com.opencsv.CSVWriter;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
+import android.content.Context
+import android.util.Log
+import com.nicrosoft.consumoelectrico.R
+import com.nicrosoft.consumoelectrico.realm.Lectura
+import com.nicrosoft.consumoelectrico.utils.AppResult
+import com.opencsv.CSVWriter
+import io.realm.Realm
+import io.realm.RealmResults
+import io.realm.Sort
+import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by Eder Xavier Rojas on 14/12/2017.
  */
-
-public class CSVHelper {
-    public static boolean saveAllToCSV(String fullPath, String name, Context context)  {
-        CSVWriter writer = null;
+object CSVHelper {
+    fun saveAllToCSV(fullPath: String, name: String, context: Context): AppResult {
+        var writer: CSVWriter? = null
         try {
-            Realm realm = Realm.getDefaultInstance();
-            RealmResults<Lectura> res = realm.where(Lectura.class)
-                    .findAll().sort("fecha_lectura", Sort.DESCENDING);
-            if(res.size()>0) {
-                List<String[]> data = new ArrayList<String[]>();
-                String[] country = {"Medidor_id", "Medidor", "Descripcion",
+            val realm = Realm.getDefaultInstance()
+            val res = realm.where(Lectura::class.java)
+                    .findAll().sort("fecha_lectura", Sort.DESCENDING)
+            if (res.size > 0) {
+                val data: MutableList<Array<String>> = ArrayList()
+                val country = arrayOf("Medidor_id", "Medidor", "Descripcion",
                         "ID_periodo", "Inicio_periodo", "Fin_periodo", "Dias_periodo", "Activo",
                         "ID_lectura", "Lectura", "Fecha_lectura", "Consumo", "Consumo_acumulado", "Consumo_promedio", "Dias_periodo",
                         "Observacion"
-                };
-                data.add(country);
-                for (Lectura re : res) {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat(context.getString(R.string.date_time_format), Locale.getDefault());
-                    String fin_p = "";
-                    if (re.periodo.fin != null)
-                        fin_p = dateFormat.format(re.periodo.fin);
-                    data.add(new String[]{re.medidor.id, re.medidor.name, re.medidor.descripcion,
-                            re.periodo.id, dateFormat.format(re.periodo.inicio), fin_p, String.valueOf(re.periodo.dias_periodo), String.valueOf(re.periodo.activo),
-                            re.id, String.valueOf(re.lectura), dateFormat.format(re.fecha_lectura), String.valueOf(re.consumo), String.valueOf(re.consumo_acumulado),
-                            String.valueOf(re.consumo_promedio), String.valueOf(re.dias_periodo), re.observacion
-                    });
+                )
+                data.add(country)
+                for (re in res) {
+                    val dateFormat = SimpleDateFormat(context.getString(R.string.date_time_format), Locale.getDefault())
+                    var fin_p = ""
+                    if(re.periodo!=null) {
+                        if (re.periodo.fin != null) fin_p = dateFormat.format(re.periodo.fin)
+                        data.add(arrayOf(re.medidor.id, re.medidor.name, re.medidor.descripcion,
+                                re.periodo.id, dateFormat.format(re.periodo.inicio), fin_p, re.periodo.dias_periodo.toString(), re.periodo.activo.toString(),
+                                re.id, re.lectura.toString(), dateFormat.format(re.fecha_lectura), re.consumo.toString(), re.consumo_acumulado.toString(), re.consumo_promedio.toString(), re.dias_periodo.toString(), re.observacion
+                        ))
+                    }
                 }
-                writer = new CSVWriter(new FileWriter(fullPath + "/" + name + ".csv"));
-                writer.writeAll(data);
-                writer.close();
-                realm.close();
+                writer = CSVWriter(FileWriter("$fullPath/$name.csv"))
+                writer.writeAll(data)
+                writer.close()
+                realm.close()
             }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("EDER", e.getMessage());
-            return false;
+            return AppResult.OK
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e("EDER", e.message!!)
+            return AppResult.AppException(e)
         }
     }
 
-    public static boolean restoreAllFromCSV(String fullPath, Context context)  {
-        Realm realm = Realm.getDefaultInstance();
-
-        try {
-            InputStream inputStream = new FileInputStream(fullPath);
-            Log.e("EDER", fullPath);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String csvLine;
-            reader.readLine();
-             while ((csvLine = reader.readLine()) != null) {
-
-                 csvLine = csvLine.replace('"', ' ');
-                 //Log.e("EDER", csvLine);
-                String[] row = csvLine.split(",");
-
-                realm.executeTransaction(realm1 -> {
-                    String observ = "";
-                    if(row.length>15)
-                        observ = row[15].trim();
-                    Medidor medidor = RestoreHelper.guardarMedidor(row[0].trim(),row[1].trim(), row[2].trim());
-                    Periodo periodo = RestoreHelper.guardarPeriodo(row[3].trim(),row[4].trim(), row[5].trim(),row[6].trim(),row[7].trim(), medidor, context);
-                    RestoreHelper.guardarLectura(row[8].trim(),row[9].trim(), row[10].trim(),row[11].trim(),
-                            row[12].trim(),row[13].trim(),row[14].trim(),observ, periodo, medidor, context);
-                });
+    fun restoreAllFromCSV(fullPath: String?, context: Context?): Boolean {
+        val realm = Realm.getDefaultInstance()
+        return try {
+            val inputStream: InputStream = FileInputStream(fullPath)
+            Log.e("EDER", fullPath!!)
+            val reader = BufferedReader(InputStreamReader(inputStream))
+            var csvLine: String
+            reader.readLine()
+            while (reader.readLine().also { csvLine = it } != null) {
+                csvLine = csvLine.replace('"', ' ')
+                //Log.e("EDER", csvLine);
+                val row = csvLine.split(",".toRegex()).toTypedArray()
+                realm.executeTransaction { realm1: Realm? ->
+                    var observ = ""
+                    if (row.size > 15) observ = row[15].trim { it <= ' ' }
+                    val medidor = RestoreHelper.guardarMedidor(row[0].trim { it <= ' ' }, row[1].trim { it <= ' ' }, row[2].trim { it <= ' ' })
+                    val periodo = RestoreHelper.guardarPeriodo(row[3].trim { it <= ' ' }, row[4].trim { it <= ' ' }, row[5].trim { it <= ' ' }, row[6].trim { it <= ' ' }, row[7].trim { it <= ' ' }, medidor, context)
+                    RestoreHelper.guardarLectura(row[8].trim { it <= ' ' }, row[9].trim { it <= ' ' }, row[10].trim { it <= ' ' }, row[11].trim { it <= ' ' },
+                            row[12].trim { it <= ' ' }, row[13].trim { it <= ' ' }, row[14].trim { it <= ' ' }, observ, periodo, medidor, context)
+                }
             }
-            inputStream.close();
-            realm.close();
-
-            return true;
-        }
-        catch (Exception ex) {
-            Log.e("EDER", ex.toString());
-            ex.printStackTrace();
-            if(!realm.isClosed())
-                realm.close();
-            return false;
+            inputStream.close()
+            realm.close()
+            true
+        } catch (ex: Exception) {
+            Log.e("EDER", ex.toString())
+            ex.printStackTrace()
+            if (!realm.isClosed) realm.close()
+            false
         }
     }
 
-    public static boolean saveActivePeriodReadings(String fullPath, String name, Context context, String medidor_id, boolean all)  {
-        CSVWriter writer = null;
-        try {
-            Realm realm = Realm.getDefaultInstance();
-            RealmResults<Lectura> res;
-            if(all) {
-                res = realm.where(Lectura.class)
+    fun saveActivePeriodReadings(fullPath: String, name: String, context: Context, medidor_id: String?, all: Boolean): Boolean {
+        var writer: CSVWriter? = null
+        return try {
+            val realm = Realm.getDefaultInstance()
+            val res: RealmResults<Lectura>
+            res = if (all) {
+                realm.where(Lectura::class.java)
                         .equalTo("medidor.id", medidor_id)
-                        .findAll().sort("fecha_lectura", Sort.DESCENDING);
-            }else {
-                res = realm.where(Lectura.class)
+                        .findAll().sort("fecha_lectura", Sort.DESCENDING)
+            } else {
+                realm.where(Lectura::class.java)
                         .equalTo("medidor.id", medidor_id)
                         .equalTo("periodo.activo", true)
-                        .findAll().sort("fecha_lectura", Sort.DESCENDING);
+                        .findAll().sort("fecha_lectura", Sort.DESCENDING)
             }
-            List<String[]> data = new ArrayList<String[]>();
-            String [] titulos ={ "Fecha_lectura", "Lectura",  "Consumo", "Consumo_acumulado", "Consumo_promedio", "Dias_periodo",
-                    "Observacion"};
-            String [] titulo1 = { "Medidor", "Descripcion"};
-            data.add(titulo1);
+            val data: MutableList<Array<String>> = ArrayList()
+            val titulos = arrayOf("Fecha_lectura", "Lectura", "Consumo", "Consumo_acumulado", "Consumo_promedio", "Dias_periodo",
+                    "Observacion")
+            val titulo1 = arrayOf("Medidor", "Descripcion")
+            data.add(titulo1)
             try {
-                data.add(new String[] { res.first().medidor.name, res.first().medidor.descripcion});
-            }catch (Exception ignored){}
-            data.add(titulos);
-            for (Lectura re : res) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat(context.getString(R.string.date_time_format), Locale.getDefault());
-                data.add(new String[] {
-                        dateFormat.format(re.fecha_lectura), String.valueOf(re.lectura),
-                        String.valueOf(re.consumo), String.valueOf(re.consumo_acumulado),
-                        String.valueOf(re.consumo_promedio), String.valueOf(re.dias_periodo), re.observacion
-                });
+                data.add(arrayOf(res.first()!!.medidor.name, res.first()!!.medidor.descripcion))
+            } catch (ignored: Exception) {
             }
-            writer = new CSVWriter(new FileWriter(fullPath+"/"+name+".csv"));
-            writer.writeAll(data);
-            writer.close();
-            realm.close();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("EDER", e.getMessage());
-            return false;
+            data.add(titulos)
+            for (re in res) {
+                val dateFormat = SimpleDateFormat(context.getString(R.string.date_time_format), Locale.getDefault())
+                data.add(arrayOf(
+                        dateFormat.format(re.fecha_lectura), re.lectura.toString(), re.consumo.toString(), re.consumo_acumulado.toString(), re.consumo_promedio.toString(), re.dias_periodo.toString(), re.observacion
+                ))
+            }
+            writer = CSVWriter(FileWriter("$fullPath/$name.csv"))
+            writer.writeAll(data)
+            writer.close()
+            realm.close()
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e("EDER", e.message!!)
+            false
         }
     }
-
-
 }

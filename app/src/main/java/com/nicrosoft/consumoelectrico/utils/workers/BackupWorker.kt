@@ -33,8 +33,11 @@ class BackupWorker (private val ctx: Context, params: WorkerParameters) : Corout
                 userBackupDir.mkdirs()
             val name = "AUTO_BACKUP " + Date().backupFormat(ctx)
             val filePath = "$dir/$name"
+            val filePath2 = "$dir/$name"
+
             //No incluir extension en la ruta
             JsonBackupHandler.createBackup(backupHelper, filePath)
+            JsonBackupHandler.createBackup(backupHelper, filePath2)
             //Log.e("EDER", "doWork BACKUP")
         }
         return@withContext Result.success()

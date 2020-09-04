@@ -204,7 +204,7 @@
     <string name="backup_notification_suggestion1">Já se passaram muitos dias desde que você salvou uma cópia de backup em um serviço externo como o Google Drive ou similar, é aconselhável manter uma cópia dos dados fora do dispositivo.</string>
     <string name="backup_notification_suggestion2">Parece que você nunca salvou uma cópia de backup em nenhum serviço externo como o Google Drive ou similar, é aconselhável manter uma cópia dos dados fora do dispositivo.</string>
     <string name="migration_message">Encontramos dados para migrar. Você gostaria de tentar migrar os dados para a nova versão do banco de dados?</string>
-    <string name="migration_error">A migração de dados falhou</string>
+    <string name="migration_error">A migração de dados falhou.\n\nTente mais uma vez, mas no menu superior direito, se o erro persistir, você pode acessar seus dados anteriores no menu superior esquerdo.</string>
     <string name="deprecated">*Obsoleto, use a nova versão em seu lugar</string>
     <string name="backup_reminder">Lembrete de backup</string>
     <string name="backup_reminder_hint">Notifica se nenhum backup foi criado nos últimos 30 dias.</string>
@@ -227,6 +227,8 @@ Fazer a leitura ao mesmo tempo permitirá calcular seu consumo diário e verific
 Você pode encerrar o período registrando uma nova leitura ou selecionar da lista de leituras aquela em que o período atual termina, certifique-se de que corresponda ao refletido em sua nova fatura, se não corresponderem, você pode editar o valor para corrigir isto.\n\n
     </string>
     <string name="help.how.read">Como ler o medidor?</string>
+    <string name="migration_success">Migração concluída</string>
+    <string name="report_error">Reportar erro</string>
 
 
 </resources>

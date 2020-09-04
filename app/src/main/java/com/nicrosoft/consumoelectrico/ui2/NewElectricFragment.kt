@@ -127,16 +127,18 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
     }
 
     private fun loadPrices(){
-        viewModel.getPriceList(viewModel.meter.value!!.code).observe(viewLifecycleOwner, Observer {
-            adapter.submitList(it)
-            if(it.isEmpty()) {
-                binding.priceMessage.setVisible()
-                binding.priceRanges.setHidden()
-            }else{
-                binding.priceMessage.setHidden()
-                binding.priceRanges.setVisible()
-            }
-        })
+        try {
+            viewModel.getPriceList(viewModel.meter.value!!.code).observe(viewLifecycleOwner, Observer {
+                adapter.submitList(it)
+                if(it.isEmpty()) {
+                    binding.priceMessage.setVisible()
+                    binding.priceRanges.setHidden()
+                }else{
+                    binding.priceMessage.setHidden()
+                    binding.priceRanges.setVisible()
+                }
+            })
+        }catch (e:Exception){}
     }
     private fun saveMeter(){
         if(!validatedForm())

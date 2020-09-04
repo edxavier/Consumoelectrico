@@ -116,12 +116,12 @@ class ListaLecturasFragment : Fragment(), LecturasView, RealmChangeListener<Real
 
 
     private fun showFolderChooseDialog(all: Boolean) {
-        if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             val initialPath = if(File("/storage/emulated/0/").exists())
                 File("/storage/emulated/0/")
             else
                 null
-            MaterialDialog(context!!).show {
+            MaterialDialog(requireContext()).show {
                 folderChooser(context,
                         initialDirectory = initialPath,
                         emptyTextRes = R.string.folder_choose,
@@ -133,15 +133,15 @@ class ListaLecturasFragment : Fragment(), LecturasView, RealmChangeListener<Real
                         message(text = folder.path)
                         input(prefill = name.replace(" ", "_")) { _, text ->
                             // Text submitted with the action button
-                            if (!CSVHelper.saveActivePeriodReadings(folder.path, text.toString(), activity, params.id, all)){
-                                MaterialDialog(activity!!).show{
+                            if (!CSVHelper.saveActivePeriodReadings(folder.path, text.toString(), requireContext(), params.id, all)){
+                                MaterialDialog(requireActivity()).show{
                                     title(text = "Error!")
                                     message(R.string.export_error)
                                     positiveButton(R.string.agree)
                                 }
                             }else {
                                 Prefs.putString("last_path", folder.path);
-                                MaterialDialog(activity!!).show {
+                                MaterialDialog(requireActivity()).show {
                                     title(R.string.export_succes)
                                     message(text = folder.path + "/" + text.toString())
                                     positiveButton(R.string.agree)

@@ -262,7 +262,7 @@
     <string name="backup_notification_suggestion1">It has been many days since you have saved a backup copy in an external service such as Google drive or similar, it is advisable to keep a copy of the data outside the device.</string>
     <string name="backup_notification_suggestion2">It seems that you have never saved a backup copy in any external service such as Google drive or similar, it is advisable to keep a copy of the data outside the device.</string>
     <string name="migration_message">We found data to migrate, would you like to try migrating the data to the new database version?</string>
-    <string name="migration_error">Data migration failed</string>
+    <string name="migration_error">Data migration failed.\n\n Try it once more, but from the top right menu, if the error persists you can access your previous data from the menu on the top left.</string>
     <string name="deprecated">*Deprecated, use the new version instead.</string>
     <string name="backup_reminder">Backup reminder</string>
     <string name="backup_reminder_hint">It Notify  if no backup has been created in the last 30 days.</string>
@@ -284,6 +284,8 @@
     You can end the period by registering a new reading or select from the list of readings the one on which the current period ends, make sure it matches the one reflected on your new invoice, if they do not match you can edit the value to correct it.\n\n
     </string>
     <string name="help.how.read">How to read the meter?</string>
+    <string name="migration_success">Migration completed</string>
+    <string name="report_error">Report Error</string>
 
 
 </resources>

@@ -28,7 +28,6 @@ import kotlin.time.ExperimentalTime
 
 class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) : ViewModel() {
 
-    fun getDao() = dao
     var meter = MutableLiveData<ElectricMeter>()
     fun selectedMeter(_meter: ElectricMeter) { meter.value = _meter }
 
@@ -262,7 +261,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         laterReadings.forEachIndexed { index, electricReading ->
             //Log.e("EDER", "RECALCULANDO lecturas")
             //Recalcular lecturas despues de la lectura pasada, que solo seria en caso de que esta sea la primer lectura de la hsitoria del medidor
-            if(index>0){
+            if(index == 0){
                 electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(reading.readingDate).toFloat()
                 //electricReading.consumptionPreviousHours = electricReading.readingDate.hoursSinceDate(newPeriod.fromDate).toFloat()
                 electricReading.kwAggConsumption = electricReading.kwConsumption

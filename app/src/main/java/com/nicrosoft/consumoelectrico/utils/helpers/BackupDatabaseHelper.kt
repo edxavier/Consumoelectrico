@@ -15,6 +15,7 @@ import com.pixplicity.easyprefs.library.Prefs
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
@@ -75,49 +76,65 @@ class BackupDatabaseHelper(val context: Context, private val dao:BackupDAO){
     }
 
     suspend fun tryMigration() = withContext(Dispatchers.IO){
-        val realm = Realm.getDefaultInstance()
 
-        val oldMeters = realm.where(Medidor::class.java).findAll()
-        val newMeters:MutableList<ElectricMeter> = ArrayList()
-        oldMeters?.forEach {
-            if(!meterExist(it.id))
-                newMeters.add(ElectricMeter(name = it.name, code = it.id, description = it.descripcion))
-        }
-        dao.saveMeters(newMeters)
-        // PERIODS
-        val oldPeriods = realm.where(Periodo::class.java).findAll().sort("inicio", Sort.ASCENDING)
-        val newPeriods:MutableList<ElectricBillPeriod> = ArrayList()
-        oldPeriods?.forEach {
-            if(!periodExist(it.id)) {
-                if (it.fin!=null)
-                    newPeriods.add(ElectricBillPeriod(code = it.id, fromDate = it.inicio, toDate = it.fin, active = it.activo, meterCode = it.medidor.id))
-                else
-                    newPeriods.add(ElectricBillPeriod(code = it.id, fromDate = it.inicio, toDate = Date(), active = it.activo, meterCode = it.medidor.id))
+        async {
+            val realm = Realm.getDefaultInstance()
+            val oldMeters = realm.where(Medidor::class.java).findAll()
+            val newMeters:MutableList<ElectricMeter> = ArrayList()
+            oldMeters?.forEach {
+                if(!meterExist(it.id))
+                    newMeters.add(ElectricMeter(name = it.name, code = it.id, description = it.descripcion))
             }
-        }
-        dao.savePeriods(newPeriods)
+            dao.saveMeters(newMeters)
+            realm.close()
+        }.await()
+
+        // PERIODS
+        async {
+            val realm = Realm.getDefaultInstance()
+            val oldPeriods = realm.where(Periodo::class.java).findAll().sort("inicio", Sort.ASCENDING)
+            val newPeriods:MutableList<ElectricBillPeriod> = ArrayList()
+            oldPeriods?.forEach {
+                if(!periodExist(it.id)) {
+                    if (it.fin!=null)
+                        newPeriods.add(ElectricBillPeriod(code = it.id, fromDate = it.inicio, toDate = it.fin, active = it.activo, meterCode = it.medidor.id))
+                    else
+                        newPeriods.add(ElectricBillPeriod(code = it.id, fromDate = it.inicio, toDate = Date(), active = it.activo, meterCode = it.medidor.id))
+                }
+            }
+            dao.savePeriods(newPeriods)
+            realm.close()
+        }.await()
 
         // READINGS
-        val oldReadins = realm.where(Lectura::class.java).findAll().sort("fecha_lectura", Sort.ASCENDING)
-        val newReadings:MutableList<ElectricReading> = ArrayList()
-        oldReadins?.forEach {
-            //Log.e("EDER", it.fecha_lectura.formatDate(context))
-            if(!readingExist(it.id)) {
-                newReadings.add(ElectricReading(
-                        code = it.id, comments = if(it.observacion.isNullOrEmpty())"" else it.observacion, periodCode = it.periodo.id,
-                        meterCode = it.medidor.id, readingDate = it.fecha_lectura, readingValue = it.lectura,
-                        kwConsumption = it.consumo, kwAggConsumption = it.consumo_acumulado, kwAvgConsumption = (it.consumo_promedio / 24),
-                        consumptionHours = it.dias_periodo * 24
-                ))
+        async {
+            val realm = Realm.getDefaultInstance()
+            val oldReadins = realm.where(Lectura::class.java).findAll().sort("fecha_lectura", Sort.ASCENDING)
+            val newReadings:MutableList<ElectricReading> = ArrayList()
+            oldReadins?.forEach {
+                //Log.e("EDER", it.fecha_lectura.formatDate(context))
+                if(!readingExist(it.id)) {
+                    try{
+                        newReadings.add(ElectricReading(
+                                code = it.id, comments = if(it.observacion.isNullOrEmpty())"" else it.observacion, periodCode = it.periodo.id,
+                                meterCode = it.medidor.id, readingDate = it.fecha_lectura, readingValue = it.lectura,
+                                kwConsumption = it.consumo, kwAggConsumption = it.consumo_acumulado, kwAvgConsumption = (it.consumo_promedio / 24),
+                                consumptionHours = it.dias_periodo * 24
+                        ))
+                    }catch (e:Exception){}
+                }
             }
-        }
-        dao.saveReadings(newReadings)
-        val periods = dao.getPeriodList()
-        periods.forEach {
-            it.totalKw = dao.getTotalPeriodKw(it.code)
-            dao.updatePeriod(it)
-        }
-        realm.close()
+            dao.saveReadings(newReadings)
+            realm.close()
+        }.await()
+
+        async {
+            val periods = dao.getPeriodList()
+            periods.forEach {
+                it.totalKw = dao.getTotalPeriodKw(it.code)
+                dao.updatePeriod(it)
+            }
+        }.await()
     }
 
     fun migrationDataAvailable():Boolean{

@@ -28,8 +28,8 @@ android {
         applicationId "com.nicrosoft.consumoelectrico"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1008
-        versionName "2020.9.3.1.0"
+        versionCode 1009
+        versionName "2020.9.3.1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true

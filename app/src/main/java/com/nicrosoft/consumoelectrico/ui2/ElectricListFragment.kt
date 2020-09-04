@@ -10,6 +10,7 @@ import android.os.Environment
 import android.view.*
 import android.view.animation.OvershootInterpolator
 import android.webkit.MimeTypeMap
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
@@ -84,14 +85,12 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
                 positiveButton(R.string.ok){
                     launch{
                         try {
-                            backupHelper.tryMigration()
+                            doMigration()
                             Prefs.putBoolean("migrated", true)
-                            initLayout()
-                            loadData()
-                        }catch (e:Exception){
+                            Toast.makeText(requireContext(), getString(R.string.migration_success), Toast.LENGTH_LONG).show()
+                        }catch (e: Exception){
                             Prefs.putBoolean("migrated", true)
-                            val msg = "${getString(R.string.migration_error)} ---> ${e.message}"
-                            showInfoDialog(msg)
+                            showErrorDialog("FALLO DE MIGRACION", getString(R.string.migration_error), e.stackTraceToString())
                             FirebaseCrashlytics.getInstance().log("FALLO DE MIGRACION")
                             FirebaseCrashlytics.getInstance().recordException(e)
                         }
@@ -100,6 +99,12 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
                 negativeButton(R.string.no_thanks){  }
             }
         }
+    }
+
+    private suspend fun doMigration(){
+        backupHelper.tryMigration()
+        initLayout()
+        loadData()
     }
 
 
@@ -203,9 +208,24 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
                     title(R.string.database_menu)
                     listItems(R.array.database_options) { _, index, _ ->
                         when (index) {
-                            0 -> { exportDialog() }
-                            1 -> { importDialog() }
-                            2 -> { migrate() }
+                            0 -> {
+                                exportDialog()
+                            }
+                            1 -> {
+                                importDialog()
+                            }
+                            2 -> {
+                                launch {
+                                    try {
+                                        doMigration()
+                                        Toast.makeText(requireContext(), getString(R.string.migration_success), Toast.LENGTH_LONG).show()
+                                    } catch (e: Exception) {
+                                        showErrorDialog("FALLO DE MIGRACION MANUAL", getString(R.string.migration_error), e.stackTraceToString())
+                                        FirebaseCrashlytics.getInstance().log("FALLO DE MIGRACION MANUAL")
+                                        FirebaseCrashlytics.getInstance().recordException(e)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -226,8 +246,8 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
         //initialDirectory = el directorio inicial sera la carpeta data de la app
         MaterialDialog(requireContext()).show {
             folderChooser(context,
-                    //initialDirectory = requireContext().getExternalFilesDir("UserBackups"),
-                    initialDirectory = userBackupDir,
+                    initialDirectory = requireContext().getExternalFilesDir("UserBackups"),
+                    //initialDirectory = userBackupDir,
                     emptyTextRes = R.string.title_choose_folder,
                     allowFolderCreation = false) { _, folder ->
                 // Folder selected
@@ -235,20 +255,24 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
                     //val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
                     var name = "USER_BACKUP " + Date().backupFormat(context)
                     name = name.replace(" ", "_")
-                    if(JsonBackupHandler.createBackup(backupHelper, "${folder.path}/$name")){
-                        MaterialDialog(requireContext()).show {
-                            title(R.string.notice)
-                            message(R.string.backup_suggestion)
-                            positiveButton(R.string.ok){
-                                sendFileIntent("${folder.path}/$name.json")
-                                Prefs.putString("last_external_backup", Date().backupFormat(requireContext()))
+                    when(val result = JsonBackupHandler.createBackup(backupHelper, "${folder.path}/$name")){
+                        is AppResult.OK -> {
+                            MaterialDialog(requireContext()).show {
+                                title(R.string.notice)
+                                message(R.string.backup_suggestion)
+                                positiveButton(R.string.ok){
+                                    sendFileIntent("${folder.path}/$name.json")
+                                    Prefs.putString("last_external_backup", Date().backupFormat(requireContext()))
+                                }
+                                negativeButton(R.string.no_thanks)
                             }
-                            negativeButton(R.string.no_thanks)
                         }
-                    }else{
-                        showInfoDialog(getString(R.string.export_error))
+                        is AppResult.AppException -> {
+                            showErrorDialog("FALLO DE EXPORTACION", getString(R.string.import_error), result.exception.stackTraceToString())
+                            FirebaseCrashlytics.getInstance().log("FALLO DE EXPORTACION")
+                            FirebaseCrashlytics.getInstance().recordException(result.exception)
+                        }
                     }
-
                 }
 
             }
@@ -267,17 +291,22 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
         val myFilter: FileFilter = { it.isDirectory || it.name.endsWith(".json", true) }
         MaterialDialog(requireContext()).show {
             fileChooser(context, emptyTextRes = R.string.title_choose_file,
-                    //initialDirectory = requireContext().getExternalFilesDir(null),
-                    initialDirectory = appBackupsDir,
+                    initialDirectory = requireContext().getExternalFilesDir(null),
+                    //initialDirectory = appBackupsDir,
                     filter = myFilter, waitForPositiveButton = false) { _, file ->
                 launch {
-                    if(JsonBackupHandler.restoreBackup(backupHelper, file.path)){
-                        delay(300)
-                        initLayout()
-                        loadData()
-                        showInfoDialog(getString(R.string.import_succes))
-                    }else{
-                        showInfoDialog(getString(R.string.backup_restore_error))
+                    when(val result = JsonBackupHandler.restoreBackup(backupHelper, file.path)){
+                        is AppResult.OK -> {
+                            delay(300)
+                            initLayout()
+                            loadData()
+                            showInfoDialog(getString(R.string.import_succes))
+                        }
+                        is AppResult.AppException -> {
+                            FirebaseCrashlytics.getInstance().log("FALLO DE IMPORTACION")
+                            FirebaseCrashlytics.getInstance().recordException(result.exception)
+                            showErrorDialog("FALLO DE IMPORTACION", getString(R.string.import_error), result.exception.stackTraceToString())
+                        }
                     }
                 }
             }
@@ -306,6 +335,17 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
         }
     }
 
+    private fun showErrorDialog(emailSubject: String, message: String, stackTrace:String){
+        MaterialDialog(requireContext()).show {
+            title(R.string.notice)
+            message(text = message)
+            negativeButton(R.string.report_error){
+                reportErrorByEmail(emailSubject, stackTrace)
+            }
+            positiveButton(R.string.agree)
+        }
+    }
+
     private fun sendFileIntent(filePath: String){
         val myMime = MimeTypeMap.getSingleton()
         val file = File(filePath)
@@ -325,4 +365,15 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
         }
     }
 
+    private fun reportErrorByEmail(title: String, error: String){
+        val uriText = "mailto:edxavier05@gmail.com" +
+                "?subject=" + Uri.encode(title) +
+                "&body=" + Uri.encode(error)
+
+        val uri = Uri.parse(uriText)
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = uri
+        }
+        startActivity(intent)
+    }
 }

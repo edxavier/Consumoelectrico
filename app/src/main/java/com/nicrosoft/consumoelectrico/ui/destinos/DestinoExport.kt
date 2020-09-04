@@ -2,7 +2,9 @@ package com.nicrosoft.consumoelectrico.ui.destinos
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
@@ -15,6 +17,7 @@ import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.input.input
 import com.nicrosoft.consumoelectrico.MainKt
 import com.nicrosoft.consumoelectrico.R
+import com.nicrosoft.consumoelectrico.utils.AppResult
 import com.nicrosoft.consumoelectrico.utils.helpers.CSVHelper
 import com.nicrosoft.consumoelectrico.utils.formatDate
 import com.pixplicity.easyprefs.library.Prefs
@@ -43,18 +46,32 @@ class DestinoExport (var context: Context, var main:MainKt): ActivityNavigator(c
                         message(text = folder.path)
                         input(prefill = name.replace(" ", "_")) { _, text ->
                             // Text submitted with the action button
-                            if (!CSVHelper.saveAllToCSV(folder.path, text.toString(), context)){
-                                MaterialDialog(context).show{
-                                    title(text = "Error!")
-                                    message(R.string.export_error)
-                                    positiveButton(R.string.agree)
+                            when(val result = CSVHelper.saveAllToCSV(folder.path, text.toString(), context)){
+                                is AppResult.OK -> {
+                                    Prefs.putString("last_path", folder.path);
+                                    MaterialDialog(context).show {
+                                        title(R.string.export_succes)
+                                        message(text = folder.path + "/" + text.toString())
+                                        positiveButton(R.string.agree)
+                                    }
                                 }
-                            }else {
-                                Prefs.putString("last_path", folder.path);
-                                MaterialDialog(context!!).show {
-                                    title(R.string.export_succes)
-                                    message(text = folder.path + "/" + text.toString())
-                                    positiveButton(R.string.agree)
+                                is AppResult.AppException -> {
+                                    MaterialDialog(context).show {
+                                        title(R.string.notice)
+                                        message(R.string.export_error)
+                                        negativeButton(R.string.report_error){
+                                            val uriText = "mailto:edxavier05@gmail.com" +
+                                                    "?subject=" + Uri.encode("ERROR EXPORTACION VERSION REALM") +
+                                                    "&body=" + Uri.encode(result.exception.stackTraceToString())
+
+                                            val uri = Uri.parse(uriText)
+                                            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                                                data = uri
+                                            }
+                                            context.startActivity(intent)
+                                        }
+                                        positiveButton(R.string.agree)
+                                    }
                                 }
                             }
                         }

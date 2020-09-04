@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import org.kodein.di.instance
 import java.util.*
 import androidx.lifecycle.Observer
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.utils.*
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
@@ -43,8 +44,8 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
     private lateinit var navController: NavController
     private lateinit var binding: FragmentNewEmeterReadingBinding
     private lateinit var tempReading:ElectricReading
-    private val currDatetime = Calendar.getInstance()
-    private val minDate = Calendar.getInstance()
+    private var currDatetime = Calendar.getInstance()
+    //private var minDate = Calendar.getInstance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -57,6 +58,7 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
     @ExperimentalTime
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
@@ -96,17 +98,13 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
                 }
             }
             nrTxtReadingDate.setOnClickListener {
-                if(period!=null)
-                    minDate.timeInMillis = period?.fromDate!!.time
-                else
-                    minDate.timeInMillis = 0
                 MaterialDialog(requireContext()).show {
-                    datePicker(minDate= minDate, maxDate = currDatetime){ _, selectedDate ->
+                    datePicker(maxDate = currDatetime){ _, selectedDate ->
                         //tempReading.readingDate.time = selectedDate.timeInMillis
                         MaterialDialog(requireContext()).show {
                             cancelOnTouchOutside(false)
                             cancelable(false)
-                            timePicker(currentTime = selectedDate, show24HoursView = false){_, time ->
+                            timePicker(currentTime = selectedDate, show24HoursView = false, requireFutureTime = false){_, time ->
                                 selectedDate.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY))
                                 selectedDate.set(Calendar.MINUTE, time.get(Calendar.MINUTE))
                                 tempReading.readingDate.time = selectedDate.timeInMillis
@@ -124,10 +122,9 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
                         return@launch
                     if(!validateReadingValue())
                         return@launch
-                    saveReading()
-                    Snackbar.make(binding.coordinator, R.string.item_saved, Snackbar.LENGTH_LONG).show()
-                    delay(1100)
-                    navController.navigateUp()
+                    if(saveReading())
+                        navController.navigateUp()
+                    //Snackbar.make(binding.coordinator, R.string.item_saved, Snackbar.LENGTH_LONG).show()
                 }
                 nrFab.hideKeyboard()
             }
@@ -194,10 +191,23 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
     }
 
     @ExperimentalTime
-    private suspend fun saveReading() {
-        tempReading.readingValue = binding.nrTxtMeterReading.text.toString().toFloat()
-        tempReading.comments = binding.nrTxtReadingComments.text.toString()
-        viewModel.savedReading(tempReading, binding.meter!!.code, binding.nrEndPeriodSw.isChecked)
+    private suspend fun saveReading(): Boolean{
+        return try {
+            tempReading.readingValue = binding.nrTxtMeterReading.text.toString().toFloat()
+            tempReading.comments = binding.nrTxtReadingComments.text.toString()
+            viewModel.savedReading(tempReading, binding.meter!!.code, binding.nrEndPeriodSw.isChecked)
+            true
+        }catch (e:Exception){
+            FirebaseCrashlytics.getInstance().log("ERROR saveReading")
+            FirebaseCrashlytics.getInstance().recordException(e)
+            MaterialDialog(requireContext()).show {
+                title(R.string.notice)
+                message(text = e.message)
+                positiveButton(R.string.ok){}
+            }
+            false
+        }
+
     }
 
 }

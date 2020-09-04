@@ -72,7 +72,7 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
     
     private fun loadData(){
         launch {
-            val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
+            val period = try {viewModel.getLastPeriod(viewModel.meter.value!!.code)}catch (e:Exception){null}
             if(period!=null) {
                 viewModel.getPeriodMetersReadings(period.code).observe(viewLifecycleOwner, Observer {
                     tempReadings = it
