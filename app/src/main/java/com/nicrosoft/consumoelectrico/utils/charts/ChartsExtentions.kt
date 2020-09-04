@@ -1,6 +1,7 @@
 package com.nicrosoft.consumoelectrico.utils.charts
 
 import android.content.Context
+import android.graphics.Typeface
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.charts.BarChart
@@ -23,8 +24,8 @@ fun Chart<*>.setupLineChartStyle(xFormatter: ValueFormatter, markerView: MarkerV
 
     val black75 = ContextCompat.getColor(context, R.color.md_black_1000_75)
     val bgColor = ContextCompat.getColor(context, R.color.md_grey_100)
-    val typeFaceBold = ResourcesCompat.getFont(context, R.font.source_sans_pro_semibold)
-    val typeFaceRegular = ResourcesCompat.getFont(context, R.font.source_sans_pro)
+    val typeFaceBold = try { ResourcesCompat.getFont(context, R.font.source_sans_pro_semibold)}catch (e:Exception){ Typeface.DEFAULT}
+    //val typeFaceRegular = ResourcesCompat.getFont(context, R.font.source_sans_pro)
     with(mChart){
         setNoDataText(context.getString(R.string.no_data_chart))
         setNoDataTextColor(black75)
@@ -62,8 +63,8 @@ fun Chart<*>.setupBarChartStyle(labels:List<String>){
 
     val black75 = ContextCompat.getColor(context, R.color.md_black_1000_75)
     val bgColor = ContextCompat.getColor(context, R.color.md_grey_100)
-    val typeFaceBold = ResourcesCompat.getFont(context, R.font.source_sans_pro_semibold)
-    val typeFaceRegular = ResourcesCompat.getFont(context, R.font.source_sans_pro)
+    val typeFaceBold = try { ResourcesCompat.getFont(context, R.font.source_sans_pro_semibold)}catch (e:Exception){ Typeface.DEFAULT}
+    //val typeFaceRegular = ResourcesCompat.getFont(context, R.font.source_sans_pro)
     with(mChart){
         setNoDataText(context.getString(R.string.no_data_chart))
         setNoDataTextColor(black75)
