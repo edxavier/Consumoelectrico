@@ -286,6 +286,7 @@
     <string name="help.how.read">How to read the meter?</string>
     <string name="migration_success">Migration completed</string>
     <string name="report_error">Report Error</string>
+    <string name="contact_telegram">Contact on Telegram</string>
 
 
 </resources>

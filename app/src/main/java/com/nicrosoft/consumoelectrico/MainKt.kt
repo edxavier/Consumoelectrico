@@ -25,13 +25,10 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.nicrosoft.consumoelectrico.ui.destinos.*
 import com.nicrosoft.consumoelectrico.utils.helpers.RestoreHelper
 import com.nicrosoft.consumoelectrico.utils.setHidden
 import com.nicrosoft.consumoelectrico.utils.setVisible
-import com.nicrosoft.consumoelectrico.ui.destinos.DestinoCompartirApp
-import com.nicrosoft.consumoelectrico.ui.destinos.DestinoExport
-import com.nicrosoft.consumoelectrico.ui.destinos.DestinoImport
-import com.nicrosoft.consumoelectrico.ui.destinos.DestinoValorarApp
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.content_mainkt.*
 import kotlinx.coroutines.delay
@@ -56,6 +53,7 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         navController.navigatorProvider.addNavigator(DestinoCompartirApp(this))
         navController.navigatorProvider.addNavigator(DestinoValorarApp(this))
+        navController.navigatorProvider.addNavigator(DestinoTelegram(this))
         navController.navigatorProvider.addNavigator(DestinoExport(this, this))
         navController.navigatorProvider.addNavigator(DestinoImport(this, this))
 

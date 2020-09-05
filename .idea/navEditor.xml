@@ -208,14 +208,7 @@
                   </entry>
                   <entry key="nav_export">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-30" />
-                            <option name="y" value="-648" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="nav_gallery">

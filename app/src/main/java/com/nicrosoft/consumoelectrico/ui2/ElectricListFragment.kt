@@ -366,9 +366,10 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
     }
 
     private fun reportErrorByEmail(title: String, error: String){
+        val appDetails = "${BuildConfig.VERSION_CODE}: ${BuildConfig.VERSION_NAME}\n\n\n $error"
         val uriText = "mailto:edxavier05@gmail.com" +
                 "?subject=" + Uri.encode(title) +
-                "&body=" + Uri.encode(error)
+                "&body=" + Uri.encode(appDetails)
 
         val uri = Uri.parse(uriText)
         val intent = Intent(Intent.ACTION_SENDTO).apply {

@@ -53,11 +53,8 @@ class BaseApp : MultiDexApplication(), DIAware {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         AndroidThreeTen.init(this)
         FirebaseApp.initializeApp(this)
-        if(BuildConfig.DEBUG) {
-            //Log.w("EDER", "REPORTE DE ERRORES DESABILITADO")
-            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
-        }else
-            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+        //if(BuildConfig.DEBUG) {
+        //   FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
 
         MobileAds.initialize(this)
         Realm.init(this)
