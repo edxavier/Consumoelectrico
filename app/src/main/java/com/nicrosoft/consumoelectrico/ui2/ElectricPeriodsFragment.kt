@@ -49,10 +49,12 @@ class ElectricPeriodsFragment : ScopeFragment(), DIAware, PeriodsAdapter.PeriodI
     }
 
     private fun loadData(){
-        viewModel.getMeterPeriods(viewModel.meter.value!!.code).observe(viewLifecycleOwner, Observer {
-            toggleMessageVisibility(it.isEmpty())
-            adapter.submitList(it)
-        })
+        try {
+            viewModel.getMeterPeriods(viewModel.meter.value!!.code).observe(viewLifecycleOwner, Observer {
+                toggleMessageVisibility(it.isEmpty())
+                adapter.submitList(it)
+            })
+        }catch (e:Exception){}
     }
     private fun toggleMessageVisibility(isEmpty:Boolean){
         if(isEmpty) {

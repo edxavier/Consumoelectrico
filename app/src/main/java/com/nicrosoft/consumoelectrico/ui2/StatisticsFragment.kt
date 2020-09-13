@@ -57,47 +57,53 @@ class StatisticsFragment : ScopeFragment(), DIAware {
             bind.detailMeterName.text = meter.name
             bind.detailMeterDesc.text = meter.description
             launch {
-                val period = viewModel.getLastPeriod(meter.code)
-                period?.let { p ->
-                    val lastReading = viewModel.getLastPeriodReading(p.code)
-                    lastReading?.let { lr ->
-                        bind.detailLastReading.text = "${lr.readingValue.toTwoDecimalPlace()} kWh"
-                        bind.detailLastReadingDate.text = lr.readingDate.formatDate(requireContext())
-                        bind.detailPeriodDailyAvgConsumption.text = "${(lr.kwAvgConsumption * 24).toTwoDecimalPlace()} kWh"
-                        if(lr.consumptionHours / 24 < meter.periodLength)
-                            bind.detailPeriodEstimatedConsumption.text = "${lr.getConsumptionProjection(meter).toTwoDecimalPlace()} kWh"
-                        else
-                            bind.detailPeriodEstimatedConsumption.text = "${p.totalKw.toTwoDecimalPlace()} kWh"
-                        bind.detailPeriodDaysConsumed.text = "${(lr.consumptionHours/24).toTwoDecimalPlace()}/${meter.periodLength}"
-                        val periodExp = viewModel.calculateEnergyCosts(p.totalKw, meter)
-                        bind.detailPeriodExpenses.text = "$coinSymbol${periodExp.total.toTwoDecimalPlace()}"
-                        //Si aun no hemos revasado la duracion periodo estimar el consumo an finalizarlo
-                        val dExpenses = if(lr.consumptionHours / 24 < meter.periodLength) {
-                            val estimatedExp = viewModel.calculateEnergyCosts(lr.getConsumptionProjection(meter), meter)
-                            bind.detailPeriodEstimatedExpenses.text = "$coinSymbol${estimatedExp.total.toTwoDecimalPlace()}"
-                            estimatedExp
-                        }else {
-                            bind.detailPeriodEstimatedExpenses.text = bind.detailPeriodExpenses.text
-                            periodExp
+                try {
+                    var period = viewModel.getLastPeriod(meter.code)
+                    period = viewModel.updatePeriodTotals(period!!.code)
+                    period.let { p ->
+                        val lastReading = viewModel.getLastPeriodReading(p.code)
+                        bind.detailPeriodConsumption.text = "${p.totalKw.toTwoDecimalPlace()} kWh"
+                        lastReading?.let { lr ->
+                            bind.detailLastReading.text = "${lr.readingValue.toTwoDecimalPlace()} kWh"
+                            bind.detailLastReadingDate.text = lr.readingDate.formatDate(requireContext())
+                            bind.detailPeriodDailyAvgConsumption.text = "${(lr.kwAvgConsumption * 24).toTwoDecimalPlace()} kWh"
+                            if (lr.consumptionHours / 24 < meter.periodLength)
+                                bind.detailPeriodEstimatedConsumption.text = "${lr.getConsumptionProjection(meter).toTwoDecimalPlace()} kWh"
+                            else
+                                bind.detailPeriodEstimatedConsumption.text = "${p.totalKw.toTwoDecimalPlace()} kWh"
+                            bind.detailPeriodDaysConsumed.text = "${(lr.consumptionHours / 24).toTwoDecimalPlace()}/${meter.periodLength}"
+                            val periodExp = viewModel.calculateEnergyCosts(p.totalKw, meter)
+                            bind.detailPeriodExpenses.text = "$coinSymbol${periodExp.total.toTwoDecimalPlace()}"
+                            //Si aun no hemos revasado la duracion periodo estimar el consumo an finalizarlo
+                            val dExpenses = if (lr.consumptionHours / 24 < meter.periodLength) {
+                                val estimatedExp = viewModel.calculateEnergyCosts(lr.getConsumptionProjection(meter), meter)
+                                bind.detailPeriodEstimatedExpenses.text = "$coinSymbol${estimatedExp.total.toTwoDecimalPlace()}"
+                                estimatedExp
+                            } else {
+                                bind.detailPeriodEstimatedExpenses.text = bind.detailPeriodExpenses.text
+                                periodExp
+                            }
+                            bind.detailEnergyExp.text = "$coinSymbol${dExpenses.energy.toTwoDecimalPlace()}"
+                            bind.detailDiscounts.text = "-$coinSymbol${dExpenses.discount.toTwoDecimalPlace()}"
+                            bind.detailTaxes.text = "$coinSymbol${dExpenses.taxes.toTwoDecimalPlace()}"
+                            bind.detailFixedExp.text = "$coinSymbol${dExpenses.fixed.toTwoDecimalPlace()}"
+                            bind.detailTotal.text = "$coinSymbol${dExpenses.total.toTwoDecimalPlace()}"
                         }
-                        bind.detailEnergyExp.text = "$coinSymbol${dExpenses.energy.toTwoDecimalPlace()}"
-                        bind.detailDiscounts.text = "-$coinSymbol${dExpenses.discount.toTwoDecimalPlace()}"
-                        bind.detailTaxes.text = "$coinSymbol${dExpenses.taxes.toTwoDecimalPlace()}"
-                        bind.detailFixedExp.text = "$coinSymbol${dExpenses.fixed.toTwoDecimalPlace()}"
-                        bind.detailTotal.text = "$coinSymbol${dExpenses.total.toTwoDecimalPlace()}"
-                    }
-                    //val firstReading = viewModel.getFirstPeriodReading(p.code)
-                    val periods = viewModel.getMeterAllPeriods(meter.code)
-                    val firstReading = if(periods.size>1)
-                        viewModel.getLastPeriodReading(periods[1].code)
-                    else
-                        viewModel.getFirstPeriodReading(p.code)
+                        //val firstReading = viewModel.getFirstPeriodReading(p.code)
+                        val periods = viewModel.getMeterAllPeriods(meter.code)
+                        // Ya que viene en orden inverso, la pos 0 es el periodo actual y la 1 el anterior al actual
+                        val firstReading = if (periods.size > 1)
+                            viewModel.getLastPeriodReading(periods[1].code)
+                        else
+                            viewModel.getFirstPeriodReading(p.code)
 
-                    firstReading?.let { fr ->
-                        bind.detailInitialReading.text = "${fr.readingValue.toTwoDecimalPlace()} kWh"
-                        bind.detailInitialReadingDate.text = fr.readingDate.formatDate(requireContext())
+                        firstReading?.let { fr ->
+                            bind.detailInitialReading.text = "${fr.readingValue.toTwoDecimalPlace()} kWh"
+                            bind.detailInitialReadingDate.text = fr.readingDate.formatDate(requireContext())
+                        }
                     }
-                    bind.detailPeriodConsumption.text = "${p.totalKw.toTwoDecimalPlace()} kWh"
+                }catch (e:Exception){
+                    e.printStackTrace()
                 }
             }
         }catch (e:Exception){

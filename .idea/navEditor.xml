@@ -97,8 +97,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-1248" />
-                            <option name="y" value="62" />
+                            <option name="x" value="-1272" />
+                            <option name="y" value="-153" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -208,7 +208,14 @@
                   </entry>
                   <entry key="nav_export">
                     <value>
-                      <LayoutPositions />
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
                     </value>
                   </entry>
                   <entry key="nav_gallery">
@@ -321,6 +328,18 @@
                           <Point>
                             <option name="x" value="-308" />
                             <option name="y" value="-522" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="nav_telegram">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="256" />
+                            <option name="y" value="12" />
                           </Point>
                         </option>
                       </LayoutPositions>

@@ -81,7 +81,7 @@ class BackupDatabaseHelper(val context: Context, private val dao:BackupDAO){
             val realm = Realm.getDefaultInstance()
             val oldMeters = realm.where(Medidor::class.java).findAll()
             val newMeters:MutableList<ElectricMeter> = ArrayList()
-            oldMeters?.forEach {
+            oldMeters.forEach {
                 if(!meterExist(it.id))
                     newMeters.add(ElectricMeter(name = it.name, code = it.id, description = it.descripcion))
             }
@@ -124,7 +124,7 @@ class BackupDatabaseHelper(val context: Context, private val dao:BackupDAO){
                     }catch (e:Exception){}
                 }
             }
-            dao.saveReadings(newReadings)
+            dao.saveReadings(newReadings.filter { it.kwAvgConsumption >= 0 })
             realm.close()
         }.await()
 

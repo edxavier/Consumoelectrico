@@ -28,8 +28,8 @@ android {
         applicationId "com.nicrosoft.consumoelectrico"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1009
-        versionName "2020.9.3.2.0"
+        versionCode 1010
+        versionName "2020.9.3.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -149,7 +149,7 @@ dependencies {
 
     //ANIMATIONS
     implementation 'com.airbnb.android:lottie:3.4.1'
-    implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
+    implementation 'jp.wasabeef:recyclerview-animators:4.0.1'
 
     // Kodein
     implementation "org.kodein.di:kodein-di:7.0.0"

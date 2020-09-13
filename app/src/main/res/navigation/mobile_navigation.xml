@@ -196,6 +196,7 @@
         android:id="@+id/electricReadingListFragment"
         android:name="com.nicrosoft.consumoelectrico.ui2.ElectricReadingListFragment"
         android:label="@string/label_readings" />
+
     <fragment
         android:id="@+id/electricDetailFragment"
         android:name="com.nicrosoft.consumoelectrico.ui2.ElectricDetailFragment"

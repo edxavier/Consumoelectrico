@@ -152,8 +152,6 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         var newPeriod = ElectricBillPeriod(fromDate = current.readingDate, meterCode = meterCode, toDate = current.readingDate)
         period.toDate = current.readingDate
         period.active = false
-        dao.updatePeriod(period)
-        updatePeriodTotals(period.code)
         dao.savePeriod(newPeriod)
         newPeriod = dao.getPeriod(newPeriod.code)
         val laterReadings = dao.getReadingsAfter(period.code, current.readingDate)
@@ -179,6 +177,8 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             newPeriod.toDate = laterReadings.last().readingDate
             dao.updatePeriod(newPeriod)
         }
+        dao.updatePeriod(period)
+        updatePeriodTotals(period.code)
         updatePeriodTotals(newPeriod.code)
     }
 
@@ -247,11 +247,12 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         //Log.e("EDER", "DELETED ${reading.readingValue}")
     }
 
-    private suspend fun updatePeriodTotals(periodCode: String){
+    suspend fun updatePeriodTotals(periodCode: String): ElectricBillPeriod = withContext(Dispatchers.IO){
         val period = dao.getPeriod(periodCode)
         period.totalKw = dao.getTotalPeriodKw(period.code)
         period.totalBill = calculateEnergyCosts(period.totalKw, meter.value!!).total
-        val costUpdated = dao.updatePeriod(period)
+        dao.updatePeriod(period)
+        return@withContext dao.getPeriod(periodCode)
         //Log.e("EDER_COSTUPDATED", costUpdated.toString())
     }
 
@@ -444,13 +445,15 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     }
 
     suspend fun getPeriodDataLabels(): MutableList<String>  = withContext(Dispatchers.IO){
-        val periods = dao.getMeterAllPeriods(meter.value!!.code)
         val labels: MutableList<String> = ArrayList()
         val timeFormat = SimpleDateFormat("MMMyy", Locale.getDefault())
+        try {
+            val periods = dao.getMeterAllPeriods(meter.value!!.code)
+            periods.sortedBy { it.fromDate }.forEach{ period ->
+                labels.add(timeFormat.format(period.fromDate))
+            }
+        }catch (e:Exception){}
 
-        periods.sortedBy { it.fromDate }.forEach{ period ->
-            labels.add(timeFormat.format(period.fromDate))
-        }
         return@withContext labels
     }
 }

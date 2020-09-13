@@ -33,6 +33,8 @@ abstract class AppDataBase:RoomDatabase() {
         private fun buildDataBase(context: Context): AppDataBase {
             return Room.databaseBuilder(context.applicationContext, AppDataBase::class.java, "app_ceh.db")
                     .fallbackToDestructiveMigration()
+                    .setJournalMode(JournalMode.AUTOMATIC)
+                    //.enableMultiInstanceInvalidation()
                     //.addMigrations(FROM_1_TO_2)
                     .build()
         }
