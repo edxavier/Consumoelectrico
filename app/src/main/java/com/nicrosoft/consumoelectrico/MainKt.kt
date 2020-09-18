@@ -17,6 +17,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
+import com.google.android.ads.mediationtestsuite.MediationTestSuite
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
@@ -103,6 +104,8 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
             requestReview()
         }
         */
+
+        //MediationTestSuite.launch(this)
     }
 
     /*private fun requestReview() {
