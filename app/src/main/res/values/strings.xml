@@ -287,6 +287,7 @@
     <string name="migration_success">Migration completed</string>
     <string name="report_error">Report Error</string>
     <string name="contact_telegram">Contact on Telegram</string>
+    <string name="previous_period">Previous period</string>
 
 
 </resources>

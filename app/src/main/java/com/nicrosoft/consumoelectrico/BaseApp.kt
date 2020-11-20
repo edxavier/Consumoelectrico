@@ -90,7 +90,7 @@ class BaseApp : MultiDexApplication(), DIAware {
         //The minimum time interval between reruns of a task is 15 minute or 900000 seconds.
         val backupWorker = PeriodicWorkRequestBuilder<BackupWorker>(24, TimeUnit.HOURS)
                 .setConstraints(constraints)
-                .setInitialDelay(24, TimeUnit.HOURS)
+                //.setInitialDelay(24, TimeUnit.HOURS)
                 .build()
         val externalBackupWorker = PeriodicWorkRequestBuilder<ExternalBackupWorker>(6, TimeUnit.HOURS)
                 .setConstraints(constraints)

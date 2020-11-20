@@ -242,12 +242,17 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
             requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), EXPORT_REQUEST_RW_PERMISSIONS)
             return
         }
+        val appBackupDir = try{
+            val tmp = File(Environment.getExternalStorageDirectory(), "CEH/UserBackups")
+            tmp.mkdirs()
+            tmp
+        }catch (e:Exception){null}
 
         //initialDirectory = el directorio inicial sera la carpeta data de la app
         MaterialDialog(requireContext()).show {
             folderChooser(context,
-                    initialDirectory = requireContext().getExternalFilesDir("UserBackups"),
-                    //initialDirectory = userBackupDir,
+                    //initialDirectory = requireContext().getExternalFilesDir("UserBackups"),
+                    initialDirectory = appBackupDir,
                     emptyTextRes = R.string.title_choose_folder,
                     allowFolderCreation = false) { _, folder ->
                 // Folder selected
@@ -287,12 +292,17 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
             requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), IMPORT_REQUEST_RW_PERMISSIONS)
             return
         }
+        val appBackupDir = try{
+            val tmp = File(Environment.getExternalStorageDirectory(), "CEH")
+            tmp.mkdirs()
+            tmp
+        }catch (e:Exception){null}
         //initialDirectory = el directorio inicial sera la carpeta data de la app
         val myFilter: FileFilter = { it.isDirectory || it.name.endsWith(".json", true) }
         MaterialDialog(requireContext()).show {
             fileChooser(context, emptyTextRes = R.string.title_choose_file,
-                    initialDirectory = requireContext().getExternalFilesDir(null),
-                    //initialDirectory = appBackupsDir,
+                    //initialDirectory = requireContext().getExternalFilesDir(null),
+                    initialDirectory = appBackupDir,
                     filter = myFilter, waitForPositiveButton = false) { _, file ->
                 launch {
                     when(val result = JsonBackupHandler.restoreBackup(backupHelper, file.path)){

@@ -25,7 +25,7 @@ class BackupWorker (private val ctx: Context, params: WorkerParameters) : Corout
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             val backupHelper: BackupDatabaseHelper by instance()
-            val dir = ctx.getExternalFilesDir("AutoBackups")
+            /*val dir = ctx.getExternalFilesDir("AutoBackups")
             val appName = ctx.getString(R.string.app_name).replace(" ", "_")
             val documents = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
             val userBackupDir = File("$documents/$appName", "AutoBackups")
@@ -37,8 +37,34 @@ class BackupWorker (private val ctx: Context, params: WorkerParameters) : Corout
 
             //No incluir extension en la ruta
             JsonBackupHandler.createBackup(backupHelper, filePath)
-            JsonBackupHandler.createBackup(backupHelper, filePath2)
+            //JsonBackupHandler.createBackup(backupHelper, filePath2)
             //Log.e("EDER", "doWork BACKUP")
+            */
+            val appBackupDir = try{
+                val tmp = File(Environment.getExternalStorageDirectory(), "CEH/AutoBackups")
+                tmp.mkdirs()
+                tmp
+            }catch (e:Exception){null}
+
+            appBackupDir?.let {
+                val name = "AUTO_BACKUP_" + Date().backupFormat(ctx)
+                val filePath = "${it.path}/$name"
+                //val filePath2 = "${it.path}/$name"
+                //No incluir extension en la ruta
+                JsonBackupHandler.createBackup(backupHelper, filePath)
+                //JsonBackupHandler.createBackup(backupHelper, filePath2)
+            }
+            //Eliminar los archivos antoguos, dejar los 5 mas recientes
+            try{
+                val tmp = File(Environment.getExternalStorageDirectory(), "CGS/AutoBackups")
+                if(tmp.exists()){
+                    val files = tmp.listFiles()
+                    files?.sortedByDescending { it.lastModified() }?.forEachIndexed { index, file ->
+                        if(index>4)
+                            file?.delete()
+                    }
+                }
+            }catch (e:Exception){}
         }
         return@withContext Result.success()
     }

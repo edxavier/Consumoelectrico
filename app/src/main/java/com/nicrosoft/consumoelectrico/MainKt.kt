@@ -1,7 +1,7 @@
 package com.nicrosoft.consumoelectrico
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -18,14 +18,12 @@ import androidx.navigation.ui.setupWithNavController
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
 import com.google.android.ads.mediationtestsuite.MediationTestSuite
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
+import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.testing.FakeReviewManager
 import com.nicrosoft.consumoelectrico.ui.destinos.*
 import com.nicrosoft.consumoelectrico.utils.helpers.RestoreHelper
 import com.nicrosoft.consumoelectrico.utils.setHidden
@@ -34,6 +32,7 @@ import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.content_mainkt.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 
 class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
@@ -47,7 +46,8 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //manager = ReviewManagerFactory.create(this)
+        manager = ReviewManagerFactory.create(this)
+        //manager = FakeReviewManager(this)
         setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_mainkt)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -85,37 +85,46 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
         //StringBuilder path = new StringBuilder(getFilesDir().getAbsolutePath());
         RestoreHelper.getInternalStoragePath(this)
 
-        /*val request = manager.requestReviewFlow()
+        val request = manager.requestReviewFlow()
         request.addOnCompleteListener { it ->
             reviewInfo = if (it.isSuccessful) {
                 //Received ReviewInfo object
-                Log.w("EDER", "reviewInfo isSuccessful ")
                 it.result
             } else {
                 //Problem in receiving object
-                Log.w("EDER", "ERROR REVIEW ")
                 it.exception?.printStackTrace()
                 null
             }
         }
 
         launch {
-            delay(5000)
+            delay(4000)
             requestReview()
         }
-        */
+
 
         //MediationTestSuite.launch(this)
     }
 
-    /*private fun requestReview() {
-        reviewInfo?.let {
-            val flow = manager.launchReviewFlow(this, it)
-            flow.addOnCompleteListener { task ->
-                //Irrespective of the result, the app flow should continue
+    private fun requestReview() {
+        val ne = Prefs.getInt("app_starts", 0)
+        Prefs.putInt("app_starts", ne + 1)
+
+        if (ne + 1 == Prefs.getInt("request_rate_after", 8)) {
+            Prefs.putInt("app_starts", 0)
+            val r = Random()
+            val min = 6
+            val max = 12
+            val rnd = r.nextInt(max - min) + min
+            Prefs.putInt("request_rate_after", rnd)
+            reviewInfo?.let {
+                val flow = manager.launchReviewFlow(this, it)
+                flow.addOnCompleteListener { task ->
+                    //Irrespective of the result, the app flow should continue
+                }
             }
         }
-    }*/
+    }
 
     private fun setupGlobalAdsConfig() {
         val adRequest = RequestConfiguration.Builder()
@@ -137,7 +146,11 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
      */
 
     private fun setupBanner() {
+        val adView =  AdView(this)
+        adViewContainer.addView(adView)
         adView.setHidden()
+        adView.adSize = getAdSize()
+        adView.adUnitId = getString(R.string.admob_banner)
 
         adView.loadAd(AdRequest.Builder().build())
         adView.adListener = object : AdListener() {
@@ -182,5 +195,20 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun getAdSize(): AdSize {
+        //Determine the screen width to use for the ad width.
+        val display = windowManager.defaultDisplay
+        val outMetrics = DisplayMetrics()
+        display.getMetrics(outMetrics)
+        val widthPixels = outMetrics.widthPixels.toFloat()
+        val density = outMetrics.density
+
+        //you can also pass your selected width here in dp
+        val adWidth = (widthPixels / density).toInt()
+
+        //return the optimal size depends on your orientation (landscape or portrait)
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
     }
 }

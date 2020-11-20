@@ -1,6 +1,7 @@
 package com.nicrosoft.consumoelectrico.viewmodels
 
 import android.content.Context
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
@@ -335,9 +336,19 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
 
     suspend fun getLineChartData(period: ElectricBillPeriod): LineChartDataSets = withContext(Dispatchers.IO){
         val dSets = LineChartDataSets()
+        val periods = dao.getMeterAllPeriods(period.meterCode)
+        val periodBefore =  if (periods.size>1)
+            periods[1]
+        else
+            null
+        val readingsBefore = if(periodBefore!=null) {
+            //Log.e("EDER", periodBefore.fromDate.toString())
+            dao.getPeriodReadings(periodBefore.code)
+        }else
+            null
         val readings = dao.getPeriodReadings(period.code)
 
-        dSets.consumptionDs = getConsumptionChartDataSets(readings)
+        dSets.consumptionDs = getConsumptionChartDataSets(readings, readingsBefore)
         dSets.dailyAvgDs = getAvgConsumptionChartDataSets(readings)
         dSets.costPerDayDs = getCostPerDayChartDataSets(readings)
         dSets.costPerKwDs = getCostPerKwhChartDataSets(readings)
@@ -359,16 +370,32 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         return dataSet
     }
 
-    private fun getConsumptionChartDataSets(readings:List<ElectricReading>): LineData {
+    private fun getConsumptionChartDataSets(readings:List<ElectricReading>, readingsBefore:List<ElectricReading>?): LineData {
         val entries: MutableList<Entry> = ArrayList()
+        val entriesBefore: MutableList<Entry> = ArrayList()
+
+        entries.add(Entry(0f,0f))
+        entriesBefore.add(Entry(0f,0f))
         readings.forEach { r -> entries.add(Entry(r.consumptionHours, r.kwAggConsumption)) }
+        readingsBefore?.forEach { r -> entriesBefore.add(Entry(r.consumptionHours, r.kwAggConsumption)) }
+
         val dataSet = LineDataSet(entries, context.getString(R.string.chart_legend_accumulated))
+        val dataSetBefore = LineDataSet(entriesBefore, context.getString(R.string.previous_period))
+
         dataSet.setupAppStyle(context)
+        dataSetBefore.setupAppStyle(context)
+        dataSetBefore.enableDashedLine(8f, 7f, 0f)
+        dataSetBefore.color = ContextCompat.getColor(context, R.color.md_grey_500)
+        dataSetBefore.setDrawCircles(false)
+        dataSetBefore.isHighlightEnabled = false
+
         val dataSets: MutableList<ILineDataSet> = ArrayList()
         dataSets.add(dataSet)
+        dataSets.add(dataSetBefore)
+
         if(readings.isNotEmpty()){
             val projectionDs = getConsumptionProjectionDataSet(readings.last(),
-                    ContextCompat.getColor(context, R.color.md_blue_grey_400))
+                    ContextCompat.getColor(context, R.color.md_blue_400))
             dataSets.add(projectionDs)
         }
         return LineData(dataSets)

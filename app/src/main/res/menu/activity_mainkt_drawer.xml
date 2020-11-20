@@ -37,6 +37,7 @@
                 android:title="@string/_import" />
 
             <item
+                android:visible="false"
                 android:id="@+id/nav_telegram"
                 android:icon="@drawable/ic_telegram"
                 android:title="@string/contact_telegram" />

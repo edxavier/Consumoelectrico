@@ -68,7 +68,7 @@ class ElectricDetailFragment : ScopeFragment(), DIAware {
             Prefs.putInt("exec_count", 0)
             val r = Random()
             val min = 3
-            val max = 6
+            val max = 5
             val rnd = r.nextInt(max - min) + min
             Prefs.putInt("show_after", rnd)
             mInterstitialAd?.let {
