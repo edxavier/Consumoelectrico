@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Consumo de energia doméstica</string>
-    <string name="title_activity_main">Consumo de energia doméstica</string>
+    <string name="title_activity_main"><strike>Consumo de energia doméstica</strike></string>
     <string name="action_settings">configurações</string>
     <string name="title.activity.new.reading">Leitura gravada</string>
     <string name="activity.new.reading.date">Data de leitura</string>
@@ -142,8 +142,8 @@
     <string name="export_succes">Dados exportados com sucesso!</string>
     <string name="import_error">Erro ao tentar importar dados</string>
     <string name="import_succes">Dados importados com sucesso!</string>
-    <string name="_import">Importar</string>
-    <string name="export">Exportar</string>
+    <string name="_import"><strike>Importar</strike></string>
+    <string name="export"><strike>Exportar</strike></string>
     <string name="warning_avg">Consumo médio acima do limite</string>
     <string name="period_history">Histórico de consumo por período</string>
     <string name="calculator.hint">Clique nesta área para contar os pulsos</string>
