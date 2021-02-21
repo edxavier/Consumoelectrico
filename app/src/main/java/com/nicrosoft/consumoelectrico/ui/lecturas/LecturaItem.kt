@@ -9,14 +9,13 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.listItems
 import com.nicrosoft.consumoelectrico.R
+import com.nicrosoft.consumoelectrico.databinding.ReadingTimeLineItemBinding
 import com.nicrosoft.consumoelectrico.fragments.readings.contracts.LecturasPresenter
+import com.nicrosoft.consumoelectrico.realm.Lectura
 import com.nicrosoft.consumoelectrico.utils.formatDate
 import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
-import com.nicrosoft.consumoelectrico.realm.Lectura
-import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
-import com.xwray.groupie.kotlinandroidextensions.Item
+import com.xwray.groupie.viewbinding.BindableItem
 import io.realm.RealmResults
-import kotlinx.android.synthetic.main.reading_time_line_item.*
 import java.util.*
 
 
@@ -25,15 +24,15 @@ class LecturaItem(
         private val ctxt: Context,
         val results: RealmResults<Lectura>?,
         val presenter:LecturasPresenter
-): Item(){
+): BindableItem<ReadingTimeLineItemBinding>(){
 
     @SuppressLint("SetTextI18n")
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+    override fun bind(viewHolder: ReadingTimeLineItemBinding, position: Int) {
         viewHolder.apply {
             if (position < results!!.size - 1) {
                 val la: Lectura = results[position + 1]!!
                 val dias: Float = lectura.dias_periodo - la.dias_periodo
-                label_consumption.text = ctxt.getString(R.string.label_consumption_since_last_reading, dias.toTwoDecimalPlace())
+                labelConsumption.text = ctxt.getString(R.string.label_consumption_since_last_reading, dias.toTwoDecimalPlace())
                 when {
                     lectura.consumo_promedio > la.consumo_promedio -> {
                         txtTendencia.rotation = 270f
@@ -55,15 +54,15 @@ class LecturaItem(
                 txtTendencia.rotation = 0f
                 txtTendencia.setColorFilter(ctxt.resources.getColor(R.color.md_blue_grey_600))
                 txtPromedio.setTextColor(ctxt.resources.getColor(R.color.md_blue_grey_600))
-                label_consumption.text = ctxt.getString(R.string.label_consumption_since_last_reading, String.format(Locale.getDefault(), "%02.0f", 0f))
+                labelConsumption.text = ctxt.getString(R.string.label_consumption_since_last_reading, String.format(Locale.getDefault(), "%02.0f", 0f))
             }
 
             if(lectura.observacion!=null && lectura.observacion.isNotEmpty()) {
                 txtObservaciones.text = lectura.observacion
                 txtObservaciones.visibility = View.VISIBLE
-                observacion_flag.visibility = View.VISIBLE
+                observacionFlag.visibility = View.VISIBLE
             }else {
-                observacion_flag.visibility = View.GONE
+                observacionFlag.visibility = View.GONE
                 txtObservaciones.visibility = View.GONE
                 txtObservaciones.text = ""
             }
@@ -71,8 +70,8 @@ class LecturaItem(
             val lect = String.format(Locale.getDefault(), "%.0f kWh", lectura.lectura)
             txtLectura.text = lect
             txtPromedio.text = String.format(Locale.getDefault(), "%.2f kWh", lectura.consumo_promedio)
-            txt_consumption.text = String.format(Locale.getDefault(), "%.2f kWh", lectura.consumo)
-            reading_row_container.setOnClickListener {
+            txtConsumption.text = String.format(Locale.getDefault(), "%.2f kWh", lectura.consumo)
+            readingRowContainer.setOnClickListener {
                 MaterialDialog(ctxt).show {
                     title(text = lectura.fecha_lectura.formatDate(context = ctxt))
                     listItems(R.array.readings_options){ _, index, _ ->
@@ -130,5 +129,9 @@ class LecturaItem(
                         Toast.makeText(context, "Registro Elminiado" , Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    override fun initializeViewBinding(view: View): ReadingTimeLineItemBinding {
+        return ReadingTimeLineItemBinding.bind(view)
     }
 }

@@ -56,7 +56,7 @@ class BackupWorker (private val ctx: Context, params: WorkerParameters) : Corout
             }
             //Eliminar los archivos antoguos, dejar los 5 mas recientes
             try{
-                val tmp = File(Environment.getExternalStorageDirectory(), "CGS/AutoBackups")
+                val tmp = File(Environment.getExternalStorageDirectory(), "CEH/AutoBackups")
                 if(tmp.exists()){
                     val files = tmp.listFiles()
                     files?.sortedByDescending { it.lastModified() }?.forEachIndexed { index, file ->

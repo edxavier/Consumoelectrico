@@ -86,7 +86,7 @@
     <string name="admob_banner" translatable="false">ca-app-pub-9964109306515647/6534465419</string>
     <string name="admob_nativeS002" translatable="false">ca-app-pub-9964109306515647/3801325019</string>
     <string name="admob_interstical" translatable="false">ca-app-pub-9964109306515647/4998856614</string>
-
+    <string name="admob_native" translatable="false">ca-app-pub-9964109306515647/1751837238</string>
     <string name="initial_reading_val" translatable="false">%1$s kWh</string>
     <string name="avg_consumption_val" translatable="false">%1$s kWh/d</string>
     <string name="estimated_expense_val" translatable="false">%1$s%2$s</string>

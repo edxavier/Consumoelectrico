@@ -2,6 +2,7 @@ package com.nicrosoft.consumoelectrico.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.navigation.NavController
@@ -13,18 +14,17 @@ import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.list.listItems
 import com.nicrosoft.consumoelectrico.MainKt
 import com.nicrosoft.consumoelectrico.R
+import com.nicrosoft.consumoelectrico.databinding.MedidorItemBinding
 import com.nicrosoft.consumoelectrico.fragments.medidor.contracts.MedidorPresenter
-import com.nicrosoft.consumoelectrico.utils.setHidden
-import com.nicrosoft.consumoelectrico.utils.setVisible
 import com.nicrosoft.consumoelectrico.realm.Lectura
 import com.nicrosoft.consumoelectrico.realm.Medidor
 import com.nicrosoft.consumoelectrico.realm.Periodo
+import com.nicrosoft.consumoelectrico.utils.setHidden
+import com.nicrosoft.consumoelectrico.utils.setVisible
 import com.pixplicity.easyprefs.library.Prefs
-import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
-import com.xwray.groupie.kotlinandroidextensions.Item
+import com.xwray.groupie.viewbinding.BindableItem
 import io.realm.Realm
 import kotlinx.android.synthetic.main.dlg_medidor.*
-import kotlinx.android.synthetic.main.medidor_item.*
 import java.text.DecimalFormat
 import java.util.*
 
@@ -35,11 +35,12 @@ class MedidorItem(
         private val activity: MainKt,
         private val presenter: MedidorPresenter,
         private val realm: Realm
-): Item(){
+): BindableItem<MedidorItemBinding>() {
 
     @SuppressLint("SetTextI18n")
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.apply {
+    override fun bind(binding: MedidorItemBinding, position: Int) {
+
+        binding.apply {
             var kw_limit = 150
             var period_limit = 30
             try {
@@ -47,10 +48,10 @@ class MedidorItem(
                 period_limit = Prefs.getString("period_lenght", "30").toInt()
             } catch (ignored: Exception) {
             }
-            circular_progress.maxProgress = kw_limit.toDouble()
-            circular_progress2.maxProgress = period_limit.toDouble()
+            circularProgress.maxProgress = kw_limit.toDouble()
+            circularProgress2.maxProgress = period_limit.toDouble()
 
-            if (medidor.name != null && medidor.name.isNotEmpty()) txt_medidor.text = medidor.name else txt_medidor.text = "-----"
+            if (medidor.name != null && medidor.name.isNotEmpty()) txtMedidor.text = medidor.name else txtMedidor.text = "-----"
             var periodo: Periodo? = null
             periodo = presenter.getActivePeriod(medidor)
             periodo?.let {
@@ -58,52 +59,52 @@ class MedidorItem(
                 lectura.let {
                     val avg_limit = kw_limit / period_limit.toFloat()
                     if (avg_limit < lectura.consumo_promedio) {
-                        warning_icon.setVisible()
-                        warning_msg.setVisible()
+                        warningIcon.setVisible()
+                        warningMsg.setVisible()
                     } else {
-                        warning_icon.setHidden()
-                        warning_msg.setHidden()
+                        warningIcon.setHidden()
+                        warningMsg.setHidden()
                     }
                     if (lectura.consumo_acumulado > kw_limit) {
                         val v = context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "+%02.0f", lectura.consumo_acumulado - kw_limit))
-                        exceso_consumo.setVisible()
-                        exceso_consumo.text = v
+                        excesoConsumo.setVisible()
+                        excesoConsumo.text = v
                     } else {
-                        exceso_consumo.setHidden()
+                        excesoConsumo.setHidden()
                     }
                     if (lectura.dias_periodo > period_limit) {
                         val decimalFormat = DecimalFormat("#.##")
                         val twoDigitsF = java.lang.Float.valueOf(decimalFormat.format((lectura.dias_periodo - period_limit).toDouble()))
                         val v = context.getString(R.string.days_consumed_val, twoDigitsF)
-                        exceso_periodo.setVisible()
-                        exceso_periodo.text = "+$v"
+                        excesoPeriodo.setVisible()
+                        excesoPeriodo.text = "+$v"
                     } else {
-                        exceso_periodo.setHidden()
+                        excesoPeriodo.setHidden()
                     }
-                    circular_progress.setCurrentProgress(lectura.consumo_acumulado.toDouble())
-                    circular_progress2.setCurrentProgress(lectura.dias_periodo.toDouble())
-                    txt_period_avg.text = context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.1f", lectura.consumo_promedio))
-                    txt_last_reading.text = context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", lectura.lectura))
+                    circularProgress.setCurrentProgress(lectura.consumo_acumulado.toDouble())
+                    circularProgress2.setCurrentProgress(lectura.dias_periodo.toDouble())
+                    txtPeriodAvg.text = context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.1f", lectura.consumo_promedio))
+                    txtLastReading.text = context.getString(R.string.initial_reading_val, String.format(Locale.getDefault(), "%02.0f", lectura.lectura))
                 }
             }
 
             val navController: NavController = Navigation.findNavController(activity, R.id.nav_host_fragment)
 
-            bnt_details.setOnClickListener {
+            bntDetails.setOnClickListener {
                 val action = MedidorFragmentDirections.actionNavHomeToDetallesFragment(id = medidor.id, name = medidor.name, desc = medidor.descripcion)
                 navController.navigate(action)
             }
 
-            bnt_new_readings.setOnClickListener {
+            bntNewReadings.setOnClickListener {
                 val action = MedidorFragmentDirections.actionNavHomeToNuevaLecturaFragment(id = medidor.id, name = medidor.name)
                 navController.navigate(action)
             }
-            bnt_readings.setOnClickListener {
+            bntReadings.setOnClickListener {
                 val action = MedidorFragmentDirections.actionNavHomeToListaLecturasFragment(id = medidor.id, name = medidor.name, desc = medidor.descripcion)
                 navController.navigate(action)
             }
 
-            card_resume.setOnClickListener {
+            cardResume.setOnClickListener {
                 MaterialDialog(context).show {
                     title(text = medidor.name)
                     listItems(R.array.medidor_options) { _, index, _ ->
@@ -164,5 +165,9 @@ class MedidorItem(
     }
 
     override fun getLayout(): Int = R.layout.medidor_item
+
+    override fun initializeViewBinding(view: View): MedidorItemBinding {
+        return MedidorItemBinding.bind(view)
+    }
 
 }

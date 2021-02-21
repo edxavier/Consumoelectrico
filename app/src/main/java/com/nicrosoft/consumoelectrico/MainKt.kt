@@ -2,7 +2,6 @@ package com.nicrosoft.consumoelectrico
 
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -17,13 +16,11 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
-import com.google.android.ads.mediationtestsuite.MediationTestSuite
 import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.android.play.core.review.testing.FakeReviewManager
 import com.nicrosoft.consumoelectrico.ui.destinos.*
 import com.nicrosoft.consumoelectrico.utils.helpers.RestoreHelper
 import com.nicrosoft.consumoelectrico.utils.setHidden

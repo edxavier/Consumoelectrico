@@ -1,572 +1,579 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-    <data></data>
-    <ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:orientation="horizontal">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animation_view"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="false"
+                app:lottie_rawRes="@raw/growing_house" />
+
+            <TextView
+                android:id="@+id/detail_meter_name"
+                style="@style/AppTheme.Title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Casa managua"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/animation_view"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/detail_meter_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Casa en alquiler"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/animation_view"
+                app:layout_constraintTop_toBottomOf="@+id/detail_meter_name" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_marginTop="4dp"
+            android:background="@color/divider"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <TextView
+            android:textColor="@color/primaryDarkColor"
+            android:textAlignment="center"
+            android:layout_margin="12dp"
+            android:textSize="12sp"
+            android:text="@string/detail.period.title"
+            style="@style/AppTheme.Section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <LinearLayout
-            android:orientation="vertical"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:orientation="horizontal">
-
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/animation_view"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_gravity="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:lottie_autoPlay="true"
-                    app:lottie_loop="false"
-                    app:lottie_rawRes="@raw/growing_house" />
-
+            <LinearLayout
+                android:gravity="start"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/detail_meter_name"
+                    android:text="@string/initial_reading"
                     style="@style/AppTheme.Title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Casa managua"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/animation_view"
-                    app:layout_constraintTop_toTopOf="parent" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
                 <TextView
-                    android:id="@+id/detail_meter_desc"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Casa en alquiler"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/animation_view"
-                    app:layout_constraintTop_toBottomOf="@+id/detail_meter_name" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:id="@+id/detail_initial_reading"
+                    android:textSize="18sp"
+                    android:textColor="@color/md_blue_grey_800"
+                    android:text="@string/empty_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/detail_initial_reading_date"
+                    android:text="@string/empty_placeholder"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
             <View
-                android:layout_marginTop="4dp"
                 android:background="@color/divider"
                 android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-            <TextView
-                android:textColor="@color/primaryDarkColor"
-                android:textAlignment="center"
-                android:layout_margin="12dp"
-                android:textSize="12sp"
-                android:text="@string/detail.period.title"
-                style="@style/AppTheme.Section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_width="1dp"
+                android:layout_height="match_parent"/>
 
             <LinearLayout
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:gravity="start"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:text="@string/initial_reading"
-                        style="@style/AppTheme.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:id="@+id/detail_initial_reading"
-                        android:textSize="18sp"
-                        android:textColor="@color/md_blue_grey_800"
-                        android:text="@string/empty_placeholder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:id="@+id/detail_initial_reading_date"
-                        android:text="@string/empty_placeholder"
-                        style="@style/TextAppearance.MaterialComponents.Caption"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-                <View
-                    android:background="@color/divider"
-                    android:layout_gravity="center"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"/>
-
-                <LinearLayout
-                    android:gravity="end"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:text="@string/label_last_reading"
-                        style="@style/AppTheme.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:id="@+id/detail_last_reading"
-                        android:textColor="@color/md_blue_grey_800"
-                        android:textSize="18sp"
-                        android:text="@string/empty_placeholder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="@string/empty_placeholder"
-                        android:id="@+id/detail_last_reading_date"
-                        style="@style/TextAppearance.MaterialComponents.Caption"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:gravity="start"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:text="@string/detail.consumption"
-                        style="@style/AppTheme.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:id="@+id/detail_period_consumption"
-                        android:textColor="@color/md_blue_grey_800"
-                        android:textSize="18sp"
-                        android:text="@string/empty_placeholder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-                <View
-                    android:background="@color/divider"
-                    android:layout_gravity="center"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"/>
-                <LinearLayout
-                    android:gravity="end"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:text="@string/chart.legend.estimate"
-                        style="@style/AppTheme.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:textColor="@color/md_blue_grey_800"
-                        android:id="@+id/detail_period_estimated_consumption"
-                        android:textSize="18sp"
-                        android:text="@string/empty_placeholder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <LinearLayout
-                    android:gravity="start"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:text="@string/expenses"
-                        style="@style/AppTheme.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:textColor="@color/md_blue_grey_800"
-                        android:textSize="18sp"
-                        android:id="@+id/detail_period_expenses"
-                        android:text="@string/empty_placeholder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
-                <View
-                    android:background="@color/divider"
-                    android:layout_gravity="center"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"/>
-
-                <LinearLayout
-                    android:gravity="end"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:text="@string/estimated_expense"
-                        style="@style/AppTheme.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:textColor="@color/md_blue_grey_800"
-                        android:textSize="18sp"
-                        android:id="@+id/detail_period_estimated_expenses"
-                        android:text="@string/empty_placeholder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:gravity="start"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:text="@string/daily_avg"
-                        style="@style/AppTheme.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:id="@+id/detail_period_daily_avg_consumption"
-                        android:textColor="@color/md_blue_grey_800"
-                        android:textSize="18sp"
-                        android:text="@string/empty_placeholder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-
-                <View
-                    android:background="@color/divider"
-                    android:layout_gravity="center"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"/>
-
-                <LinearLayout
-                    android:gravity="end"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:text="@string/label_days_consumption"
-                        style="@style/AppTheme.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:id="@+id/detail_period_days_consumed"
-                        android:textColor="@color/md_blue_grey_800"
-                        android:textSize="18sp"
-                        android:text="@string/empty_placeholder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <TextView
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:textSize="12sp"
-                android:textAlignment="center"
-                android:textColor="@color/primaryDarkColor"
-                android:text="@string/expense_detail"
-                style="@style/AppTheme.Section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <LinearLayout
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:padding="4dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textColor="@color/md_black_1000_75"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/detail.consumption"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/detail_energy_exp"
-                    tools:ignore="MissingPrefix"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/empty_placeholder"
-                    android:fontFamily="@font/share_tech"
-                    android:textSize="16sp"
-                    android:gravity="end"
-                    android:layout_marginStart="16dp" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:padding="4dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textColor="@color/md_black_1000_75"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/discount"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/detail_discounts"
-                    tools:ignore="MissingPrefix"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/empty_placeholder"
-                    android:fontFamily="@font/share_tech"
-                    android:textSize="16sp"
-                    android:gravity="end"
-                    android:layout_marginStart="16dp" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:padding="4dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textColor="@color/md_black_1000_75"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/_taxes"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/detail_taxes"
-                    tools:ignore="MissingPrefix"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/empty_placeholder"
-                    android:fontFamily="@font/share_tech"
-                    android:textSize="16sp"
-                    android:gravity="end"
-                    android:layout_marginStart="16dp" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:padding="4dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textColor="@color/md_black_1000_75"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings.ac.fixed_charges"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/detail_fixed_exp"
-                    tools:ignore="MissingPrefix"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/empty_placeholder"
-                    android:fontFamily="@font/share_tech"
-                    android:textSize="16sp"
-                    android:gravity="end"
-                    android:layout_marginStart="16dp" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:padding="4dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    style="@style/AppTheme.Title"
-                    android:text="@string/total"
-                    android:textSize="13sp" />
-
-                <TextView
-                    style="@style/AppTheme.Title"
-                    android:id="@+id/detail_total"
-                    tools:ignore="MissingPrefix"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/empty_placeholder"
-                    android:fontFamily="@font/share_tech"
-                    android:textSize="16sp"
-                    android:gravity="end"
-                    android:layout_marginStart="16dp" />
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:textSize="12sp"
-                android:textAlignment="center"
-                android:textColor="@color/primaryDarkColor"
-                android:text="@string/charts"
-                style="@style/AppTheme.Section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <LinearLayout
-                android:layout_margin="12dp"
+                android:gravity="end"
                 android:orientation="vertical"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:text="@string/label_last_reading"
                     style="@style/AppTheme.Title"
-                    android:text="@string/period_history"
-                    android:fontFamily="@font/play"
-                    android:textAlignment="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <com.github.mikephil.charting.charts.BarChart
-                    android:layout_marginTop="8dp"
-                    android:id="@+id/periods_chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="210dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_margin="12dp"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
                 <TextView
-                    style="@style/AppTheme.Title"
-                    android:textAlignment="center"
-                    android:text="@string/detail.chart1.title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-                <com.github.mikephil.charting.charts.LineChart
-                    android:layout_marginTop="8dp"
-                    android:id="@+id/agg_consumption_chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="210dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_margin="12dp"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    android:id="@+id/detail_last_reading"
+                    android:textColor="@color/md_blue_grey_800"
+                    android:textSize="18sp"
+                    android:text="@string/empty_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
                 <TextView
-                    style="@style/AppTheme.Title"
-                    android:textAlignment="center"
-                    android:text="@string/detail.chart2.title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-                <com.github.mikephil.charting.charts.LineChart
-                    android:layout_marginTop="8dp"
-                    android:id="@+id/avg_consumption_chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="210dp" />
+                    android:text="@string/empty_placeholder"
+                    android:id="@+id/detail_last_reading_date"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
-
-            <LinearLayout
-                android:visibility="gone"
-                android:layout_margin="12dp"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    style="@style/AppTheme.Title"
-                    android:textAlignment="center"
-                    android:text="@string/detail.chart2.title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-                <com.github.mikephil.charting.charts.LineChart
-                    android:layout_marginTop="8dp"
-                    android:id="@+id/cost_vs_day_chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="210dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_margin="12dp"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    style="@style/AppTheme.Title"
-                    android:textAlignment="center"
-                    android:text="@string/detail.chart2.cost_vs_kwh.title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-                <com.github.mikephil.charting.charts.LineChart
-                    android:layout_marginTop="8dp"
-                    android:id="@+id/cost_vs_kwh_chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="210dp" />
-            </LinearLayout>
-
 
         </LinearLayout>
-    </ScrollView>
-</layout>
+
+        <LinearLayout
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:gravity="start"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/detail.consumption"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/detail_period_consumption"
+                    android:textColor="@color/md_blue_grey_800"
+                    android:textSize="18sp"
+                    android:text="@string/empty_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+            <View
+                android:background="@color/divider"
+                android:layout_gravity="center"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:gravity="end"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/chart.legend.estimate"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:textColor="@color/md_blue_grey_800"
+                    android:id="@+id/detail_period_estimated_consumption"
+                    android:textSize="18sp"
+                    android:text="@string/empty_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:gravity="start"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/expenses"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:textColor="@color/md_blue_grey_800"
+                    android:textSize="18sp"
+                    android:id="@+id/detail_period_expenses"
+                    android:text="@string/empty_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <View
+                android:background="@color/divider"
+                android:layout_gravity="center"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"/>
+
+            <LinearLayout
+                android:gravity="end"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/estimated_expense"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:textColor="@color/md_blue_grey_800"
+                    android:textSize="18sp"
+                    android:id="@+id/detail_period_estimated_expenses"
+                    android:text="@string/empty_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:gravity="start"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/daily_avg"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/detail_period_daily_avg_consumption"
+                    android:textColor="@color/md_blue_grey_800"
+                    android:textSize="18sp"
+                    android:text="@string/empty_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <View
+                android:background="@color/divider"
+                android:layout_gravity="center"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"/>
+
+            <LinearLayout
+                android:gravity="end"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/label_days_consumption"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/detail_period_days_consumed"
+                    android:textColor="@color/md_blue_grey_800"
+                    android:textSize="18sp"
+                    android:text="@string/empty_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:background="@color/md_grey_100"
+            android:layout_marginTop="12dp"
+            android:id="@+id/nativeAdFrameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+        </FrameLayout>
+
+        <TextView
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp"
+            android:textSize="12sp"
+            android:textAlignment="center"
+            android:textColor="@color/primaryDarkColor"
+            android:text="@string/expense_detail"
+            style="@style/AppTheme.Section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:padding="4dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textColor="@color/md_black_1000_75"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/detail.consumption"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/detail_energy_exp"
+                tools:ignore="MissingPrefix"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_placeholder"
+                android:fontFamily="@font/share_tech"
+                android:textSize="16sp"
+                android:gravity="end"
+                android:layout_marginStart="16dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:padding="4dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textColor="@color/md_black_1000_75"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/discount"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/detail_discounts"
+                tools:ignore="MissingPrefix"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_placeholder"
+                android:fontFamily="@font/share_tech"
+                android:textSize="16sp"
+                android:gravity="end"
+                android:layout_marginStart="16dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:padding="4dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textColor="@color/md_black_1000_75"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/_taxes"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/detail_taxes"
+                tools:ignore="MissingPrefix"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_placeholder"
+                android:fontFamily="@font/share_tech"
+                android:textSize="16sp"
+                android:gravity="end"
+                android:layout_marginStart="16dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:padding="4dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textColor="@color/md_black_1000_75"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/settings.ac.fixed_charges"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/detail_fixed_exp"
+                tools:ignore="MissingPrefix"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_placeholder"
+                android:fontFamily="@font/share_tech"
+                android:textSize="16sp"
+                android:gravity="end"
+                android:layout_marginStart="16dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:padding="4dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                style="@style/AppTheme.Title"
+                android:text="@string/total"
+                android:textSize="13sp" />
+
+            <TextView
+                style="@style/AppTheme.Title"
+                android:id="@+id/detail_total"
+                tools:ignore="MissingPrefix"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_placeholder"
+                android:fontFamily="@font/share_tech"
+                android:textSize="16sp"
+                android:gravity="end"
+                android:layout_marginStart="16dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp"
+            android:textSize="12sp"
+            android:textAlignment="center"
+            android:textColor="@color/primaryDarkColor"
+            android:text="@string/charts"
+            style="@style/AppTheme.Section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_margin="12dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/AppTheme.Title"
+                android:text="@string/period_history"
+                android:fontFamily="@font/play"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:layout_marginTop="8dp"
+                android:id="@+id/periods_chart"
+                android:layout_width="match_parent"
+                android:layout_height="210dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="12dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/AppTheme.Title"
+                android:textAlignment="center"
+                android:text="@string/detail.chart1.title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <com.github.mikephil.charting.charts.LineChart
+                android:layout_marginTop="8dp"
+                android:id="@+id/agg_consumption_chart"
+                android:layout_width="match_parent"
+                android:layout_height="210dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="12dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/AppTheme.Title"
+                android:textAlignment="center"
+                android:text="@string/detail.chart2.title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <com.github.mikephil.charting.charts.LineChart
+                android:layout_marginTop="8dp"
+                android:id="@+id/avg_consumption_chart"
+                android:layout_width="match_parent"
+                android:layout_height="210dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:layout_margin="12dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/AppTheme.Title"
+                android:textAlignment="center"
+                android:text="@string/detail.chart2.title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <com.github.mikephil.charting.charts.LineChart
+                android:layout_marginTop="8dp"
+                android:id="@+id/cost_vs_day_chart"
+                android:layout_width="match_parent"
+                android:layout_height="210dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="12dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/AppTheme.Title"
+                android:textAlignment="center"
+                android:text="@string/detail.chart2.cost_vs_kwh.title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <com.github.mikephil.charting.charts.LineChart
+                android:layout_marginTop="8dp"
+                android:id="@+id/cost_vs_kwh_chart"
+                android:layout_width="match_parent"
+                android:layout_height="210dp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

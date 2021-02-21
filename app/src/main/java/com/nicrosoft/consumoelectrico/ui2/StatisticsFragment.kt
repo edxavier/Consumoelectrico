@@ -5,17 +5,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
+import com.nicrosoft.consumoelectrico.databinding.AdNativeLayoutBinding
 import com.nicrosoft.consumoelectrico.databinding.FragmentStatisticsBinding
-import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import com.nicrosoft.consumoelectrico.utils.*
 import com.nicrosoft.consumoelectrico.utils.charts.*
+import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.fragment_statistics.*
 import kotlinx.coroutines.launch
@@ -34,9 +39,9 @@ class StatisticsFragment : ScopeFragment(), DIAware {
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        bind = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false)
+        bind = FragmentStatisticsBinding.inflate(layoutInflater)
         //return inflater.inflate(R.layout.fragment_statistics, container, false)
         return bind.root
     }
@@ -48,6 +53,7 @@ class StatisticsFragment : ScopeFragment(), DIAware {
         coinSymbol = Prefs.getString("price_simbol", "$")
         loadDetailData()
         loadChartsData()
+        loadNativeAd()
     }
 
     @SuppressLint("SetTextI18n")
@@ -142,6 +148,64 @@ class StatisticsFragment : ScopeFragment(), DIAware {
 
             }
         }
+    }
+
+
+    @SuppressLint("InflateParams")
+    private fun loadNativeAd(){
+        val builder = AdLoader.Builder(requireContext(), getString(R.string.admob_native))
+        builder.forNativeAd { nativeAd ->
+            try {
+                if (isAdded) {
+                    val adBinding = AdNativeLayoutBinding.inflate(layoutInflater)
+                    //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
+                    bind.nativeAdFrameLayout.removeAllViews()
+                    bind.nativeAdFrameLayout.addView(populateNativeAd(nativeAd, adBinding))
+                }
+            }catch (e:Exception){}
+        }
+
+        val adLoader = builder.build()
+        adLoader.loadAd(AdRequest.Builder().build())
+    }
+
+    private fun populateNativeAd(nativeAd: NativeAd, adView: AdNativeLayoutBinding): NativeAdView {
+        val nativeAdView = adView.root
+        with(adView){
+            adHeadline.text = nativeAd.headline
+            nativeAdView.headlineView = adHeadline
+            nativeAd.advertiser?.let {
+                adAdvertiser.text = it
+                nativeAdView.advertiserView = adAdvertiser
+            }
+            nativeAd.icon?.let {
+                adIcon.setImageDrawable(it.drawable)
+                //adIcon.load(it.drawable){transformations(RoundedCornersTransformation(radius = 8f))}
+                adIcon.setVisible()
+                nativeAdView.iconView = adIcon
+            }
+            nativeAd.starRating?.let {
+                adStartRating.rating = it.toFloat()
+                adStartRating.setVisible()
+                nativeAdView.starRatingView = adStartRating
+            }
+            nativeAd.callToAction?.let {
+                adBtnCallToAction.text = it
+                nativeAdView.callToActionView = adBtnCallToAction
+            }
+            nativeAd.body?.let {
+                adBodyText.text = it
+                nativeAdView.bodyView = adBodyText
+            }
+            nativeAd.mediaContent?.let {
+                adMedia.setMediaContent(it)
+                adMedia.setVisible()
+                adMedia.setImageScaleType(ImageView.ScaleType.FIT_XY)
+                nativeAdView.mediaView = adMedia
+            }
+        }
+        nativeAdView.setNativeAd(nativeAd)
+        return nativeAdView
     }
 
 }

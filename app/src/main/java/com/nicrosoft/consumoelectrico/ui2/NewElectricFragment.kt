@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -46,6 +45,7 @@ import org.kodein.di.instance
 
 
 class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceItemListener {
+    private var meter: ElectricMeter? = null
     private var cargosFijos: String = "----"
     private var impuestos: String = "----"
     private var precios: String = "----"
@@ -63,9 +63,9 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_electric_meter, container, false)
+        binding = FragmentNewElectricMeterBinding.inflate(inflater, container, false)
         //return inflater.inflate(R.layout.fragment_new_electric_meter, container, false)
         return binding.root
     }
@@ -91,12 +91,23 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
         // Solo usamo one way databinding para rellenar el formulario ya que el 2 way es un dolor de huevo, lo hare a lo tradicional
         adapter = PriceRangeAdapter(this)
         binding.apply {
-            meter = if (params.editingItem) {
+            if (params.editingItem) {
                 requireActivity().toolbar.title = getString(R.string.edit)
-                viewModel.meter.value
-            }else
-                ElectricMeter(name = "")
+                meter = viewModel.meter.value
+                meter?.let {
+                    binding.txtEmeterName.setText(it.name)
+                    binding.txtEmeterDescription.setText(it.description)
+                    binding.txtEmeterFixedCharges.setText(it.fixedPrices.toString())
+                    binding.txtEmeterKwDiscount.setText(it.kwDiscount.toString())
+                    binding.txtEmeterKwLimit.setText(it.maxKwLimit.toString())
+                    binding.txtEmeterKwPrice.setText(it.kwPrice.toString())
+                    binding.txtEmeterKwVat.setText(it.taxes.toString())
+                    binding.txtEmeterPeriodLen.setText(it.periodLength.toString())
+                    binding.txtEmeterReminder.setText(it.readReminder.toString())
+                    binding.swLoseDiscount.isChecked = it.loseDiscount
 
+                }
+            }
             fab.setOnClickListener {
                 if(params.editingItem)
                     updateMeter()
@@ -248,7 +259,7 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                                 dlg_txt_to_kw.requestFocus()
                             }else{
                                 launch {
-                                    val next = viewModel.getNextPriceRange(binding.meter!!.code, from)
+                                    val next = viewModel.getNextPriceRange(meter!!.code, from)
                                     if (next!=null){
                                         // No permitir que el rango mayor Nuevo sea mayor o igual al rango mayor-1 del siguienterango
                                         if(to>=next.toKw-1){
@@ -335,7 +346,7 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
             message(R.string.delete_item_notice)
             positiveButton(R.string.agree){
                 launch {
-                    val next = viewModel.getNextPriceRange(binding.meter!!.code, price.fromKw)
+                    val next = viewModel.getNextPriceRange(meter!!.code, price.fromKw)
                     next?.let {
                         next.fromKw = price.fromKw
                         viewModel.updatePriceRange(next)

@@ -5,37 +5,42 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.activity.addCallback
-import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.datetime.datePicker
 import com.afollestad.materialdialogs.datetime.timePicker
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdView
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
-import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
-import com.nicrosoft.consumoelectrico.databinding.FragmentNewEmeterReadingBinding
-import kotlinx.coroutines.launch
-import org.kodein.di.instance
-import java.util.*
-import androidx.lifecycle.Observer
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
+import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
+import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
+import com.nicrosoft.consumoelectrico.databinding.AdNativeLayoutBinding
+import com.nicrosoft.consumoelectrico.databinding.FragmentNewEmeterReadingBinding
 import com.nicrosoft.consumoelectrico.utils.*
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
 import org.joda.time.Period
 import org.joda.time.PeriodType
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
+import org.kodein.di.instance
+import java.util.*
 import kotlin.time.ExperimentalTime
 
 
 class NewElectricReadingFragment : ScopeFragment(), DIAware {
+    private var meter: ElectricMeter? = null
     private var period: ElectricBillPeriod? = null
     override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
@@ -51,7 +56,7 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_new_emeter_reading, container, false)
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_emeter_reading, container, false)
+        binding = FragmentNewEmeterReadingBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -64,13 +69,14 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
         tempReading = ElectricReading()
         initUI()
-        viewModel.getAllMeterReadings(viewModel.meter.value!!.code).observe(viewLifecycleOwner, Observer { it ->
+        loadNativeAd()
+        /*viewModel.getAllMeterReadings(viewModel.meter.value!!.code).observe(viewLifecycleOwner, Observer { it ->
             it.forEach {
                 //Log.e("EDER", "Fecha: ${it.readingDate.formatDate(requireContext())} - " +
                   //      "Lectura: ${it.readingValue} - Consumo: ${it.kwConsumption} - AVG: ${it.kwAvgConsumption} " +
                     //    "- TOTAL: ${it.kwAggConsumption} - HrPrev${it.consumptionPreviousHours} - TotalHr${it.consumptionHours}")
             }
-        })
+        })*/
     }
 
     @ExperimentalTime
@@ -79,6 +85,7 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
         binding.apply {
             meter = viewModel.meter.value
             meter?.let { m ->
+                nrTxtMedidorName.text = m.name
                 launch {
                     val lastTwoReadings =  m.getLastReading(viewModel)
                     if(lastTwoReadings!=null){
@@ -183,7 +190,7 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
 
     private suspend fun validateReadingValue():Boolean{
         val r = binding.nrTxtMeterReading.text.toString().toFloat()
-        val isValid = viewModel.validatedReadingValue(tempReading.readingDate, r, binding.meter!!.code)
+        val isValid = viewModel.validatedReadingValue(tempReading.readingDate, r, meter!!.code)
         if (!isValid){
             binding.nrTxtMeterReading.error = getString(R.string.alert_over_range)
         }
@@ -195,7 +202,7 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
         return try {
             tempReading.readingValue = binding.nrTxtMeterReading.text.toString().toFloat()
             tempReading.comments = binding.nrTxtReadingComments.text.toString()
-            viewModel.savedReading(tempReading, binding.meter!!.code, binding.nrEndPeriodSw.isChecked)
+            viewModel.savedReading(tempReading, meter!!.code, binding.nrEndPeriodSw.isChecked)
             true
         }catch (e:Exception){
             FirebaseCrashlytics.getInstance().log("ERROR saveReading")
@@ -209,6 +216,60 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
         }
 
     }
+
+    @SuppressLint("InflateParams")
+    private fun loadNativeAd(){
+        val builder = AdLoader.Builder(requireContext(), getString(R.string.admob_native))
+        builder.forNativeAd { nativeAd ->
+            try {
+                if (isAdded) {
+                    val adBinding = AdNativeLayoutBinding.inflate(layoutInflater)
+                    //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
+                    binding.nativeAdFrameLayout.removeAllViews()
+                    binding.nativeAdFrameLayout.addView(populateNativeAd(nativeAd, adBinding))
+                }
+            }catch (e:Exception){}
+        }
+
+        val adLoader = builder.build()
+        adLoader.loadAd(AdRequest.Builder().build())
+    }
+
+    private fun populateNativeAd(nativeAd: NativeAd, adView: AdNativeLayoutBinding): NativeAdView {
+        val nativeAdView = adView.root
+        with(adView){
+            adHeadline.text = nativeAd.headline
+            nativeAdView.headlineView = adHeadline
+            nativeAd.advertiser?.let {
+                adAdvertiser.setVisible()
+                adAdvertiser.text = it
+                nativeAdView.advertiserView = adAdvertiser
+            }
+            nativeAd.icon?.let {
+                adIcon.setImageDrawable(it.drawable)
+                //adIcon.load(it.drawable){transformations(RoundedCornersTransformation(radius = 8f))}
+                adIcon.setVisible()
+                nativeAdView.iconView = adIcon
+            }
+            nativeAd.starRating?.let {
+                adStartRating.rating = it.toFloat()
+                adStartRating.setVisible()
+                nativeAdView.starRatingView = adStartRating
+            }
+            nativeAd.callToAction?.let {
+                adBtnCallToAction.text = it
+                nativeAdView.callToActionView = adBtnCallToAction
+            }
+            nativeAd.body?.let {
+                adBodyText.text = it
+                nativeAdView.bodyView = adBodyText
+            }
+
+        }
+        nativeAdView.setNativeAd(nativeAd)
+        return nativeAdView
+    }
+
 
 }
 
