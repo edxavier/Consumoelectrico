@@ -1,6 +1,7 @@
 package com.nicrosoft.consumoelectrico.ui2
 
 import android.Manifest
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,6 +12,8 @@ import android.view.*
 import android.view.animation.OvershootInterpolator
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
@@ -209,10 +212,10 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
                     listItems(R.array.database_options) { _, index, _ ->
                         when (index) {
                             0 -> {
-                                exportDialog()
+                                saveFile()
                             }
                             1 -> {
-                                importDialog()
+                                openFile()
                             }
                             2 -> {
                                 launch {
@@ -234,88 +237,74 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
         return super.onOptionsItemSelected(item)
     }
 
-
-    private fun exportDialog(){
-
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            //ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), EXPORT_REQUEST_RW_PERMISSIONS)
-            return
+    fun saveFile() {
+        var name = "USER_BACKUP " + Date().backupFormat(requireContext())
+        name = name.replace(" ", "_")
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+            putExtra(Intent.EXTRA_TITLE, name)
+            //putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri)
         }
-        val appBackupDir = try{
-            val tmp = File(Environment.getExternalStorageDirectory(), "CEH/UserBackups")
-            tmp.mkdirs()
-            tmp
-        }catch (e:Exception){null}
+        startSaveFileForResult.launch(intent)
+    }
 
-        //initialDirectory = el directorio inicial sera la carpeta data de la app
-        MaterialDialog(requireContext()).show {
-            folderChooser(context,
-                    //initialDirectory = requireContext().getExternalFilesDir("UserBackups"),
-                    initialDirectory = appBackupDir,
-                    emptyTextRes = R.string.title_choose_folder,
-                    allowFolderCreation = false) { _, folder ->
-                // Folder selected
+    private val startSaveFileForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
                 launch {
                     //val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
-                    var name = "USER_BACKUP " + Date().backupFormat(context)
-                    name = name.replace(" ", "_")
-                    when(val result = JsonBackupHandler.createBackup(backupHelper, "${folder.path}/$name")){
+                    //var name = "USER_BACKUP " + Date().backupFormat(requireContext())
+                    //name = name.replace(" ", "_")
+                    when(val backupResult = JsonBackupHandler.createBackup(backupHelper, uri, requireContext())){
                         is AppResult.OK -> {
                             MaterialDialog(requireContext()).show {
                                 title(R.string.notice)
                                 message(R.string.backup_suggestion)
                                 positiveButton(R.string.ok){
-                                    sendFileIntent("${folder.path}/$name.json")
+                                    sendFileIntent(uri)
                                     Prefs.putString("last_external_backup", Date().backupFormat(requireContext()))
                                 }
                                 negativeButton(R.string.no_thanks)
                             }
                         }
                         is AppResult.AppException -> {
-                            showErrorDialog("FALLO DE EXPORTACION", getString(R.string.import_error), result.exception.stackTraceToString())
+                            showErrorDialog("FALLO DE EXPORTACION", getString(R.string.import_error), backupResult.exception.stackTraceToString())
                             FirebaseCrashlytics.getInstance().log("FALLO DE EXPORTACION")
-                            FirebaseCrashlytics.getInstance().recordException(result.exception)
+                            FirebaseCrashlytics.getInstance().recordException(backupResult.exception)
                         }
                     }
                 }
 
             }
         }
-
     }
 
-    private fun importDialog(){
-
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            //ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), IMPORT_REQUEST_RW_PERMISSIONS)
-            return
+    fun openFile() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+            //putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri)
         }
-        val appBackupDir = try{
-            val tmp = File(Environment.getExternalStorageDirectory(), "CEH")
-            tmp.mkdirs()
-            tmp
-        }catch (e:Exception){null}
-        //initialDirectory = el directorio inicial sera la carpeta data de la app
-        val myFilter: FileFilter = { it.isDirectory || it.name.endsWith(".json", true) }
-        MaterialDialog(requireContext()).show {
-            fileChooser(context, emptyTextRes = R.string.title_choose_file,
-                    //initialDirectory = requireContext().getExternalFilesDir(null),
-                    initialDirectory = appBackupDir,
-                    filter = myFilter, waitForPositiveButton = false) { _, file ->
+        startForResult.launch(intent)
+    }
+
+    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
                 launch {
-                    when(val result = JsonBackupHandler.restoreBackup(backupHelper, file.path)){
+                    when(val restoreResult = JsonBackupHandler.restoreBackup(backupHelper, uri, requireContext())){
                         is AppResult.OK -> {
                             delay(300)
-                            initLayout()
                             loadData()
                             showInfoDialog(getString(R.string.import_succes))
                         }
                         is AppResult.AppException -> {
                             FirebaseCrashlytics.getInstance().log("FALLO DE IMPORTACION")
-                            FirebaseCrashlytics.getInstance().recordException(result.exception)
-                            showErrorDialog("FALLO DE IMPORTACION", getString(R.string.import_error), result.exception.stackTraceToString())
+                            FirebaseCrashlytics.getInstance().recordException(restoreResult.exception)
+                            showErrorDialog("FALLO DE IMPORTACION", getString(R.string.import_error), restoreResult.exception.stackTraceToString())
                         }
                     }
                 }
@@ -327,10 +316,6 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.isNotEmpty()){
-            if(requestCode == EXPORT_REQUEST_RW_PERMISSIONS)
-                exportDialog()
-            else
-                importDialog()
         }else{
             showInfoDialog("No se concedieron los permisos")
         }
@@ -355,12 +340,11 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
             positiveButton(R.string.agree)
         }
     }
-
-    private fun sendFileIntent(filePath: String){
+    private fun sendFileIntent(uri: Uri){
         val myMime = MimeTypeMap.getSingleton()
-        val file = File(filePath)
+        //val file = File(filePath)
         val mimeType = myMime.getMimeTypeFromExtension("json")
-        val uri: Uri = FileProvider.getUriForFile(requireActivity(), BuildConfig.APPLICATION_ID + ".provider", file)
+        //val uri: Uri = FileProvider.getUriForFile(requireActivity(), BuildConfig.APPLICATION_ID + ".provider", file)
         val newIntent = Intent(Intent.ACTION_SEND)
         newIntent.setDataAndType(uri, mimeType)
         newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

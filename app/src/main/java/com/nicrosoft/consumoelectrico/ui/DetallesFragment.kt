@@ -9,7 +9,8 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.activities.perio_details.contracts.PeriodDetailPresenterImpl
@@ -121,28 +122,19 @@ class DetallesFragment : ScopeFragment() {
             val High = 12
             val rnd = r.nextInt(High - Low) + Low
             Prefs.putInt("show_after", rnd)
-            mInterstitialAd?.let {
-                if(it.isLoaded)
-                    it.show()
-            }
+            mInterstitialAd?.show(requireActivity())
         }
 
     }
 
     private fun requestInterstialAds() {
-        val adRequest = AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR) //.addTestDevice("0B307F34E3DDAF6C6CAB28FAD4084125")
-                //.addTestDevice("B0FF48A19BF36BD2D5DCD62163C64F45")
-                .addTestDevice("B162B59FFBB489F8FC90FE755FFA25F0")
-                .build()
-        mInterstitialAd = InterstitialAd(activity)
-        mInterstitialAd?.adUnitId = resources.getString(R.string.admob_interstical)
-        mInterstitialAd?.loadAd(adRequest)
-        mInterstitialAd?.adListener = object : AdListener() {
-            override fun onAdClosed() {
-                super.onAdClosed()
-                requestInterstialAds()
+        val adUnitId = resources.getString(R.string.admob_interstical)
+        InterstitialAd.load(requireActivity(), adUnitId, AdRequest.Builder().build(), object:
+            InterstitialAdLoadCallback(){
+            override fun onAdLoaded(p0: InterstitialAd) {
+                super.onAdLoaded(p0)
+                mInterstitialAd = p0
             }
-        }
+        })
     }
 }

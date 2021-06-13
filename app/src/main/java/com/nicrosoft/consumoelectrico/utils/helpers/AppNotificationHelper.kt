@@ -37,7 +37,7 @@ object AppNotificationHelper {
             it.setContentText(message)
             it.setContentIntent(resultPendingIntent)
             it.setStyle(bigTextStyle)
-            it.priority = 0
+            it.priority = NotificationCompat.PRIORITY_DEFAULT
             it.setLights(Color.BLUE, 500, 500)
             it.setDefaults(Notification.DEFAULT_ALL)
         }

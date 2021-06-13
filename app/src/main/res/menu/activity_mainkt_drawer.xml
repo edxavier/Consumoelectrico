@@ -5,6 +5,7 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:visible="false"
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_bulb"
             android:title="@string/title_activity_main" />
@@ -28,10 +29,12 @@
     <item android:title="@string/options">
         <menu>
             <item
+                android:visible="false"
                 android:id="@+id/nav_export"
                 android:icon="@drawable/ic_file_upload"
                 android:title="@string/export" />
             <item
+                android:visible="false"
                 android:id="@+id/nav_import"
                 android:icon="@drawable/ic_file_download"
                 android:title="@string/_import" />

@@ -10,7 +10,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
@@ -71,24 +72,20 @@ class ElectricDetailFragment : ScopeFragment(), DIAware {
             val max = 5
             val rnd = r.nextInt(max - min) + min
             Prefs.putInt("show_after", rnd)
-            mInterstitialAd?.let {
-                if(it.isLoaded)
-                    it.show()
-            }
+            mInterstitialAd?.show(requireActivity())
+
         }
 
     }
 
     private fun requestInterstitialAds() {
-
-        mInterstitialAd = InterstitialAd(activity)
-        mInterstitialAd?.adUnitId = resources.getString(R.string.admob_interstical)
-        mInterstitialAd?.loadAd(AdRequest.Builder().build())
-        mInterstitialAd?.adListener = object : AdListener() {
-            override fun onAdClosed() {
-                super.onAdClosed()
-                requestInterstitialAds()
+        val adUnitId = resources.getString(R.string.admob_interstical)
+        InterstitialAd.load(requireActivity(), adUnitId, AdRequest.Builder().build(), object:
+            InterstitialAdLoadCallback(){
+            override fun onAdLoaded(p0: InterstitialAd) {
+                super.onAdLoaded(p0)
+                mInterstitialAd = p0
             }
-        }
+        })
     }
 }

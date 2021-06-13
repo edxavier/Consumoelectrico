@@ -19,24 +19,12 @@
         tools:layout="@layout/fragment_home">
 
         <action
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_nav_home_to_nuevaLecturaFragment"
             app:destination="@id/nav_nueva_lectura" />
         <action
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_nav_home_to_listaLecturasFragment"
             app:destination="@id/listaLecturasFragment" />
         <action
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_nav_home_to_detallesFragment"
             app:destination="@id/detallesFragment" />
     </fragment>
@@ -100,10 +88,6 @@
             app:argType="string"
             android:defaultValue="----" />
         <action
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_listaLecturasFragment_to_nav_nueva_lectura"
             app:destination="@id/nav_nueva_lectura" />
     </fragment>
@@ -124,17 +108,9 @@
             app:argType="string"
             android:defaultValue="----" />
         <action
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_detallesFragment_to_listaLecturasFragment"
             app:destination="@id/listaLecturasFragment" />
         <action
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_detallesFragment_to_nav_nueva_lectura"
             app:destination="@id/nav_nueva_lectura" />
     </fragment>
@@ -145,25 +121,12 @@
         android:label="@string/electric_meters"
         tools:layout="@layout/emeter_list_fragment" >
         <action
-
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_nav_emater_list_to_newElectricMeterFragment"
             app:destination="@id/newElectricMeterFragment" />
         <action
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_nav_emater_list_to_newEmeterReadingFragment"
             app:destination="@id/newEmeterReadingFragment" />
         <action
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit"
             android:id="@+id/action_nav_emater_list_to_electricReadingListFragment"
             app:destination="@id/electricReadingListFragment" />
         <action

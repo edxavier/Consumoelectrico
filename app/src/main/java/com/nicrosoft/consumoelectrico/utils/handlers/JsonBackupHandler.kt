@@ -2,6 +2,8 @@
 
 package com.nicrosoft.consumoelectrico.utils.handlers
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.data.BackupSkeleton
@@ -10,6 +12,7 @@ import com.nicrosoft.consumoelectrico.utils.AppResult
 import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.io.*
 import java.util.*
 
@@ -71,4 +74,70 @@ object JsonBackupHandler {
             return AppResult.AppException(e)
         }
     }
+
+    suspend fun restoreBackup(backup: BackupDatabaseHelper, fileUri: Uri, context: Context): AppResult {
+        try{
+            val inputStream = context.contentResolver.openInputStream(fileUri)
+
+            val reader = BufferedReader(
+                InputStreamReader(
+                    inputStream
+                )
+            )
+            val stringBuilder = StringBuilder()
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                stringBuilder.append(line)
+            }
+            inputStream?.close()
+
+            val moshi = Moshi.Builder()
+                .add(Date::class.java, DateJsonAdapter())
+                .addLast(KotlinJsonAdapterFactory())
+                .build()
+            val jsonAdapter: JsonAdapter<BackupSkeleton> = moshi.adapter(BackupSkeleton::class.java)
+            val data = jsonAdapter.fromJson(stringBuilder.toString())
+            //Log.e("EDER", outputStringBuffer.toString())
+            data?.let {
+                backup.saveMeters(it.meters)
+                backup.savePrices(it.prices)
+                backup.savePeriods(it.periods)
+                backup.saveReadings(it.readings)
+            }
+
+            return AppResult.OK
+        }catch (e:Exception){
+            return AppResult.AppException(e)
+        }
+    }
+
+    suspend fun createBackup(backupHelper:BackupDatabaseHelper, fileUri: Uri, context: Context): AppResult {
+        try{
+            val dao = backupHelper.getDao()
+            val moshi = Moshi.Builder()
+                .add(Date::class.java, DateJsonAdapter())
+                .addLast(KotlinJsonAdapterFactory())
+                .build()
+            val jsonAdapter: JsonAdapter<BackupSkeleton> = moshi.adapter(BackupSkeleton::class.java)
+
+            val backup  = BackupSkeleton()
+            backup.meters = dao.getMeterList()
+            backup.prices = dao.getPricesList()
+            backup.periods = dao.getPeriodList()
+            backup.readings = dao.getReadingList()
+            val json = jsonAdapter.toJson(backup)
+
+            val outputStream = context.contentResolver.openOutputStream(fileUri)
+            val bufferedWriter = BufferedWriter(
+                OutputStreamWriter(outputStream)
+            )
+            bufferedWriter.write(json)
+            bufferedWriter.flush()
+            bufferedWriter.close()
+            return AppResult.OK
+        }
+        catch (e:Exception){ return AppResult.AppException(e) }
+    }
+
+
 }

@@ -6,7 +6,6 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'realm-android'
 
-
 android {
     lintOptions {
         checkReleaseBuilds false
@@ -25,8 +24,8 @@ android {
         applicationId "com.nicrosoft.consumoelectrico"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1012
-        versionName "2021.02.3.4.0"
+        versionCode 1013
+        versionName "2021.06.3.5.0-ce"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -67,8 +66,8 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
-    def room_version = "2.2.6"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    def room_version = "2.3.0"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     // optional - Kotlin Extensions and Coroutines support for Room
@@ -79,8 +78,8 @@ dependencies {
 
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.anjlab.android.iab.v3:library:1.1.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.3.0'
@@ -91,23 +90,23 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart-Realm:v3.0.3@aar'
     implementation 'joda-time:joda-time:2.10.5'
 
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.3'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.3'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
     testImplementation 'junit:junit:4.13'
 
-    implementation 'com.google.firebase:firebase-core:18.0.2'
-    implementation 'com.google.firebase:firebase-ads:19.7.0'
+    implementation 'com.google.firebase:firebase-core:19.0.0'
+    implementation 'com.google.firebase:firebase-ads:20.2.0'
     implementation 'com.google.firebase:firebase-crash:16.2.1'
     // Recommended: Add the Firebase SDK for Google Analytics.
-    implementation 'com.google.firebase:firebase-analytics:18.0.2'
+    implementation 'com.google.firebase:firebase-analytics:19.0.0'
     // Add the Firebase SDK for Crashlytics.
-    implementation 'com.google.firebase:firebase-crashlytics:17.3.1'
+    implementation 'com.google.firebase:firebase-crashlytics:18.0.1'
     // Add the SDK for Firebase Cloud Messaging
-    implementation 'com.google.firebase:firebase-messaging:21.0.1'
-    implementation 'com.google.firebase:firebase-config-ktx:20.0.3'
+    //implementation 'com.google.firebase:firebase-messaging:22.0.0'
+    implementation 'com.google.firebase:firebase-config-ktx:21.0.0'
 
     implementation 'com.opencsv:opencsv:5.1'
     //implementation 'com.obsez.android.lib.filechooser:filechooser:1.2.0'
@@ -115,9 +114,9 @@ dependencies {
     // progreso circular que se muestra en la lista
     implementation 'com.github.antonKozyriatskyi:CircularProgressIndicator:1.3.0'
 
-    implementation 'com.firebase:firebase-jobdispatcher:0.8.6'
+    //implementation 'com.firebase:firebase-jobdispatcher:0.8.6'
 
-    implementation "androidx.core:core-ktx:1.3.2"
+    implementation "androidx.core:core-ktx:1.5.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 
@@ -135,8 +134,8 @@ dependencies {
     implementation "androidx.preference:preference-ktx:1.1.1"
 
     // Kotlin Android Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
 
     //implementation 'com.github.TutorialsAndroid:FilePicker:v8.0.19'
 
@@ -156,14 +155,14 @@ dependencies {
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
 
     // JSON PARSING
-    implementation "com.squareup.moshi:moshi:1.8.0"
+    implementation "com.squareup.moshi:moshi:1.11.0"
     implementation "com.squareup.moshi:moshi-kotlin:1.8.0"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.6.0"
 
     //WORK MANAGER
-    implementation "androidx.work:work-runtime-ktx:2.5.0"
+    implementation "androidx.work:work-runtime-ktx:2.6.0-beta01"
 
     // IN APP REVIEW
-    implementation 'com.google.android.play:core:1.9.1'
+    implementation 'com.google.android.play:core:1.10.0'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -68,7 +68,7 @@ class ElectricPeriodsFragment : ScopeFragment(), DIAware, PeriodsAdapter.PeriodI
     }
 
     private fun initLayout() {
-        adapter = PeriodsAdapter(this)
+        adapter = PeriodsAdapter(this, viewModel)
         val animAdapter = ScaleInAnimationAdapter(adapter)
         animAdapter.setFirstOnly(false)
         animAdapter.setInterpolator(OvershootInterpolator())

@@ -1,15 +1,15 @@
 package com.nicrosoft.consumoelectrico
 
 import android.content.ContextWrapper
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import androidx.work.Constraints
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.google.firebase.FirebaseApp
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.nicrosoft.consumoelectrico.data.AppDataBase
 import com.nicrosoft.consumoelectrico.realm.Migration
@@ -21,13 +21,8 @@ import com.nicrosoft.consumoelectrico.utils.workers.ReadReminderWorker
 import com.pixplicity.easyprefs.library.Prefs
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import org.kodein.di.DI
-import org.kodein.di.DIAware
+import org.kodein.di.*
 import org.kodein.di.android.x.androidXModule
-import org.kodein.di.bind
-import org.kodein.di.instance
-import org.kodein.di.provider
-import org.kodein.di.singleton
 import java.util.concurrent.TimeUnit
 
 
@@ -55,7 +50,12 @@ class BaseApp : MultiDexApplication(), DIAware {
         FirebaseApp.initializeApp(this)
         //if(BuildConfig.DEBUG) {
         //   FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+        val conf = RequestConfiguration
+            .Builder()
+            .setTestDeviceIds(listOf("45D8AEB3B66116F8F24E001927292BD5", AdRequest.DEVICE_ID_EMULATOR))
+            .build()
 
+        MobileAds.setRequestConfiguration(conf)
         MobileAds.initialize(this)
         Realm.init(this)
         val config = RealmConfiguration.Builder()
@@ -88,13 +88,13 @@ class BaseApp : MultiDexApplication(), DIAware {
                 //.setRequiresStorageNotLow(true)
                 .build()
         //The minimum time interval between reruns of a task is 15 minute or 900000 seconds.
-        val backupWorker = PeriodicWorkRequestBuilder<BackupWorker>(24, TimeUnit.HOURS)
-                .setConstraints(constraints)
+        //val backupWorker = PeriodicWorkRequestBuilder<BackupWorker>(24, TimeUnit.HOURS)
+        //        .setConstraints(constraints)
                 //.setInitialDelay(24, TimeUnit.HOURS)
-                .build()
+        //        .build()
         val externalBackupWorker = PeriodicWorkRequestBuilder<ExternalBackupWorker>(6, TimeUnit.HOURS)
                 .setConstraints(constraints)
-                .setInitialDelay(30, TimeUnit.DAYS)
+                .setInitialDelay(15, TimeUnit.DAYS)
                 .build()
         val readReminderWork = PeriodicWorkRequestBuilder<ReadReminderWorker>(4, TimeUnit.HOURS)
                 .setConstraints(constraints)
@@ -102,7 +102,7 @@ class BaseApp : MultiDexApplication(), DIAware {
                 .build()
 
         workManager.enqueue(readReminderWork)
-        workManager.enqueue(backupWorker)
+        //workManager.enqueue(backupWorker)
         workManager.enqueue(externalBackupWorker)
     }
 }
