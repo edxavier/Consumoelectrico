@@ -1,11 +1,11 @@
-package com.nicrosoft.consumoelectrico.realm;
+/**
+ * Created by Eder Xavier Rojas on 18/01/2017.
+
+ package com.nicrosoft.consumoelectrico.realm;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by Eder Xavier Rojas on 18/01/2017.
- */
 
 public class Medidor extends RealmObject {
     @PrimaryKey
@@ -27,3 +27,4 @@ public class Medidor extends RealmObject {
     public Medidor() {
     }
 }
+ */

@@ -3,6 +3,6 @@
     <string-array name="database_options" >
         <item>Crear respaldo</item>
         <item>Restaurar respaldo</item>
-        <item>Migrar de versión anterior</item>
+        <!--<item>Migrar de versión anterior</item>-->
     </string-array>
 </resources>

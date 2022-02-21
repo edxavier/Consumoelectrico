@@ -10,7 +10,7 @@ import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 class ElectricVMFactory(
         private val context: Context, private val dao:ElectricMeterDAO
 ): ViewModelProvider.NewInstanceFactory()  {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return ElectricViewModel(context, dao) as T
     }
 }

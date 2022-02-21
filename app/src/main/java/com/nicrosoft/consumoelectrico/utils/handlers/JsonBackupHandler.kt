@@ -4,10 +4,9 @@ package com.nicrosoft.consumoelectrico.utils.handlers
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.data.BackupSkeleton
 import com.nicrosoft.consumoelectrico.data.DateJsonAdapter
+import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.utils.AppResult
 import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
 import com.squareup.moshi.JsonAdapter
@@ -125,19 +124,47 @@ object JsonBackupHandler {
             backup.prices = dao.getPricesList()
             backup.periods = dao.getPeriodList()
             backup.readings = dao.getReadingList()
-            val json = jsonAdapter.toJson(backup)
 
-            val outputStream = context.contentResolver.openOutputStream(fileUri)
-            val bufferedWriter = BufferedWriter(
-                OutputStreamWriter(outputStream)
-            )
-            bufferedWriter.write(json)
-            bufferedWriter.flush()
-            bufferedWriter.close()
-            return AppResult.OK
+            if(!thereAreInfiniteNumbers(backup.readings)){
+                val json = jsonAdapter.toJson(backup)
+
+                val outputStream = context.contentResolver.openOutputStream(fileUri)
+                val bufferedWriter = BufferedWriter(
+                    OutputStreamWriter(outputStream)
+                )
+                bufferedWriter.write(json)
+                bufferedWriter.flush()
+                bufferedWriter.close()
+                return AppResult.OK
+            }else{
+                throw Exception("Invalid value found in readings, please check it out")
+            }
         }
         catch (e:Exception){ return AppResult.AppException(e) }
     }
 
+    private fun thereAreInfiniteNumbers(readings: List<ElectricReading>):Boolean{
+        readings.forEach { reading ->
+            if (reading.readingValue.isInfinite() || reading.readingValue.isNaN()){
+                return true
+            }
+            if (reading.kwConsumption.isInfinite() || reading.kwConsumption.isNaN()){
+                return true
+            }
+            if (reading.kwAvgConsumption.isInfinite() || reading.kwAvgConsumption.isNaN()){
+                return true
+            }
+            if (reading.kwAggConsumption.isInfinite() || reading.kwAggConsumption.isNaN()){
+                return true
+            }
+            if (reading.consumptionHours.isInfinite() || reading.consumptionHours.isNaN()){
+                return true
+            }
+            if (reading.consumptionPreviousHours.isInfinite() || reading.consumptionPreviousHours.isNaN()){
+                return true
+            }
+        }
+        return false
+    }
 
 }

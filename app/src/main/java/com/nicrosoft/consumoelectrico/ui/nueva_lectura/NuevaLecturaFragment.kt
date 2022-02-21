@@ -1,4 +1,4 @@
-package com.nicrosoft.consumoelectrico.ui.nueva_lectura
+/*package com.nicrosoft.consumoelectrico.ui.nueva_lectura
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -218,3 +218,4 @@ class NuevaLecturaFragment : Fragment(), ReadingView {
     }
 
 }
+ */

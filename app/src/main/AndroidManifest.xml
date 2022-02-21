@@ -21,6 +21,7 @@
         tools:ignore="UnusedAttribute">
 
         <activity
+            android:exported="true"
             android:name=".MainKt"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">

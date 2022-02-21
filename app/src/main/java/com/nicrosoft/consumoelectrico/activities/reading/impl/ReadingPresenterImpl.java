@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.activities.reading.impl;
+/**
+ package com.nicrosoft.consumoelectrico.activities.reading.impl;
 
 import com.nicrosoft.consumoelectrico.activities.reading.contracts.ReadingPresenter;
 import com.nicrosoft.consumoelectrico.activities.reading.contracts.ReadingService;
@@ -9,9 +10,7 @@ import com.nicrosoft.consumoelectrico.realm.Periodo;
 
 import java.util.Date;
 
-/**
  * Created by Eder Xavier Rojas on 16/01/2017.
- */
 
 public class ReadingPresenterImpl implements ReadingPresenter {
     private ReadingService service;
@@ -47,3 +46,4 @@ public class ReadingPresenterImpl implements ReadingPresenter {
         return service.getActivePeriod(medidor_id);
     }
 }
+ */

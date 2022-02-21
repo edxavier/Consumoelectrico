@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.fragments.medidor.contracts;
+/**
+ package com.nicrosoft.consumoelectrico.fragments.medidor.contracts;
 
 import com.nicrosoft.consumoelectrico.realm.Lectura;
 import com.nicrosoft.consumoelectrico.realm.Medidor;
@@ -8,9 +9,7 @@ import java.util.Date;
 
 import io.realm.RealmResults;
 
-/**
  * Created by Eder Xavier Rojas on 11/01/2017.
- */
 
 public interface MedidorPresenter {
     void getMedidores();
@@ -19,3 +18,4 @@ public interface MedidorPresenter {
     Lectura getFirstReading(Periodo periodo);
 
 }
+ */

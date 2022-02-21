@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.fragments.main.imp;
+/**
+ package com.nicrosoft.consumoelectrico.fragments.main.imp;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
@@ -18,9 +19,7 @@ import java.util.Date;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-/**
  * Created by Eder Xavier Rojas on 11/01/2017.
- */
 
 public class MainServiceImpl implements MainService {
 
@@ -37,10 +36,10 @@ public class MainServiceImpl implements MainService {
     @Override
     public Lectura getResumeData() {
         try {
-           /* RealmResults<Lectura> res = realm.where(Lectura.class).findAll().sort("fecha_lectura");
+            RealmResults<Lectura> res = realm.where(Lectura.class).findAll().sort("fecha_lectura");
             for (Lectura re : res) {
                 Log.e("EDER--", String.valueOf(re.fecha_lectura));
-            }*/
+            }
             return realm.where(Lectura.class).findAll().sort("fecha_lectura").last();
         }catch (Exception e){
             return null;
@@ -184,3 +183,4 @@ public class MainServiceImpl implements MainService {
     }
 
 }
+        */

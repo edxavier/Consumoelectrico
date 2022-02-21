@@ -1,24 +1,21 @@
 package com.nicrosoft.consumoelectrico.utils
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
-import android.widget.PopupMenu
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.data.ExpenseDetail
-import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
-import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
-import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import kotlinx.android.synthetic.main.emeter_list_fragment.*
 import java.text.SimpleDateFormat
+import java.time.Duration
+import java.time.temporal.ChronoUnit
 import java.util.*
-import kotlin.time.DurationUnit
+import java.util.concurrent.TimeUnit
 import kotlin.time.ExperimentalTime
 
 fun RecyclerView.hideFabButtonOnScroll(fab:FloatingActionButton){
@@ -71,10 +68,13 @@ fun Date.formatDate(context: Context, includeTime:Boolean): String{
     return sdf.format(this.time)
 }
 
-@ExperimentalTime
+@OptIn(ExperimentalTime::class)
 fun Date.hoursSinceDate(prevDate:Date): Long{
     return try {
-        DurationUnit.HOURS.convert(this.time - prevDate.time , DurationUnit.MILLISECONDS)
+        //DurationUnit.HOURS.convert(this.time - prevDate.time , DurationUnit.MILLISECONDS)
+        //convert((this.time - prevDate.time).toDouble(), DurationUnit.MILLISECONDS, DurationUnit.DAYS).toLong()
+
+        TimeUnit.MILLISECONDS.toHours(this.time - prevDate.time)
     }catch (e:Exception){ -1 }
 }
 

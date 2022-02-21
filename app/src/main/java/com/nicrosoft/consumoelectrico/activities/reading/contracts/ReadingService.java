@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.activities.reading.contracts;
+/**
+ package com.nicrosoft.consumoelectrico.activities.reading.contracts;
 
 
 import androidx.annotation.NonNull;
@@ -9,9 +10,7 @@ import com.nicrosoft.consumoelectrico.realm.Periodo;
 
 import java.util.Date;
 
-/**
  * Created by Eder Xavier Rojas on 15/01/2017.
- */
 
 public interface ReadingService {
 
@@ -25,3 +24,4 @@ public interface ReadingService {
     Lectura getLastReading(Periodo periodo, boolean old_readings_if_more_than_a_period);
 
 }
+ */

@@ -40,6 +40,7 @@ class SettingsFragment : ScopeFragment() {
             val defValue = Prefs.getString("price_simbol", "C$")
             showDialog(title, "price_simbol", defValue, typeText)
         }
+        /*
         container_price.setOnClickListener {
             val title = getString(R.string.settings_ac_price_kwh)
             val defValue = Prefs.getString("price_kwh", "6")
@@ -70,6 +71,8 @@ class SettingsFragment : ScopeFragment() {
             val defValue = Prefs.getString("reminder_after", "14")
             showDialog(title, "reminder_after", defValue, typeNumber)
         }
+         */
+
         backup_reminder.setOnCheckedChangeListener { _, isChecked ->
             Prefs.putBoolean("backup_reminder_enabled", isChecked)
         }
@@ -78,7 +81,7 @@ class SettingsFragment : ScopeFragment() {
     private fun showDialog(title:String, setCode:String, default:String, inputType: Int){
         MaterialDialog(requireActivity()).show {
             title(text = title)
-            input(prefill = default, inputType = inputType){ dialog, text ->
+            input(prefill = default, inputType = inputType){ _, text ->
                 Prefs.putString(setCode, text.toString())
             }
             positiveButton(R.string.ok)

@@ -1,10 +1,9 @@
-package com.nicrosoft.consumoelectrico.fragments.readings.contracts;
+/**
+ package com.nicrosoft.consumoelectrico.fragments.readings.contracts;
 
 import com.nicrosoft.consumoelectrico.realm.Lectura;
 
-/**
  * Created by Eder Xavier Rojas on 17/02/2017.
- */
 
 public interface LecturasPresenter {
     void onDestroy();
@@ -16,3 +15,4 @@ public interface LecturasPresenter {
 
 
 }
+ */

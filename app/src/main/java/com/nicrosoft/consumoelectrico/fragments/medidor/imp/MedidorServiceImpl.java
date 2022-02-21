@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.fragments.medidor.imp;
+/**
+ package com.nicrosoft.consumoelectrico.fragments.medidor.imp;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
@@ -20,9 +21,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-/**
  * Created by Eder Xavier Rojas on 11/01/2017.
- */
 
 public class MedidorServiceImpl implements MedidorService {
 
@@ -166,3 +165,4 @@ public class MedidorServiceImpl implements MedidorService {
     }
 
 }
+ */

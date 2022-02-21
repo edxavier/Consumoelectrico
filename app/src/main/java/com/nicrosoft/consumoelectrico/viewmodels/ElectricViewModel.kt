@@ -80,7 +80,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
                 if(previous!=null) {
                     computeReading(reading, previous, next, period, false)
                     updatePeriodTotals(period.code)
-                    if(terminatePeriod) {terminatePeriod(reading, period, meterCode)}else{}
+                    if(terminatePeriod) {terminatePeriod(reading, period, meterCode)}
                 }else {
                     //No se encontro lecturas anterirores a la neuva en este periodo, esta pasa a ser la primera
                     //Cargar ultima lectura del periodo aanterior
@@ -93,7 +93,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
                 val previousReading = dao.getLastMeterReading(meterCode, reading.readingDate)
                 val nextReading = null
                 if(previousReading!=null){
-                    computeReading(reading, previousReading, nextReading,  period, true)}else{}
+                    computeReading(reading, previousReading, nextReading,  period, true)}
 
             }
             val lr = dao.getLastPeriodReading(period.code)
@@ -119,7 +119,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
     }
 
     @ExperimentalTime
-    private suspend fun computeReading(current:ElectricReading, previous:ElectricReading,
+    private fun computeReading(current:ElectricReading, previous:ElectricReading,
                                next:ElectricReading?, period:ElectricBillPeriod, isFirstPeriodReading:Boolean){
         //inicializar  variable p, para calcular las horas desde que inicio el periodo hasta la fecha de la lectura actual
         val totalHours = current.readingDate.hoursSinceDate(period.fromDate)
@@ -133,6 +133,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         else
             current.kwAggConsumption = current.kwConsumption + previous.kwAggConsumption
         current.kwAvgConsumption = current.kwAggConsumption / current.consumptionHours
+        if (current.kwAvgConsumption == null){ current.kwAvgConsumption = 0f }
 
         next?.let {
             //Log.e("EDER", "HAY LECTURAS POSTERIORES")

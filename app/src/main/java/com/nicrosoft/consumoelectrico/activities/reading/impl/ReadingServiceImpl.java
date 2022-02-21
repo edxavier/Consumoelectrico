@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.activities.reading.impl;
+/**
+ package com.nicrosoft.consumoelectrico.activities.reading.impl;
 
 import androidx.annotation.NonNull;
 import android.util.Log;
@@ -19,9 +20,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-/**
  * Created by Eder Xavier Rojas on 16/01/2017.
- */
 
 public class ReadingServiceImpl implements ReadingService {
 
@@ -276,3 +275,4 @@ public class ReadingServiceImpl implements ReadingService {
     }
 
 }
+ */

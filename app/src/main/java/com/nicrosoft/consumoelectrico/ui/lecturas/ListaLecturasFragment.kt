@@ -1,3 +1,4 @@
+/*
 package com.nicrosoft.consumoelectrico.ui.lecturas
 
 import android.Manifest
@@ -172,3 +173,4 @@ class ListaLecturasFragment : Fragment(), LecturasView, RealmChangeListener<Real
         presenter.getReadings(params.id, false)
     }
 }
+ */

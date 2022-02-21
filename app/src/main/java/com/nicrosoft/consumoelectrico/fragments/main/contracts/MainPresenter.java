@@ -1,6 +1,5 @@
 package com.nicrosoft.consumoelectrico.fragments.main.contracts;
 
-import com.nicrosoft.consumoelectrico.realm.Periodo;
 
 import java.util.Date;
 
@@ -14,5 +13,5 @@ public interface MainPresenter {
     boolean isRecordsEmpty();
     boolean thereIsRecordForDate(Date date);
     boolean endPeriod(Date date);
-    Periodo getActivePeriod();
+    //Periodo getActivePeriod();
 }

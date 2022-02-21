@@ -80,7 +80,7 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
         val version = headerNav.findViewById<TextView>(R.id.version)
         version.text = BuildConfig.VERSION_NAME
         //StringBuilder path = new StringBuilder(getFilesDir().getAbsolutePath());
-        RestoreHelper.getInternalStoragePath(this)
+        //RestoreHelper.getInternalStoragePath(this)
 
         val request = manager.requestReviewFlow()
         request.addOnCompleteListener { it ->

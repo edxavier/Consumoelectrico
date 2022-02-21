@@ -54,7 +54,7 @@ class ElectricMeterAdapter(
                             if(previousHours>=48)
                                 item_txt_meter_readed_since.text = "Hace ${previousHours/24} dias"
                             else
-                                item_txt_meter_readed_since.text = "Hace ${previousHours} horas"
+                                item_txt_meter_readed_since.text = "Hace $previousHours horas"
                             item_txt_period_daily_avg.text = (lastReadings.kwAvgConsumption*24).toTwoDecimalPlace()
                             item_circular_progress.maxProgress = meter.maxKwLimit.toDouble()
                             item_circular_progress2.maxProgress = meter.periodLength.toDouble()
@@ -94,7 +94,7 @@ class ElectricMeterAdapter(
         return ViewHolder(LayoutInflater.from(parent.context!!).inflate(R.layout.item_electric_meter, parent, false))
     }
 
-    @ExperimentalTime
+    @OptIn(ExperimentalTime::class)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position), itemClickListener, viewModel, scope)
     }

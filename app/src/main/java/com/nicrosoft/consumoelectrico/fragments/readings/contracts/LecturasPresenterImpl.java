@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.fragments.readings.contracts;
+/**
+ package com.nicrosoft.consumoelectrico.fragments.readings.contracts;
 
 import android.util.Log;
 
@@ -6,9 +7,7 @@ import com.nicrosoft.consumoelectrico.realm.Lectura;
 
 import io.realm.RealmResults;
 
-/**
  * Created by Eder Xavier Rojas on 17/02/2017.
- */
 
 public class LecturasPresenterImpl implements LecturasPresenter {
 
@@ -52,3 +51,4 @@ public class LecturasPresenterImpl implements LecturasPresenter {
         return service.deleteEntry(lectura);
     }
 }
+ */

@@ -46,7 +46,7 @@ class DestinoExport (var context: Context, var main:MainKt): ActivityNavigator(c
                         message(text = folder.path)
                         input(prefill = name.replace(" ", "_")) { _, text ->
                             // Text submitted with the action button
-                            when(val result = CSVHelper.saveAllToCSV(folder.path, text.toString(), context)){
+                            /*when(val result = CSVHelper.saveAllToCSV(folder.path, text.toString(), context)){
                                 is AppResult.OK -> {
                                     Prefs.putString("last_path", folder.path);
                                     MaterialDialog(context).show {
@@ -74,6 +74,8 @@ class DestinoExport (var context: Context, var main:MainKt): ActivityNavigator(c
                                     }
                                 }
                             }
+
+                             */
                         }
                         positiveButton(R.string.ok)
                         negativeButton(R.string.cancel)

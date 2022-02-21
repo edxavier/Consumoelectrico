@@ -1,3 +1,4 @@
+/*
 package com.nicrosoft.consumoelectrico.ui.home
 
 import android.content.Intent
@@ -22,19 +23,15 @@ import com.nicrosoft.consumoelectrico.fragments.medidor.imp.MedidorPresenterImpl
 import com.nicrosoft.consumoelectrico.utils.hideFabButtonOnScroll
 import com.nicrosoft.consumoelectrico.utils.setHidden
 import com.nicrosoft.consumoelectrico.utils.setVisible
-import com.nicrosoft.consumoelectrico.realm.Medidor
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.realm.Realm
-import io.realm.RealmChangeListener
-import io.realm.RealmResults
 import kotlinx.android.synthetic.main.dlg_medidor.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 
 class MedidorFragment : Fragment(), MedidorView, RealmChangeListener<Realm> {
 
-    private lateinit var realm: Realm
+    //private lateinit var realm: Realm
     private lateinit var homeViewModel: MedidorViewModel
     lateinit var presenter: MedidorPresenter
     lateinit var mainActivity: MainKt
@@ -139,3 +136,4 @@ class MedidorFragment : Fragment(), MedidorView, RealmChangeListener<Realm> {
     }
 
 }
+ */

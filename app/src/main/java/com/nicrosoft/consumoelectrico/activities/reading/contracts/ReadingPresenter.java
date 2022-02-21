@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.activities.reading.contracts;
+/**
+ package com.nicrosoft.consumoelectrico.activities.reading.contracts;
 
 
 import com.nicrosoft.consumoelectrico.realm.Lectura;
@@ -7,9 +8,7 @@ import com.nicrosoft.consumoelectrico.realm.Periodo;
 
 import java.util.Date;
 
-/**
  * Created by Eder Xavier Rojas on 15/01/2017.
- */
 
 public interface ReadingPresenter {
     Boolean readingForDateExist(Date date, Periodo periodo);
@@ -20,3 +19,4 @@ public interface ReadingPresenter {
     Periodo getActivePeriod(String medidor_id);
     Lectura getLastReading(Periodo periodo, boolean old_readings_if_more_than_a_period);
 }
+ */

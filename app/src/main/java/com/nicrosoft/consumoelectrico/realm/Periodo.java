@@ -1,13 +1,14 @@
-package com.nicrosoft.consumoelectrico.realm;
+
+/**
+ * Created by Eder Xavier Rojas on 18/01/2017.
+ */
+/*package com.nicrosoft.consumoelectrico.realm;
 
 import java.util.Date;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by Eder Xavier Rojas on 18/01/2017.
- */
 
 public class Periodo extends RealmObject {
 
@@ -38,3 +39,4 @@ public class Periodo extends RealmObject {
         this.medidor = medidor;
     }
 }
+*/

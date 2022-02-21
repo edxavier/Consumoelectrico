@@ -1,22 +1,10 @@
 package com.nicrosoft.consumoelectrico.utils.helpers
 
-import android.content.Context
-import android.util.Log
-import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.realm.Lectura
-import com.nicrosoft.consumoelectrico.utils.AppResult
-import com.opencsv.CSVWriter
-import io.realm.Realm
-import io.realm.RealmResults
-import io.realm.Sort
-import java.io.*
-import java.text.SimpleDateFormat
-import java.util.*
-
 /**
  * Created by Eder Xavier Rojas on 14/12/2017.
  */
 object CSVHelper {
+    /*
     fun saveAllToCSV(fullPath: String, name: String, context: Context): AppResult {
         var writer: CSVWriter? = null
         try {
@@ -129,4 +117,5 @@ object CSVHelper {
             false
         }
     }
+     */
 }

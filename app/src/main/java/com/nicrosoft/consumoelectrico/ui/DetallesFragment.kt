@@ -1,4 +1,4 @@
-package com.nicrosoft.consumoelectrico.ui
+/*package com.nicrosoft.consumoelectrico.ui
 
 import android.os.Bundle
 import android.view.*
@@ -45,7 +45,7 @@ class DetallesFragment : ScopeFragment() {
         params = DetallesFragmentArgs.fromBundle(requireArguments())
         presenter = PeriodDetailPresenterImpl(context)
         presenter.onCreate()
-        setupBillingPeriodDetails(params.id)
+        //setupBillingPeriodDetails(params.id)
 
     }
 
@@ -67,6 +67,7 @@ class DetallesFragment : ScopeFragment() {
         }
         return super.onOptionsItemSelected(item)
     }
+    /*
     private fun setupBillingPeriodDetails(medidor_id: String) {
         val period = presenter.getActivePeriod(medidor_id)
         val ultimaLectura = presenter.getLastReading(period)
@@ -109,7 +110,7 @@ class DetallesFragment : ScopeFragment() {
         } catch (ignored: Exception) {
         }
     }
-
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         presenter.onDestroy()
@@ -138,3 +139,4 @@ class DetallesFragment : ScopeFragment() {
         })
     }
 }
+ */

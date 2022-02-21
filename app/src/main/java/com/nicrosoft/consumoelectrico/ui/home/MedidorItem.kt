@@ -1,5 +1,5 @@
 package com.nicrosoft.consumoelectrico.ui.home
-
+/*
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
@@ -171,3 +171,5 @@ class MedidorItem(
     }
 
 }
+
+ */

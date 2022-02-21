@@ -1,4 +1,4 @@
-package com.nicrosoft.consumoelectrico.ui.lecturas
+/*package com.nicrosoft.consumoelectrico.ui.lecturas
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -135,3 +135,5 @@ class LecturaItem(
         return ReadingTimeLineItemBinding.bind(view)
     }
 }
+
+ */

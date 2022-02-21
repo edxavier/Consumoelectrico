@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.fragments.readings.contracts;
+/**
+ package com.nicrosoft.consumoelectrico.fragments.readings.contracts;
 
 import androidx.annotation.NonNull;
 
@@ -16,9 +17,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-/**
  * Created by Eder Xavier Rojas on 17/02/2017.
- */
 
 public class LecturasServiceImpl implements LecturasService {
     private Realm realm;
@@ -217,3 +216,4 @@ public class LecturasServiceImpl implements LecturasService {
         }
     }
 }
+ */

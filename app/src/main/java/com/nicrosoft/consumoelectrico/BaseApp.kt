@@ -12,15 +12,12 @@ import com.google.android.gms.ads.RequestConfiguration
 import com.google.firebase.FirebaseApp
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.nicrosoft.consumoelectrico.data.AppDataBase
-import com.nicrosoft.consumoelectrico.realm.Migration
 import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
 import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
 import com.nicrosoft.consumoelectrico.utils.workers.BackupWorker
 import com.nicrosoft.consumoelectrico.utils.workers.ExternalBackupWorker
 import com.nicrosoft.consumoelectrico.utils.workers.ReadReminderWorker
 import com.pixplicity.easyprefs.library.Prefs
-import io.realm.Realm
-import io.realm.RealmConfiguration
 import org.kodein.di.*
 import org.kodein.di.android.x.androidXModule
 import java.util.concurrent.TimeUnit
@@ -30,6 +27,8 @@ import java.util.concurrent.TimeUnit
  * Created by Eder Xavier Rojas on 06/12/2016.
  */
 class BaseApp : MultiDexApplication(), DIAware {
+    private lateinit var appOpenManager:AppOpenManager
+
     override val di = DI.lazy {
         import(androidXModule(this@BaseApp))
         // BasedeDatos
@@ -57,7 +56,7 @@ class BaseApp : MultiDexApplication(), DIAware {
 
         MobileAds.setRequestConfiguration(conf)
         MobileAds.initialize(this)
-        Realm.init(this)
+        /*Realm.init(this)
         val config = RealmConfiguration.Builder()
                 .schemaVersion(1) // Must be bumped when the schema changes
                 .migration(Migration()) // Migration to run instead of throwing an exception
@@ -67,12 +66,7 @@ class BaseApp : MultiDexApplication(), DIAware {
         } catch (ignored: Exception) {
         }
         Realm.setDefaultConfiguration(config)
-        Prefs.Builder()
-                .setContext(this)
-                .setMode(ContextWrapper.MODE_PRIVATE)
-                .setPrefsName(packageName)
-                .setUseDefaultSharedPreference(true)
-                .build()
+         */
 
         /*LocalDateTime now = LocalDateTime.now();
         int hour = now.getHourOfDay();
@@ -104,5 +98,14 @@ class BaseApp : MultiDexApplication(), DIAware {
         workManager.enqueue(readReminderWork)
         //workManager.enqueue(backupWorker)
         workManager.enqueue(externalBackupWorker)
+
+        Prefs.Builder()
+            .setContext(this)
+            .setMode(ContextWrapper.MODE_PRIVATE)
+            .setPrefsName(packageName)
+            .setUseDefaultSharedPreference(true)
+            .build()
+        appOpenManager = AppOpenManager(this);
+
     }
 }

@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.fragments.medidor.imp;
+/**
+ package com.nicrosoft.consumoelectrico.fragments.medidor.imp;
 
 import android.content.Context;
 
@@ -14,9 +15,7 @@ import java.util.Date;
 
 import io.realm.RealmResults;
 
-/**
  * Created by Eder Xavier Rojas on 11/01/2017.
- */
 
 public class MedidorPresenterImpl implements MedidorPresenter {
 
@@ -58,3 +57,4 @@ public class MedidorPresenterImpl implements MedidorPresenter {
 
 
 }
+ */

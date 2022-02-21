@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.realm;
+/**
+ package com.nicrosoft.consumoelectrico.realm;
 
 import androidx.annotation.NonNull;
 
@@ -6,9 +7,7 @@ import io.realm.DynamicRealm;
 import io.realm.RealmMigration;
 import io.realm.RealmSchema;
 
-/**
  * Created by Eder Xavier Rojas on 23/11/2017.
- */
 
 public class Migration implements RealmMigration {
     @Override
@@ -22,3 +21,4 @@ public class Migration implements RealmMigration {
         }
     }
 }
+ */

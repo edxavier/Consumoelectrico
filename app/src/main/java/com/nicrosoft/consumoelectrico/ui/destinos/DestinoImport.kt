@@ -35,6 +35,7 @@ class DestinoImport (var context: Context, var main:MainKt): ActivityNavigator(c
                         filter = myFilter,
                         allowFolderCreation = false) { _, file  ->
                     // Folder selected
+                    /*
                     if (!CSVHelper.restoreAllFromCSV(file.path, context)){
                         MaterialDialog(context).show{
                             title(text = "Error!")
@@ -48,6 +49,7 @@ class DestinoImport (var context: Context, var main:MainKt): ActivityNavigator(c
                             positiveButton(R.string.agree)
                         }
                     }
+                     */
 
                 }
             }

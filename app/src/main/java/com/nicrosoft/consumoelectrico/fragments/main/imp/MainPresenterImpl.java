@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.fragments.main.imp;
+/**
+ package com.nicrosoft.consumoelectrico.fragments.main.imp;
 
 import android.content.Context;
 
@@ -10,9 +11,7 @@ import com.nicrosoft.consumoelectrico.realm.Periodo;
 
 import java.util.Date;
 
-/**
  * Created by Eder Xavier Rojas on 11/01/2017.
- */
 
 public class MainPresenterImpl implements MainPresenter {
 
@@ -60,3 +59,4 @@ public class MainPresenterImpl implements MainPresenter {
         return service.getActivePeriod();
     }
 }
+ */

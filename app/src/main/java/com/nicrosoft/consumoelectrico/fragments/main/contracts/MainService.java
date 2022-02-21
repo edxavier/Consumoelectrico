@@ -1,4 +1,4 @@
-package com.nicrosoft.consumoelectrico.fragments.main.contracts;
+/*package com.nicrosoft.consumoelectrico.fragments.main.contracts;
 
 
 import androidx.annotation.Nullable;
@@ -10,9 +10,7 @@ import java.util.Date;
 
 import io.realm.RealmResults;
 
-/**
  * Created by Eder Xavier Rojas on 11/01/2017.
- */
 
 public interface MainService {
     @Nullable
@@ -24,3 +22,4 @@ public interface MainService {
     Periodo getActivePeriod();
 
 }
+ */

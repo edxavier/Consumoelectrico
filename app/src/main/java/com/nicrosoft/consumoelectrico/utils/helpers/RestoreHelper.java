@@ -3,9 +3,6 @@ package com.nicrosoft.consumoelectrico.utils.helpers;
 import android.content.Context;
 
 import com.nicrosoft.consumoelectrico.R;
-import com.nicrosoft.consumoelectrico.realm.Lectura;
-import com.nicrosoft.consumoelectrico.realm.Medidor;
-import com.nicrosoft.consumoelectrico.realm.Periodo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,7 +10,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
-import io.realm.Realm;
 
 /**
  * Created by Eder Xavier Rojas on 14/12/2017.
@@ -21,7 +17,7 @@ import io.realm.Realm;
 
 public class RestoreHelper {
 
-    private static Medidor getMedidor(String medidor_id){
+/*    private static Medidor getMedidor(String medidor_id){
         Realm realm = Realm.getDefaultInstance();
         Medidor exist = realm.where(Medidor.class)
                 .equalTo("id", medidor_id)
@@ -29,7 +25,6 @@ public class RestoreHelper {
         realm.close();
         return exist;
     }
-
     private static Periodo getPeriodo(String _id){
         Realm realm = Realm.getDefaultInstance();
         Periodo exist = realm.where(Periodo.class)
@@ -115,5 +110,6 @@ public class RestoreHelper {
         }
 
     }
+ */
 
 }

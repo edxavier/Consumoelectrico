@@ -111,7 +111,7 @@ class ElectricReadingAdapter(
         return ViewHolder(LayoutInflater.from(parent.context!!).inflate(R.layout.item_electric_reading, parent, false))
     }
 
-    @ExperimentalTime
+    @OptIn(ExperimentalTime::class)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val previous = if(position<itemCount-1)

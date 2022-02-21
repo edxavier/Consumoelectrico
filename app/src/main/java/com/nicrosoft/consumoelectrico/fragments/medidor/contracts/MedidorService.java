@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.fragments.medidor.contracts;
+/**
+ package com.nicrosoft.consumoelectrico.fragments.medidor.contracts;
 
 
 import androidx.annotation.Nullable;
@@ -9,9 +10,7 @@ import com.nicrosoft.consumoelectrico.realm.Periodo;
 
 import io.realm.RealmResults;
 
-/**
  * Created by Eder Xavier Rojas on 11/01/2017.
- */
 
 public interface MedidorService {
     RealmResults<Medidor> getMedidores();
@@ -22,3 +21,4 @@ public interface MedidorService {
 
 
 }
+ */

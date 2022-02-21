@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.activities.perio_details.contracts;
+/**
+ package com.nicrosoft.consumoelectrico.activities.perio_details.contracts;
 
 import android.content.Context;
 import android.util.Log;
@@ -33,9 +34,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-/**
  * Created by Eder Xavier Rojas on 01/12/2017.
- */
 
 public class PeriodDetailServiceImpl implements PeriodDetailsService {
     private Realm realm;
@@ -196,12 +195,12 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
                 dataSet.setValueTextColor(this.context.getResources().getColor(R.color.md_black_1000_75));
                 BarData data = new BarData(dataSet);
                 data.setBarWidth(0.8f);
-                /*data.setValueFormatter(new IValueFormatter() {
+                data.setValueFormatter(new IValueFormatter() {
                     @Override
                     public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
                         return String.format(Locale.getDefault(), "%.0f", value);
                     }
-                });*/
+                });
                 chart.setData(data);
                 chart.setVisibleXRangeMaximum(12);
                 chart.getXAxis().setAxisMinimum(-0.8f);
@@ -231,3 +230,4 @@ public class PeriodDetailServiceImpl implements PeriodDetailsService {
             realm.close();
     }
 }
+*/

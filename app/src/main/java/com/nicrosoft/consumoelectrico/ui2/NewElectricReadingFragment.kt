@@ -60,7 +60,7 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
         return binding.root
     }
 
-    @ExperimentalTime
+    @OptIn(ExperimentalTime::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

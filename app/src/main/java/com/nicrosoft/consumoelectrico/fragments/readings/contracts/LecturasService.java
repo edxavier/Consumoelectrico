@@ -1,12 +1,11 @@
-package com.nicrosoft.consumoelectrico.fragments.readings.contracts;
+/**
+ package com.nicrosoft.consumoelectrico.fragments.readings.contracts;
 
 import com.nicrosoft.consumoelectrico.realm.Lectura;
 
 import io.realm.RealmResults;
 
-/**
  * Created by Eder Xavier Rojas on 17/02/2017.
- */
 
 public interface LecturasService {
     RealmResults<Lectura> getReadings(String medidor_id, boolean get_all);
@@ -19,3 +18,4 @@ public interface LecturasService {
     boolean isValueOverange(Lectura lectura, String newValue);
 
 }
+ */

@@ -107,7 +107,7 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
 
     }
 
-    @ExperimentalTime
+    @OptIn(ExperimentalTime::class)
     override fun onItemClickListener(reading: ElectricReading) {
         launch {
             val period = viewModel.getLastPeriod(reading.meterCode!!)

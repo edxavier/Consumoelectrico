@@ -7,15 +7,7 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
-import com.nicrosoft.consumoelectrico.realm.Lectura
-import com.nicrosoft.consumoelectrico.realm.Medidor
-import com.nicrosoft.consumoelectrico.realm.Periodo
-import com.nicrosoft.consumoelectrico.utils.formatDate
-import com.pixplicity.easyprefs.library.Prefs
-import io.realm.Realm
-import io.realm.Sort
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
@@ -75,6 +67,7 @@ class BackupDatabaseHelper(val context: Context, private val dao:BackupDAO){
         dao.saveReadings(tempList)
     }
 
+    /*
     suspend fun tryMigration() = withContext(Dispatchers.IO){
 
         async {
@@ -136,10 +129,12 @@ class BackupDatabaseHelper(val context: Context, private val dao:BackupDAO){
             }
         }.await()
     }
-
+     */
     fun migrationDataAvailable():Boolean{
-        val realm = Realm.getDefaultInstance()
+        /*val realm = Realm.getDefaultInstance()
         val oldMeters = realm.where(Medidor::class.java).findAll()
         return oldMeters.isNotEmpty()
+         */
+        return false
     }
 }

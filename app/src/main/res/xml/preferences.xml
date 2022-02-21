@@ -20,6 +20,7 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/settings.ac.price.kwh" />
+        <!--
 
         <EditTextPreference
             android:defaultValue="2.86"
@@ -39,14 +40,12 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/settings.ac.fixed_charges" />
-        <!--
 
         <SwitchPreference android:defaultValue="false"
                 android:icon="@drawable/ic_flash"
                 android:key="lose_discount"
                 android:summary="Indicate if the discount is conditioned to the limit of kWh consumed at the end of period, if you exceed the limit you lose the benefit"
                 android:title="Conditioned discount"/>
-        -->
         <EditTextPreference
             android:summary="Indicate which is the maximum consumption you want at the end of a billing period, either by self-control or by discounts benefits"
             android:icon="@drawable/ic_network_gauge"
@@ -74,6 +73,7 @@
             android:selectAllOnFocus="true"
             android:singleLine="false"
             android:title="@string/settings.ac.reminder_afer" />
+        -->
 
 
 </PreferenceScreen>

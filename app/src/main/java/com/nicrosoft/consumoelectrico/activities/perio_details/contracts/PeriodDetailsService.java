@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.activities.perio_details.contracts;
+/**
+ package com.nicrosoft.consumoelectrico.activities.perio_details.contracts;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -6,9 +7,7 @@ import com.nicrosoft.consumoelectrico.realm.Lectura;
 import com.nicrosoft.consumoelectrico.realm.Medidor;
 import com.nicrosoft.consumoelectrico.realm.Periodo;
 
-/**
  * Created by Eder Xavier Rojas on 01/12/2017.
- */
 
 public interface PeriodDetailsService {
     Periodo getActivePeriod(String medidor_id);
@@ -29,3 +28,4 @@ public interface PeriodDetailsService {
 
 
 }
+ */

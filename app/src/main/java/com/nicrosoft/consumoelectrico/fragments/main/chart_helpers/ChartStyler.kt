@@ -13,10 +13,8 @@ import com.github.mikephil.charting.data.realm.implementation.RealmBarDataSet
 import com.github.mikephil.charting.data.realm.implementation.RealmLineDataSet
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.realm.Lectura
 import com.nicrosoft.consumoelectrico.utils.charts.KwValueFormatter
 import com.pixplicity.easyprefs.library.Prefs
-import io.realm.RealmResults
 import java.util.*
 
 /**
@@ -226,6 +224,7 @@ object ChartStyler {
         return acumuladoDataSet
     }
 
+    /*
     @JvmStatic
     fun setProyectionPeriodLine(lecturas: RealmResults<Lectura?>, context: Context): LineDataSet {
         val lectura = lecturas.last()
@@ -254,4 +253,6 @@ object ChartStyler {
         periodDataSet.enableDashedLine(10f, 10f, 0f)
         return periodDataSet
     }
+
+     */
 }

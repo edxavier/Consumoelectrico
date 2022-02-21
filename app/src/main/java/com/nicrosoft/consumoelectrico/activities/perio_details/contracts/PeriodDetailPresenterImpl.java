@@ -1,4 +1,5 @@
-package com.nicrosoft.consumoelectrico.activities.perio_details.contracts;
+/**
+ package com.nicrosoft.consumoelectrico.activities.perio_details.contracts;
 
 import android.content.Context;
 
@@ -9,9 +10,7 @@ import com.nicrosoft.consumoelectrico.realm.Lectura;
 import com.nicrosoft.consumoelectrico.realm.Medidor;
 import com.nicrosoft.consumoelectrico.realm.Periodo;
 
-/**
  * Created by Eder Xavier Rojas on 01/12/2017.
- */
 
 public class PeriodDetailPresenterImpl implements PeriodDetailsPresenter {
 
@@ -87,3 +86,4 @@ public class PeriodDetailPresenterImpl implements PeriodDetailsPresenter {
         service.onDestroy();
     }
 }
+ */

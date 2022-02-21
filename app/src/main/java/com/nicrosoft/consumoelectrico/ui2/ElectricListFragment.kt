@@ -1,6 +1,7 @@
 package com.nicrosoft.consumoelectrico.ui2
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -105,7 +106,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
     }
 
     private suspend fun doMigration(){
-        backupHelper.tryMigration()
+        //backupHelper.tryMigration()
         initLayout()
         loadData()
     }
@@ -204,6 +205,8 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
         inflater.inflate(R.menu.emeter_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
+
+    @SuppressLint("CheckResult")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.ac_export_import_data -> {
@@ -217,6 +220,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
                             1 -> {
                                 openFile()
                             }
+                            /*
                             2 -> {
                                 launch {
                                     try {
@@ -229,6 +233,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
                                     }
                                 }
                             }
+                             */
                         }
                     }
                 }
@@ -237,7 +242,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
         return super.onOptionsItemSelected(item)
     }
 
-    fun saveFile() {
+    private fun saveFile() {
         var name = "USER_BACKUP " + Date().backupFormat(requireContext())
         name = name.replace(" ", "_")
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
@@ -281,7 +286,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
         }
     }
 
-    fun openFile() {
+    private fun openFile() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"
