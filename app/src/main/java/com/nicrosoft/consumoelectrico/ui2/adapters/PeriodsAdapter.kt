@@ -10,13 +10,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
-import com.nicrosoft.consumoelectrico.data.entities.PriceRange
 import com.nicrosoft.consumoelectrico.utils.formatDate
 import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.item_period.view.*
-import kotlinx.android.synthetic.main.item_price_range.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -48,16 +46,23 @@ class PeriodsAdapter(
 
                     GlobalScope.launch {
                         val lastR = viewModel.getLastPeriodReading(period.code)
-                        item_label_last_reading.text = lastR?.readingValue?.toTwoDecimalPlace()
+                        val periods = viewModel.getMeterAllPeriods(period.meterCode)
+                        val firstReading = if (periods.size > 1)
+                            viewModel.getLastPeriodReading(periods[1].code)
+                        else
+                            viewModel.getFirstPeriodReading(period.code)
+                        firstReading?.let { fr ->
+                            item_first_reading.text = " ${fr.readingValue.toTwoDecimalPlace()} Kwh"
+                        }
+                        item_last_reading.text = "${lastR?.readingValue?.toTwoDecimalPlace()} Kwh"
                     }
-
-
+                    val coinSymbol = Prefs.getString("price_simbol", "$")
                     item_label_total_kw.text = period.totalKw.toTwoDecimalPlace()
-                    item_label_total_spend.text = period.totalBill.toTwoDecimalPlace()
+                    item_label_total_spend.text = "$coinSymbol${period.totalBill.toTwoDecimalPlace()}"
                     if(period.active)
-                        item_period_status.setColorFilter(ContextCompat.getColor(context, R.color.md_green_500))
+                        item_period_status.setBackgroundColor(ContextCompat.getColor(context, R.color.md_green_500))
                     else
-                        item_period_status.setColorFilter(ContextCompat.getColor(context, R.color.md_grey_500))
+                        item_period_status.setBackgroundColor(ContextCompat.getColor(context, R.color.md_grey_500))
 
                 }
             }

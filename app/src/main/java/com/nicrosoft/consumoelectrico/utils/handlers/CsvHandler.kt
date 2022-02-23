@@ -1,6 +1,8 @@
 package com.nicrosoft.consumoelectrico.utils.handlers
 
 import android.content.Context
+import android.net.Uri
+import android.util.Log
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.utils.formatDate
@@ -14,10 +16,8 @@ import java.util.*
  */
 object CsvHandler {
 
-    fun exportMeterReadings(readings:List<ElectricReading>, filePathName:String, ctx:Context):String? {
+    fun exportMeterReadings(readings:List<ElectricReading>, fileUri: Uri, ctx:Context):Uri? {
         try {
-            val s = "$filePathName.csv"
-            val writer = CSVWriter(FileWriter(s))
             val data: MutableList<Array<String>> = ArrayList()
             val titles = arrayOf(
                     ctx.getString(R.string.label_date),
@@ -27,7 +27,6 @@ object CsvHandler {
                     ctx.getString(R.string.period_consumption)
             )
             data.add(titles)
-
             readings.sortedBy { it.readingDate }.forEach { r ->
                 data.add(
                         arrayOf(
@@ -39,10 +38,16 @@ object CsvHandler {
                         )
                 )
             }
+            val outputStream = ctx.contentResolver.openOutputStream(fileUri)
+            val bufferedWriter = BufferedWriter(
+                OutputStreamWriter(outputStream)
+            )
+            val writer = CSVWriter(bufferedWriter)
             writer.writeAll(data)
             writer.close()
-            return s
+            return fileUri
         }catch (e:Exception){
+            Log.e("EDER", e.stackTraceToString())
             return null
         }
     }

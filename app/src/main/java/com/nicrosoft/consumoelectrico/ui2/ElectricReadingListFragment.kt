@@ -12,6 +12,8 @@ import android.view.*
 import android.view.animation.OvershootInterpolator
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
@@ -22,6 +24,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.listItems
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.BuildConfig
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
@@ -29,7 +32,9 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricReadingAdapter
 import com.nicrosoft.consumoelectrico.utils.*
 import com.nicrosoft.consumoelectrico.utils.handlers.CsvHandler
+import com.nicrosoft.consumoelectrico.utils.handlers.JsonBackupHandler
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
+import com.pixplicity.easyprefs.library.Prefs
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.android.synthetic.main.emeter_list_fragment.*
@@ -70,18 +75,30 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
         loadData()
     }
     
-    private fun loadData(){
+    private fun loadData(showAll: Boolean = false){
         launch {
             val period = try {viewModel.getLastPeriod(viewModel.meter.value!!.code)}catch (e:Exception){null}
             if(period!=null) {
-                viewModel.getPeriodMetersReadings(period.code).observe(viewLifecycleOwner, Observer {
-                    tempReadings = it
-                    toggleMessageVisibility(it.isEmpty())
-                    adapter.submitList(it)
-                })
+                if(showAll){
+                    viewModel.getAllMeterReadings(period.meterCode).observe(viewLifecycleOwner, Observer {
+                        tempReadings = it
+                        toggleMessageVisibility(it.isEmpty())
+                        adapter.submitList(it)
+                    })
+                }else{
+                    viewModel.getPeriodMetersReadings(period.code).observe(viewLifecycleOwner, Observer {
+                        tempReadings = it
+                        toggleMessageVisibility(it.isEmpty())
+                        adapter.submitList(it)
+                    })
+                }
             }else{
                 toggleMessageVisibility(true)
             }
+            viewModel.getAllMeterReadings(viewModel.meter.value!!.code)
+                .observe(viewLifecycleOwner) {
+                    tempReadings = it
+                }
         }
     }
 
@@ -205,6 +222,9 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
             R.id.action_export_readings_to_ocsv->{
                 exportDialog()
             }
+            R.id.action_show_all_meter_readings->{
+                loadData(showAll = true)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -220,11 +240,18 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
             requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
             return
         }
-        val initialPath = if(File("/storage/emulated/0/").exists())
-            File("/storage/emulated/0/")
-        else
-            null
 
+
+        var name = getString(R.string.label_readings) + " " + viewModel.meter.value!!.name + Date().formatDate(requireContext())
+        name = name.replace(" ", "_").replace(",", "")
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "text/csv"
+            putExtra(Intent.EXTRA_TITLE, name)
+            //putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri)
+        }
+        startSaveFileForResult.launch(intent)
+        /*
         MaterialDialog(requireContext()).show {
                 folderChooser(context,
                         initialDirectory = initialPath,
@@ -234,7 +261,7 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
                     launch {
                         //val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
                         var name = getString(R.string.label_readings) + " " + viewModel.meter.value!!.name + Date().formatDate(context)
-                        name = name.replace(" ", "_")
+                        name = name.replace(" ", "_").replace(",", "")
                         tempReadings?.let {
                             val resultPath = CsvHandler.exportMeterReadings(it, "${folder.path}/$name", requireContext())
                             if (resultPath!=null) {
@@ -247,7 +274,24 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
 
                 }
         }
+        */
+    }
 
+    private val startSaveFileForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                launch {
+                    tempReadings?.let {
+                        val resultPath = CsvHandler.exportMeterReadings(it, uri, requireContext())
+                        if (resultPath!=null) {
+                            openFileIntent(resultPath)
+                        }else
+                            showInfoDialog(getString(R.string.export_error))
+                    }
+                }
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -267,13 +311,13 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
         }
     }
 
-    private fun openFileIntent(filePath:String){
+    private fun openFileIntent(fileUri:Uri){
         val myMime = MimeTypeMap.getSingleton()
         val newIntent = Intent(Intent.ACTION_VIEW)
-        val file = File(filePath)
+        // val file = File(filePath)
         val mimeType = myMime.getMimeTypeFromExtension("csv")
-        val uri: Uri = FileProvider.getUriForFile(requireActivity(), BuildConfig.APPLICATION_ID.toString() + ".provider", file)
-        newIntent.setDataAndType(uri, mimeType)
+        // val uri: Uri = FileProvider.getUriForFile(requireActivity(), BuildConfig.APPLICATION_ID.toString() + ".provider", file)
+        newIntent.setDataAndType(fileUri, mimeType)
         newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         try {

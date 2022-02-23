@@ -105,7 +105,7 @@ class BaseApp : MultiDexApplication(), DIAware {
             .setPrefsName(packageName)
             .setUseDefaultSharedPreference(true)
             .build()
-        appOpenManager = AppOpenManager(this);
+        appOpenManager = AppOpenManager(this)
 
     }
 }

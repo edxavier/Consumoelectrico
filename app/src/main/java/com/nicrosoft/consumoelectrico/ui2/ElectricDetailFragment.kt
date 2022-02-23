@@ -19,7 +19,6 @@ import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.fragment_electric_detail.*
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
-import org.kodein.di.android.x.kodein
 import org.kodein.di.instance
 import java.util.*
 
@@ -29,10 +28,6 @@ class ElectricDetailFragment : ScopeFragment(), DIAware {
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
     private var mInterstitialAd: InterstitialAd? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

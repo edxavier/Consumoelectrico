@@ -19,7 +19,7 @@ class AppPreference : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
     private lateinit var navController: NavController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        navController = Navigation.findNavController(activity!!, R.id.nav_host_fragment)
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
 
         return super.onCreateView(inflater, container, savedInstanceState)

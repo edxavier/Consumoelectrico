@@ -25,7 +25,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 1014
-        versionName "2022.2.3.6.0-ce"
+        versionName "2022.2.3.5.1-ce"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true

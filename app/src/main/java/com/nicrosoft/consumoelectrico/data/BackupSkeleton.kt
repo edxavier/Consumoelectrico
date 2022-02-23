@@ -6,8 +6,8 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
 
 class BackupSkeleton (
-        var meters:List<ElectricMeter> = ArrayList(),
-        var prices:List<PriceRange> = ArrayList(),
-        var periods:List<ElectricBillPeriod> = ArrayList(),
-        var readings:List<ElectricReading> = ArrayList()
+        var meters:MutableList<ElectricMeter> = ArrayList(),
+        var prices:MutableList<PriceRange> = ArrayList(),
+        var periods:MutableList<ElectricBillPeriod> = ArrayList(),
+        var readings:MutableList<ElectricReading> = ArrayList()
 )

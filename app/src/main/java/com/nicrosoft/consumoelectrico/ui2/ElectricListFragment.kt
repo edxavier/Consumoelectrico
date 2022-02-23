@@ -320,8 +320,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty()){
-        }else{
+        if(grantResults.isEmpty()){
             showInfoDialog("No se concedieron los permisos")
         }
     }

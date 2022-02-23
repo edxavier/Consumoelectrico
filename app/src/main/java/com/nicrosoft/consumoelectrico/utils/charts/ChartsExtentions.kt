@@ -18,7 +18,7 @@ import com.nicrosoft.consumoelectrico.R
 
 fun Chart<*>.setupLineChartStyle(xFormatter: ValueFormatter, markerView: MarkerView){
     val mChart = if (this is BarChart)
-        this as BarChart
+        this
     else
         this as LineChart
 
@@ -31,13 +31,13 @@ fun Chart<*>.setupLineChartStyle(xFormatter: ValueFormatter, markerView: MarkerV
         setNoDataTextColor(black75)
         description.isEnabled = false
         setNoDataTextTypeface(typeFaceBold)
-        setExtraOffsets(5f, 15f, 5f, 10f);
+        setExtraOffsets(5f, 15f, 5f, 10f)
         setBackgroundColor(bgColor)
         setDrawBorders(false)
         setTouchEnabled(true)
         marker = markerView
-        animateXY(500, 0);
-        setDrawGridBackground(false);
+        animateXY(500, 0)
+        setDrawGridBackground(false)
         with(xAxis){
             valueFormatter = xFormatter
             position = XAxis.XAxisPosition.BOTTOM
@@ -71,7 +71,7 @@ fun Chart<*>.setupBarChartStyle(labels:List<String>){
 
         description.isEnabled = false
         setNoDataTextTypeface(typeFaceBold)
-        setExtraOffsets(5f, 15f, 5f, 10f);
+        setExtraOffsets(5f, 15f, 5f, 10f)
         setBackgroundColor(bgColor)
         setDrawBorders(false)
         setTouchEnabled(true)
@@ -80,7 +80,7 @@ fun Chart<*>.setupBarChartStyle(labels:List<String>){
         animateX(500)
         setFitBars(true)
         //marker = markerView
-        animateXY(500, 0);
+        animateXY(500, 0)
         setDrawGridBackground(false)
         with(xAxis){
             valueFormatter = IndexAxisValueFormatter(labels)
@@ -111,7 +111,7 @@ fun Chart<*>.setupBarChartStyle(labels:List<String>){
 
 fun Chart<*>.drawLimit(limitValue:Float) {
     val mChart = if (this is BarChart)
-        this as BarChart
+        this
     else
         this as LineChart
     val typeFaceRegular = ResourcesCompat.getFont(context, R.font.source_sans_pro)

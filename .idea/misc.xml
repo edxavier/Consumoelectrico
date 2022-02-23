@@ -4,6 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/drawable/splash_drawable.xml" value="0.1" />
+        <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/layout/fragment_settings.xml" value="0.33" />
+        <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/layout/item_electric_reading.xml" value="0.33" />
+        <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/layout/item_period.xml" value="0.25" />
         <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/menu/activity_mainkt_drawer.xml" value="0.1" />
         <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/menu/calculator_menu.xml" value="0.1" />
@@ -12,7 +15,7 @@
         <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/menu/emeter_menu.xml" value="0.1" />
         <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/menu/mainkt.xml" value="0.1" />
         <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/menu/readings_menu.xml" value="0.1" />
-        <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/xml/drawable/ic_edxr_logo.xml" value="0.2604166666666667" />
+        <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/xml/drawable/ic_edxr_logo.xml" value="0.14" />
         <entry key="..\:/Users/Eder Xavier Rojas/StudioProjects/Consumoelectrico/app/src/main/res/xml/preferences.xml" value="0.1" />
       </map>
     </option>

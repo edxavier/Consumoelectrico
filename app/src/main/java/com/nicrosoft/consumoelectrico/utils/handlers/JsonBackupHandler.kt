@@ -6,6 +6,7 @@ import android.content.Context
 import android.net.Uri
 import com.nicrosoft.consumoelectrico.data.BackupSkeleton
 import com.nicrosoft.consumoelectrico.data.DateJsonAdapter
+import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.utils.AppResult
 import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
@@ -26,10 +27,10 @@ object JsonBackupHandler {
             val jsonAdapter: JsonAdapter<BackupSkeleton> = moshi.adapter(BackupSkeleton::class.java)
 
             val backup  = BackupSkeleton()
-            backup.meters = dao.getMeterList()
-            backup.prices = dao.getPricesList()
-            backup.periods = dao.getPeriodList()
-            backup.readings = dao.getReadingList()
+            backup.meters = dao.getMeterList().toMutableList()
+            backup.prices = dao.getPricesList().toMutableList()
+            backup.periods = dao.getPeriodList().toMutableList()
+            backup.readings = dao.getReadingList().toMutableList()
             val json = jsonAdapter.toJson(backup)
 
             //val file = File(filePathName)
@@ -77,7 +78,6 @@ object JsonBackupHandler {
     suspend fun restoreBackup(backup: BackupDatabaseHelper, fileUri: Uri, context: Context): AppResult {
         try{
             val inputStream = context.contentResolver.openInputStream(fileUri)
-
             val reader = BufferedReader(
                 InputStreamReader(
                     inputStream
@@ -120,51 +120,59 @@ object JsonBackupHandler {
             val jsonAdapter: JsonAdapter<BackupSkeleton> = moshi.adapter(BackupSkeleton::class.java)
 
             val backup  = BackupSkeleton()
-            backup.meters = dao.getMeterList()
-            backup.prices = dao.getPricesList()
-            backup.periods = dao.getPeriodList()
-            backup.readings = dao.getReadingList()
+            backup.meters = dao.getMeterList().toMutableList()
+            backup.prices = dao.getPricesList().toMutableList()
+            backup.periods = removeInfiniteNumbersPeriod(dao.getPeriodList().toMutableList())
+            backup.readings = removeInfiniteNumbersReading(dao.getReadingList().toMutableList())
+            val json = jsonAdapter.toJson(backup)
 
-            if(!thereAreInfiniteNumbers(backup.readings)){
-                val json = jsonAdapter.toJson(backup)
-
-                val outputStream = context.contentResolver.openOutputStream(fileUri)
-                val bufferedWriter = BufferedWriter(
-                    OutputStreamWriter(outputStream)
-                )
-                bufferedWriter.write(json)
-                bufferedWriter.flush()
-                bufferedWriter.close()
-                return AppResult.OK
-            }else{
-                throw Exception("Invalid value found in readings, please check it out")
-            }
+            val outputStream = context.contentResolver.openOutputStream(fileUri)
+            val bufferedWriter = BufferedWriter(
+                OutputStreamWriter(outputStream)
+            )
+            bufferedWriter.write(json)
+            bufferedWriter.flush()
+            bufferedWriter.close()
+            return AppResult.OK
         }
         catch (e:Exception){ return AppResult.AppException(e) }
     }
 
-    private fun thereAreInfiniteNumbers(readings: List<ElectricReading>):Boolean{
+    private fun removeInfiniteNumbersReading(readings: MutableList<ElectricReading>):MutableList<ElectricReading>{
         readings.forEach { reading ->
             if (reading.readingValue.isInfinite() || reading.readingValue.isNaN()){
-                return true
+                readings.remove(reading)
             }
-            if (reading.kwConsumption.isInfinite() || reading.kwConsumption.isNaN()){
-                return true
+            else if (reading.kwConsumption.isInfinite() || reading.kwConsumption.isNaN()){
+                readings.remove(reading)
             }
-            if (reading.kwAvgConsumption.isInfinite() || reading.kwAvgConsumption.isNaN()){
-                return true
+            else if (reading.kwAvgConsumption.isInfinite() || reading.kwAvgConsumption.isNaN()){
+                readings.remove(reading)
             }
-            if (reading.kwAggConsumption.isInfinite() || reading.kwAggConsumption.isNaN()){
-                return true
+            else if (reading.kwAggConsumption.isInfinite() || reading.kwAggConsumption.isNaN()){
+                readings.remove(reading)
             }
-            if (reading.consumptionHours.isInfinite() || reading.consumptionHours.isNaN()){
-                return true
+            else if (reading.consumptionHours.isInfinite() || reading.consumptionHours.isNaN()){
+                readings.remove(reading)
             }
-            if (reading.consumptionPreviousHours.isInfinite() || reading.consumptionPreviousHours.isNaN()){
-                return true
+            else if (reading.consumptionPreviousHours.isInfinite() || reading.consumptionPreviousHours.isNaN()){
+                readings.remove(reading)
             }
         }
-        return false
+        return readings
+    }
+
+    private fun removeInfiniteNumbersPeriod(periods: MutableList<ElectricBillPeriod>):MutableList<ElectricBillPeriod>{
+        periods.forEach { period ->
+            if (period.totalKw.isInfinite() || period.totalKw.isNaN()){
+                periods.remove(period)
+            }
+            else if (period.totalBill.isInfinite() || period.totalBill.isNaN()){
+                periods.remove(period)
+            }
+
+        }
+        return periods
     }
 
 }

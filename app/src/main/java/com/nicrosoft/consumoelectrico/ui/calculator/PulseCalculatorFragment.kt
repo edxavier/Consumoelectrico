@@ -58,7 +58,7 @@ class PulseCalculatorFragment : Fragment() {
                 chronometer.base = SystemClock.elapsedRealtime()
                 chronometer.start()
                 play_icon.setImageResource(R.drawable.ic_stop)
-                consumption_area.setAlpha(1f)
+                consumption_area.alpha = 1f
                 consumption_icon.setImageResource(R.drawable.ic_pulse_line)
                 txt_hint.visibility = View.VISIBLE
             } else {
@@ -102,7 +102,7 @@ class PulseCalculatorFragment : Fragment() {
             title(R.string.notice)
             message(R.string.calculator_explanation)
             negativeButton(R.string.not_show_again){
-                Prefs.putBoolean("firstTimeCalculator", false);
+                Prefs.putBoolean("firstTimeCalculator", false)
             }
             positiveButton(R.string.ok)
         }
@@ -120,7 +120,7 @@ class PulseCalculatorFragment : Fragment() {
                 positiveButton (R.string.save){
                     val pulsesPerKwh = txt_pulses_kwh.text.toString().trim()
                     if (pulsesPerKwh.isNotEmpty())
-                        Prefs.putString("pulses_per_kwh", pulsesPerKwh);
+                        Prefs.putString("pulses_per_kwh", pulsesPerKwh)
                     else
                         Toast.makeText(activity, getString(R.string.activity_new_reading_snack_warning),
                                 Toast.LENGTH_LONG).show()
@@ -129,8 +129,8 @@ class PulseCalculatorFragment : Fragment() {
                 customView(R.layout.dlg_pulses_per_kwh, scrollable = true, horizontalPadding = true)
             }
             try {
-                pulses_per_kwh = dlg.getCustomView().findViewById(R.id.txt_pulses_kwh);
-                pulses_per_kwh.setText(Prefs.getString("pulses_per_kwh", "1600"));
+                pulses_per_kwh = dlg.getCustomView().findViewById(R.id.txt_pulses_kwh)
+                pulses_per_kwh.setText(Prefs.getString("pulses_per_kwh", "1600"))
             } catch (e:Exception) { }
         }
         if (item.itemId == R.id.ac_calculator_help)

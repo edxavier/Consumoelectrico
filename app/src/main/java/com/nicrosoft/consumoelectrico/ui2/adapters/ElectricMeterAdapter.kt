@@ -52,9 +52,10 @@ class ElectricMeterAdapter(
                             item_txt_meter_last_reading.text = "${lastReadings.readingValue.toInt()} kWh"
                             val previousHours = Date().hoursSinceDate(lastReadings.readingDate)
                             if(previousHours>=48)
-                                item_txt_meter_readed_since.text = "Hace ${previousHours/24} dias"
+                                item_txt_meter_readed_since.text = context.getString(R.string.since, (previousHours/24))
+
                             else
-                                item_txt_meter_readed_since.text = "Hace $previousHours horas"
+                                item_txt_meter_readed_since.text = context.getString(R.string.since, previousHours)
                             item_txt_period_daily_avg.text = (lastReadings.kwAvgConsumption*24).toTwoDecimalPlace()
                             item_circular_progress.maxProgress = meter.maxKwLimit.toDouble()
                             item_circular_progress2.maxProgress = meter.periodLength.toDouble()

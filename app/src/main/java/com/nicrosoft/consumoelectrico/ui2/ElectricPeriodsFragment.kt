@@ -31,10 +31,6 @@ class ElectricPeriodsFragment : ScopeFragment(), DIAware, PeriodsAdapter.PeriodI
     private lateinit var adapter: PeriodsAdapter
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -43,7 +39,7 @@ class ElectricPeriodsFragment : ScopeFragment(), DIAware, PeriodsAdapter.PeriodI
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity(), vmFactory)[ElectricViewModel::class.java]
         initLayout()
         loadData()
     }

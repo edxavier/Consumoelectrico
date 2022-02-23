@@ -33,7 +33,7 @@ class DestinoExport (var context: Context, var main:MainKt): ActivityNavigator(c
                 File("/storage/emulated/0/")
             else
                 null
-            MaterialDialog(context!!).show {
+            MaterialDialog(context).show {
                 folderChooser(context,
                         initialDirectory = initialPath,
                         emptyTextRes = R.string.title_choose_folder,

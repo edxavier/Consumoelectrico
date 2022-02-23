@@ -40,7 +40,7 @@ class AppOpenManager(myApplication: BaseApp):LifecycleObserver, Application.Acti
 
     init {
         myApplication.registerActivityLifecycleCallbacks(this)
-        ProcessLifecycleOwner.get().lifecycle.addObserver(this);
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
 
     /** Request an ad  */
@@ -72,7 +72,7 @@ class AppOpenManager(myApplication: BaseApp):LifecycleObserver, Application.Acti
 
     /** Utility method that checks if ad exists and can be shown.  */
     private val isAdAvailable: Boolean
-        get() =  appOpenAd != null && wasLoadTimeLessThanNHoursAgo(4);
+        get() =  appOpenAd != null && wasLoadTimeLessThanNHoursAgo(4)
 
     /** Utility method to check if ad was loaded more than n hours ago.  */
     private fun wasLoadTimeLessThanNHoursAgo(numHours: Long): Boolean {
@@ -90,11 +90,11 @@ class AppOpenManager(myApplication: BaseApp):LifecycleObserver, Application.Acti
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
 
     override fun onActivityStarted(activity: Activity) {
-        currentActivity = activity;
+        currentActivity = activity
     }
 
     override fun onActivityResumed(activity: Activity) {
-        currentActivity = activity;
+        currentActivity = activity
     }
 
     override fun onActivityPaused(activity: Activity) {}
