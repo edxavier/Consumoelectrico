@@ -13,7 +13,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 
 @Suppress("DEPRECATION")
 @Navigator.Name("valorar_app")
-class DestinoValorarApp (var context: Context): ActivityNavigator(context) {
+class DestinoValorarApp (var _context: Context): ActivityNavigator(_context) {
     override fun navigate(destination: Destination, args: Bundle?, navOptions: NavOptions?, navigatorExtras: Navigator.Extras?): NavDestination? {
         //super.navigate(destination, args, navOptions, navigatorExtras)
 

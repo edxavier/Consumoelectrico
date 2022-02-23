@@ -35,7 +35,7 @@ class AppOpenManager(myApplication: BaseApp):LifecycleObserver, Application.Acti
         if(!isPurchased) {
             showAdIfAvailable()
         }
-        Log.d(LOG_TAG, "onStart")
+        //Log.d(LOG_TAG, "onStart")
     }
 
     init {
@@ -45,7 +45,7 @@ class AppOpenManager(myApplication: BaseApp):LifecycleObserver, Application.Acti
 
     /** Request an ad  */
     fun fetchAd() {
-        Log.d(LOG_TAG, "Fetch ad.")
+        //Log.d(LOG_TAG, "Fetch ad.")
         if(isAdAvailable)
             return
         loadCallback = object : AppOpenAdLoadCallback() {

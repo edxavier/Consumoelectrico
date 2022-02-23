@@ -12,7 +12,7 @@ import androidx.navigation.Navigator
 import com.nicrosoft.consumoelectrico.R
 
 @Navigator.Name("nav_telegram")
-class DestinoTelegram (var context: Context): ActivityNavigator(context) {
+class DestinoTelegram (var _context: Context): ActivityNavigator(_context) {
     override fun navigate(destination: Destination, args: Bundle?, navOptions: NavOptions?, navigatorExtras: Navigator.Extras?): NavDestination? {
 
         val i = Intent(Intent.ACTION_VIEW)

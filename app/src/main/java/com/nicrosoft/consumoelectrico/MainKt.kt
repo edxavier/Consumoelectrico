@@ -15,7 +15,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.anjlab.android.iab.v3.BillingProcessor
-import com.anjlab.android.iab.v3.TransactionDetails
+import com.anjlab.android.iab.v3.PurchaseInfo
 import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.play.core.review.ReviewInfo
@@ -167,7 +167,7 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
     override fun onPurchaseHistoryRestored() {}
 
-    override fun onProductPurchased(productId: String, details: TransactionDetails?) {
+    override fun onProductPurchased(productId: String, details: PurchaseInfo?) {
         Prefs.putBoolean("isPurchased", true)
     }
 

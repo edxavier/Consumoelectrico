@@ -18,7 +18,7 @@ import com.pixplicity.easyprefs.library.Prefs
 class AppPreference : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var navController: NavController
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
 
@@ -28,8 +28,7 @@ class AppPreference : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
         initSummaries(this.preferenceScreen)
-        this.preferenceScreen.sharedPreferences
-                .registerOnSharedPreferenceChangeListener(this)
+        this.preferenceScreen.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
     }
 
     /**

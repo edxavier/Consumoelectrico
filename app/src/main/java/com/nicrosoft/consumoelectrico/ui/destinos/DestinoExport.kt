@@ -25,7 +25,7 @@ import java.io.File
 import java.util.*
 
 @Navigator.Name("export_ac")
-class DestinoExport (var context: Context, var main:MainKt): ActivityNavigator(context) {
+class DestinoExport (var _context: Context, var main:MainKt): ActivityNavigator(_context) {
     override fun navigate(destination: Destination, args: Bundle?, navOptions: NavOptions?, navigatorExtras: Navigator.Extras?): NavDestination? {
         //super.navigate(destination, args, navOptions, navigatorExtras)
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {

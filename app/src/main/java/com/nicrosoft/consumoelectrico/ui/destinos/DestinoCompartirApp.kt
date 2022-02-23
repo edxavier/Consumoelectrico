@@ -11,7 +11,7 @@ import androidx.navigation.Navigator
 import com.nicrosoft.consumoelectrico.R
 
 @Navigator.Name("compartir_app")
-class DestinoCompartirApp (var context: Context): ActivityNavigator(context) {
+class DestinoCompartirApp (var _context: Context): ActivityNavigator(_context) {
     override fun navigate(destination: Destination, args: Bundle?, navOptions: NavOptions?, navigatorExtras: Navigator.Extras?): NavDestination? {
         //super.navigate(destination, args, navOptions, navigatorExtras)
 
