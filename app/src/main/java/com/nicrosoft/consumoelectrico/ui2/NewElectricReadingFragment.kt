@@ -151,7 +151,9 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
         launch {
             period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
             val p = Period(LocalDate(period?.fromDate), LocalDate(date), PeriodType.days())
-            if(p.days <= viewModel.meter.value!!.periodLength-5) {
+            //if(p.days <= viewModel.meter.value!!.periodLength-5) {
+            // Hide end period check if period passed time its less than 1 day
+            if(p.days < 1) {
                 binding.nrEndPeriodSw.setHidden()
             }else {
                 binding.nrEndPeriodSw.setVisible()

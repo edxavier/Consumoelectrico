@@ -15,26 +15,20 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.listItems
-import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.nicrosoft.consumoelectrico.BuildConfig
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricReadingAdapter
 import com.nicrosoft.consumoelectrico.utils.*
 import com.nicrosoft.consumoelectrico.utils.handlers.CsvHandler
-import com.nicrosoft.consumoelectrico.utils.handlers.JsonBackupHandler
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
-import com.pixplicity.easyprefs.library.Prefs
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.android.synthetic.main.emeter_list_fragment.*
@@ -42,7 +36,6 @@ import kotlinx.coroutines.launch
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
 import org.kodein.di.instance
-import java.io.File
 import java.util.*
 import kotlin.time.ExperimentalTime
 
@@ -128,9 +121,11 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
     override fun onItemClickListener(reading: ElectricReading) {
         launch {
             val period = viewModel.getLastPeriod(reading.meterCode!!)
-            val meter = viewModel.getMeter(reading.meterCode!!)
+            // val meter = viewModel.getMeter(reading.meterCode!!)
             val options = resources.getStringArray(R.array.readings_options).toMutableList()
-            if(reading.readingDate.hoursSinceDate(period!!.fromDate)/24<=meter.periodLength-5)
+            // if(reading.readingDate.hoursSinceDate(period!!.fromDate)/24<=meter.periodLength-5)
+            // Hide end period check if period passed time its less than 1 day
+            if((reading.readingDate.hoursSinceDate(period!!.fromDate)/24)<1)
                 options.removeAt(0)
             MaterialDialog(requireContext()).show {
                 title(text = reading.readingValue.toTwoDecimalPlace())
