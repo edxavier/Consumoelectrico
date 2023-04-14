@@ -2,6 +2,7 @@ package com.nicrosoft.consumoelectrico
 
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -10,6 +11,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -21,12 +23,13 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.nicrosoft.consumoelectrico.databinding.ActivityMainktBinding
+import com.nicrosoft.consumoelectrico.databinding.ContentMainktBinding
 import com.nicrosoft.consumoelectrico.ui.destinos.*
 import com.nicrosoft.consumoelectrico.utils.helpers.RestoreHelper
 import com.nicrosoft.consumoelectrico.utils.setHidden
 import com.nicrosoft.consumoelectrico.utils.setVisible
 import com.pixplicity.easyprefs.library.Prefs
-import kotlinx.android.synthetic.main.content_mainkt.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
@@ -43,12 +46,14 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         manager = ReviewManagerFactory.create(this)
         //manager = FakeReviewManager(this)
         setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_mainkt)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
         navController.navigatorProvider.addNavigator(DestinoCompartirApp(this))
         navController.navigatorProvider.addNavigator(DestinoValorarApp(this))
         navController.navigatorProvider.addNavigator(DestinoTelegram(this))
@@ -144,9 +149,10 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
     private fun setupBanner() {
         val adView =  AdView(this)
-        adViewContainer.addView(adView)
+        val myAdView = findViewById<FrameLayout>(R.id.adViewContainer)
+        myAdView.addView(adView)
         adView.setHidden()
-        adView.adSize = getAdSize()
+        adView.setAdSize(getAdSize())
         adView.adUnitId = getString(R.string.admob_banner)
 
         adView.loadAd(AdRequest.Builder().build())

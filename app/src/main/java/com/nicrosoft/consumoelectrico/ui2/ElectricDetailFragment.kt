@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -14,9 +15,9 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
+import com.nicrosoft.consumoelectrico.databinding.FragmentElectricDetailBinding
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import com.pixplicity.easyprefs.library.Prefs
-import kotlinx.android.synthetic.main.fragment_electric_detail.*
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
 import org.kodein.di.instance
@@ -27,25 +28,24 @@ class ElectricDetailFragment : ScopeFragment(), DIAware {
     override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
+    private lateinit var binding: FragmentElectricDetailBinding
     private var mInterstitialAd: InterstitialAd? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_electric_detail, container, false)
+                              savedInstanceState: Bundle?): View {
+        binding = FragmentElectricDetailBinding.inflate(layoutInflater)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val mainNavController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val mainNavController = findNavController()
         val navController2 = requireActivity().findNavController(R.id.nav_host_fragment_detail)
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             mainNavController.navigateUp()
             navController2.navigateUp()
         }
-        //val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        bottom_nav_details.setupWithNavController(navController2)
-        //NavigationUI.setupWithNavController(bottom_nav_details, navController2)
+        binding.bottomNavDetails.setupWithNavController(navController2)
         if(!Prefs.getBoolean("isPurchased", false))
             requestInterstitialAds()
     }

@@ -1,46 +1,52 @@
 package com.nicrosoft.consumoelectrico.ui2
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.view.*
-import android.view.animation.OvershootInterpolator
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import androidx.lifecycle.Observer
+import androidx.compose.animation.core.EaseInOutCubic
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.files.FileFilter
-import com.afollestad.materialdialogs.files.fileChooser
-import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.list.listItems
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.BuildConfig
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
-import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter
-import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricMeterAdapter.AdapterItemListener
+import com.nicrosoft.consumoelectrico.databinding.EmeterListFragmentBinding
+import com.nicrosoft.consumoelectrico.ui2.compose.main.MeterList
+import com.nicrosoft.consumoelectrico.ui2.compose.main.MeterPreviewCard
 import com.nicrosoft.consumoelectrico.utils.*
 import com.nicrosoft.consumoelectrico.utils.handlers.JsonBackupHandler
 import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import com.pixplicity.easyprefs.library.Prefs
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
-import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
-import kotlinx.android.synthetic.main.emeter_list_fragment.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.kodein.di.DIAware
@@ -49,7 +55,7 @@ import org.kodein.di.instance
 import java.io.File
 import java.util.*
 
-class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
+class ElectricListFragment : ScopeFragment(), DIAware, MenuProvider {
     private lateinit var userBackupDir: File
     private lateinit var appBackupsDir: File
     override val di by closestDI()
@@ -57,28 +63,33 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
     private val backupHelper by instance<BackupDatabaseHelper>()
     private lateinit var viewModel: ElectricViewModel
 
-    private val EXPORT_REQUEST_RW_PERMISSIONS = 1
-    private val IMPORT_REQUEST_RW_PERMISSIONS = 2
-
     private lateinit var navController: NavController
-    private lateinit var adapter:ElectricMeterAdapter
+    private lateinit var binding:EmeterListFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.emeter_list_fragment, container, false)
+                              savedInstanceState: Bundle?): View {
+        binding = EmeterListFragmentBinding.inflate(inflater)
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = findNavController()
+        viewModel = ViewModelProvider(requireActivity(), vmFactory)[ElectricViewModel::class.java]
         launch {
             delay(1500)
             migrate()
         }
-        initLayout()
-        loadData()
+        binding.addMeterBtn.setOnClickListener { fabAction() }
+        toggleMessageVisibility(true)
+        viewModel.meters.observe(viewLifecycleOwner) {
+            toggleMessageVisibility(it.isEmpty())
+            if (it.isNotEmpty()) {
+                initLayout()
+            }
+        }
     }
 
     private fun migrate() {
@@ -105,32 +116,83 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
         }
     }
 
-    private suspend fun doMigration(){
+    private fun doMigration(){
         //backupHelper.tryMigration()
         initLayout()
-        loadData()
     }
 
-
-    private fun loadData(){
-        viewModel.getElectricMeterList().observe(viewLifecycleOwner, Observer {
-            toggleMessageVisibility(it.isEmpty())
-            adapter.submitList(it)
-        })
-    }
 
     private fun toggleMessageVisibility(isEmpty: Boolean){
         if(isEmpty) {
-            message_.setVisible()
-            animation_view.fadeZoomIn()
-            message_title.slideIn()
-            message_body.slideIn()
+            with(binding){
+                message.setVisible()
+                animationView.fadeZoomIn()
+                messageTitle.slideIn()
+                addMeterBtn.slideIn()
+                messageBody.slideIn()
+                composeList.setHidden()
+            }
         }
-        else
-            message_.setHidden()
+        else {
+            binding.message.setHidden()
+            binding.composeList.setVisible()
+        }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     private fun initLayout() {
+        binding.composeList.setContent {
+            val meterList by viewModel.meters.observeAsState(initial = emptyList())
+            val listState = rememberLazyListState()
+            val expandedFabState = remember {
+                derivedStateOf {
+                    listState.firstVisibleItemScrollOffset
+                }
+            }
+            if (meterList.isNotEmpty()) {
+                toggleMessageVisibility(false)
+                MeterList(
+                    viewModel = viewModel,
+                    onFabClick = {
+                        fabAction()
+                    },
+                    children = { p ->
+                        LaunchedEffect(key1 = expandedFabState.value) {
+                            viewModel.expandedFab = viewModel.firstVisible >= expandedFabState.value
+                            viewModel.firstVisible = expandedFabState.value
+                        }
+
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(p),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            state = listState
+                        ) {
+                            items(items = meterList, key = { it.code }) { myMeter ->
+                                MeterPreviewCard(
+                                    onClick = { onItemClickListener(meter = myMeter) },
+                                    meter = myMeter,
+                                    viewModel = viewModel,
+                                    onDetailsClick = {
+                                        showItemDetails(it)
+                                    },
+                                    modifier = Modifier.animateItemPlacement(
+                                        animationSpec = tween(
+                                            durationMillis = 350,
+                                            easing = EaseInOutCubic
+                                        )
+                                    )
+                                )
+
+                            }
+                        }
+
+                    }
+                )
+            }
+        }
+
         val appName = getString(R.string.app_name).replace(" ", "_")
         val documents = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
         userBackupDir = File("$documents/$appName", "UserBackups")
@@ -139,22 +201,14 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
             userBackupDir.mkdirs()
         if(!appBackupsDir.exists())
             appBackupsDir.mkdirs()
-
-        adapter = ElectricMeterAdapter(this, viewModel, this)
-        val animAdapter = ScaleInAnimationAdapter(adapter)
-        animAdapter.setFirstOnly(false)
-        animAdapter.setInterpolator(OvershootInterpolator())
-        emeter_list.itemAnimator = ScaleInBottomAnimator()
-        emeter_list.adapter = animAdapter
-        emeter_list.setHasFixedSize(true)
-        emeter_list.hideFabButtonOnScroll(fab_new_electric_meter)
-        fab_new_electric_meter.setOnClickListener {
-            val action = ElectricListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment()
-            navController.navigate(action)
-        }
     }
-
-    override fun onItemClickListener(meter: ElectricMeter) {
+    private fun fabAction(){
+        val action =
+            ElectricListFragmentDirections.actionNavEmaterListToNewElectricMeterFragment()
+        navController.navigate(action)
+    }
+    @SuppressLint("CheckResult")
+    fun onItemClickListener(meter: ElectricMeter) {
         MaterialDialog(requireContext()).show {
             title(text = meter.name)
             listItems(R.array.medidor_options) { _, index, _ ->
@@ -174,7 +228,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
 
     }
 
-    override fun onItemDetailListener(meter: ElectricMeter) {
+    private fun showItemDetails(meter: ElectricMeter) {
         launch {
             viewModel.selectedMeter(meter)
             val action = ElectricListFragmentDirections.actionNavEmaterListToElectricDetailFragment()
@@ -182,65 +236,19 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
         }
     }
 
-    override fun onItemNewReading(meter: ElectricMeter) {
-        launch {
-            viewModel.selectedMeter(meter)
-            val action = ElectricListFragmentDirections.actionNavEmaterListToNewEmeterReadingFragment()
-            navController.navigate(action)
-        }
-    }
-
     private fun showDeleteConfirmDialog(meter: ElectricMeter){
         MaterialDialog(requireContext()).show {
-            title(text = meter.name)
+            title(text = "${getString(R.string.delete)} ${meter.name}?")
             message(R.string.delete_medidor_notice)
             positiveButton(R.string.agree){
-                launch { viewModel.deleteElectricMeter(meter) }
+                launch {
+                    viewModel.deleteElectricMeter(meter)
+                }
             }
             negativeButton(R.string.cancel)
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.emeter_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    @SuppressLint("CheckResult")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.ac_export_import_data -> {
-                MaterialDialog(requireContext()).show {
-                    title(R.string.database_menu)
-                    listItems(R.array.database_options) { _, index, _ ->
-                        when (index) {
-                            0 -> {
-                                saveFile()
-                            }
-                            1 -> {
-                                openFile()
-                            }
-                            /*
-                            2 -> {
-                                launch {
-                                    try {
-                                        doMigration()
-                                        Toast.makeText(requireContext(), getString(R.string.migration_success), Toast.LENGTH_LONG).show()
-                                    } catch (e: Exception) {
-                                        showErrorDialog("FALLO DE MIGRACION MANUAL", getString(R.string.migration_error), e.stackTraceToString())
-                                        FirebaseCrashlytics.getInstance().log("FALLO DE MIGRACION MANUAL")
-                                        FirebaseCrashlytics.getInstance().recordException(e)
-                                    }
-                                }
-                            }
-                             */
-                        }
-                    }
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     private fun saveFile() {
         var name = "USER_BACKUP " + Date().backupFormat(requireContext())
@@ -303,7 +311,6 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
                     when(val restoreResult = JsonBackupHandler.restoreBackup(backupHelper, uri, requireContext())){
                         is AppResult.OK -> {
                             delay(300)
-                            loadData()
                             showInfoDialog(getString(R.string.import_succes))
                         }
                         is AppResult.AppException -> {
@@ -374,5 +381,28 @@ class ElectricListFragment : ScopeFragment(), DIAware, AdapterItemListener {
             data = uri
         }
         startActivity(intent)
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.emeter_menu, menu)
+    }
+
+    @SuppressLint("CheckResult")
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return when(menuItem.itemId){
+            R.id.ac_export_import_data -> {
+                MaterialDialog(requireContext()).show {
+                    title(R.string.database_menu)
+                    listItems(R.array.database_options) { _, index, _ ->
+                        when (index) {
+                            0 -> saveFile()
+                            1 -> openFile()
+                        }
+                    }
+                }
+                true
+            }
+            else -> false
+        }
     }
 }

@@ -2,13 +2,13 @@ package com.nicrosoft.consumoelectrico.utils.charts
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.widget.TextView
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
-import kotlinx.android.synthetic.main.marker.view.*
 
 @SuppressLint("ViewConstructor")
 class MyMarkerView(private val ctx:Context, private val layout:Int): MarkerView(ctx, layout){
@@ -17,6 +17,8 @@ class MyMarkerView(private val ctx:Context, private val layout:Int): MarkerView(
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         val daysLabel = ctx.getString(R.string.label_days)
         val energy = ctx.getString(R.string.energy)
+        val marker_kwh = findViewById<TextView>(R.id.marker_kwh)
+        val marker_days = findViewById<TextView>(R.id.marker_days)
         marker_kwh.text = "$energy: ${e!!.y.toTwoDecimalPlace()} kWh"
         marker_days.text = "$daysLabel: ${(e.x/24).toTwoDecimalPlace()}"
         days = (e.x/24)

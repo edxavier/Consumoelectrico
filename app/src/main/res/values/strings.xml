@@ -119,7 +119,7 @@
     <string name="detail.consumption">Consumption</string>
 
 
-    <string name="calculator.resume">Estimated daily consumption   %1$s kWh</string>
+    <string name="calculator.resume">Estimated hourly consumption   %1$s kWh</string>
     <string name="calculator.title">Consumption calculator</string>
     <string name="calculator.menu.pulses">Pulses per kWh</string>
     <string name="calculator.explanation">
@@ -149,7 +149,7 @@
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="not_show_again">Not show again</string>
     <string name="help">Help</string>
-    <string name="calculator.per_hour">Per hour</string>
+    <string name="calculator.per_day">Per day</string>
     <string name="detail.period.readings">Period readings</string>
     <string name="label_consumption_since_last_reading">Consumption in %1$s days</string>
     <string name="label_consumption_in_hours">Consumption in %1$s hours</string>
@@ -291,7 +291,11 @@
     <string name="from">From</string>
     <string name="to">To</string>
     <string name="hourly_avg">Hourly average</string>
-    <string name="since">%d days ago</string>
+    <string name="since">%d days</string>
+    <string name="hours">%d hours</string>
+    <string name="daily_avg_unit">kWh/d</string>
+    <string name="add">Add</string>
+    <string name="initial_calculation">00 kWh</string>
 
 
 </resources>

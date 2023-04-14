@@ -36,15 +36,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:visibility="gone"
-                android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_home"
-                android:layout_width="64dp"
-                android:layout_height="64dp" />
-
             <com.airbnb.lottie.LottieAnimationView
                 android:layout_gravity="center"
+                android:visibility="gone"
                 android:id="@+id/animation_view"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
@@ -54,20 +48,22 @@
 
 
             <TextView
+                style="@style/TextAppearance.MaterialComponents.Headline5"
                 android:id="@+id/nr_txt_medidor_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/md_black_1000_75"
-                android:textSize="18sp" />
+                />
 
             <TextView
                 android:textAlignment="center"
                 android:padding="2dp"
                 android:minWidth="100dp"
-                android:background="@drawable/borders"
                 android:layout_gravity="center"
-                android:textSize="16sp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/md_black_1000_75"
                 android:id="@+id/nr_txt_last_reading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -78,11 +74,21 @@
                 android:padding="2dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="8dp"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:id="@+id/nr_txt_reading_since"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:textColor="@color/primaryDarkColor"
+                android:drawableStart="@drawable/ic_calendar"
+                android:drawablePadding="8dp"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:text="@string/end_period"
+                android:id="@+id/nr_end_period_sw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/nr_txt_ilayout_fecha"
@@ -132,14 +138,6 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:textColor="@color/md_black_1000_75"
-                android:drawableStart="@drawable/ic_calendar"
-                android:drawablePadding="8dp"
-                android:text="@string/end_period"
-                android:id="@+id/nr_end_period_sw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
             <FrameLayout
                 android:background="@color/md_grey_100"

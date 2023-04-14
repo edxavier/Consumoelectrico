@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicrosoft.consumoelectrico.R
-import kotlinx.android.synthetic.main.emeter_list_fragment.*
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.temporal.ChronoUnit

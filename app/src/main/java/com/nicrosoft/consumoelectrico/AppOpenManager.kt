@@ -62,7 +62,7 @@ class AppOpenManager(myApplication: BaseApp):LifecycleObserver, Application.Acti
         val request: AdRequest = adRequest
         AppOpenAd.load(
             myApplication, AD_UNIT_ID, request,
-            AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback
+            AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback as AppOpenAdLoadCallback
         )
     }
 

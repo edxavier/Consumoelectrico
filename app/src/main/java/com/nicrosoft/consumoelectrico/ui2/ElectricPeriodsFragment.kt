@@ -7,18 +7,17 @@ import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
-import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
+import com.nicrosoft.consumoelectrico.databinding.FragmentElectricPeriodsBinding
 import com.nicrosoft.consumoelectrico.ui2.adapters.PeriodsAdapter
 import com.nicrosoft.consumoelectrico.utils.fadeZoomIn
 import com.nicrosoft.consumoelectrico.utils.setHidden
 import com.nicrosoft.consumoelectrico.utils.setVisible
 import com.nicrosoft.consumoelectrico.utils.slideIn
+import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
-import kotlinx.android.synthetic.main.fragment_electric_periods.*
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
 import org.kodein.di.instance
@@ -29,12 +28,14 @@ class ElectricPeriodsFragment : ScopeFragment(), DIAware, PeriodsAdapter.PeriodI
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
     private lateinit var adapter: PeriodsAdapter
+    private lateinit var binding: FragmentElectricPeriodsBinding
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_electric_periods, container, false)
+        binding = FragmentElectricPeriodsBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,13 +55,15 @@ class ElectricPeriodsFragment : ScopeFragment(), DIAware, PeriodsAdapter.PeriodI
     }
     private fun toggleMessageVisibility(isEmpty:Boolean){
         if(isEmpty) {
-            message_.setVisible()
-            animation_view.fadeZoomIn()
-            message_title.slideIn()
-            message_body.slideIn()
+            with(binding){
+                message.setVisible()
+                animationView.fadeZoomIn()
+                messageTitle.slideIn()
+                messageBody.slideIn()
+            }
         }
         else
-            message_.setHidden()
+            binding.message.setHidden()
     }
 
     private fun initLayout() {
@@ -68,9 +71,9 @@ class ElectricPeriodsFragment : ScopeFragment(), DIAware, PeriodsAdapter.PeriodI
         val animAdapter = ScaleInAnimationAdapter(adapter)
         animAdapter.setFirstOnly(false)
         animAdapter.setInterpolator(OvershootInterpolator())
-        period_list.itemAnimator = ScaleInBottomAnimator()
-        period_list.adapter = animAdapter
-        period_list.setHasFixedSize(true)
+        binding.periodList.itemAnimator = ScaleInBottomAnimator()
+        binding.periodList.adapter = animAdapter
+        binding.periodList.setHasFixedSize(true)
     }
 
     override fun onPeriodItemClickListener(period: ElectricBillPeriod) {

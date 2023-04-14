@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
@@ -35,8 +36,6 @@ import com.wajahatkarim3.easyvalidation.core.view_ktx.nonEmpty
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter
 import jp.wasabeef.recyclerview.animators.FadeInRightAnimator
-import kotlinx.android.synthetic.main.app_bar_mainkt.*
-import kotlinx.android.synthetic.main.dlg_prices.*
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.kodein.di.DIAware
@@ -66,15 +65,14 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
     ): View {
         setHasOptionsMenu(true)
         binding = FragmentNewElectricMeterBinding.inflate(inflater, container, false)
-        //return inflater.inflate(R.layout.fragment_new_electric_meter, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         params = NewElectricFragmentArgs.fromBundle(requireArguments())
-        viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        viewModel = ViewModelProvider(requireActivity(), vmFactory)[ElectricViewModel::class.java]
+        navController = findNavController()
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
         //form_container.fadeIn()
         initLayout()
@@ -92,7 +90,8 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
         adapter = PriceRangeAdapter(this)
         binding.apply {
             if (params.editingItem) {
-                requireActivity().toolbar.title = getString(R.string.edit)
+                //requireActivity().toolbar.title = getString(R.string.edit)
+
                 meter = viewModel.meter.value
                 meter?.let {
                     binding.txtEmeterName.setText(it.name)
@@ -250,34 +249,37 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                     .title(R.string.edit)
                     .negativeButton(R.string.cancel) { dismiss() }
                     .positiveButton(R.string.ok) {
-                        if(checkNonEmptyEditText(dlg_txt_to_kw) && checkNonEmptyEditText(dlg_txt_price_kw)){
-                            val from = dlg_txt_from_kw.text.toString().toInt()
-                            val to = dlg_txt_to_kw.text.toString().toInt()
+                        val fromKw = it.getCustomView().findViewById(R.id.dlg_txt_from_kw) as TextInputEditText
+                        val toKw = it.getCustomView().findViewById(R.id.dlg_txt_to_kw) as TextInputEditText
+                        val priceKw = it.getCustomView().findViewById(R.id.dlg_txt_price_kw) as TextInputEditText
+                        if(checkNonEmptyEditText(toKw) && checkNonEmptyEditText(priceKw)){
+                            val from = fromKw.text.toString().toInt()
+                            val to = toKw.text.toString().toInt()
                             // No permitir que el rango mayor se menor que el rango minimo
                             if(from >= to){
-                                dlg_txt_to_kw.error = getString(R.string.invalid_kw_range)
-                                dlg_txt_to_kw.requestFocus()
+                                toKw.error = getString(R.string.invalid_kw_range)
+                                toKw.requestFocus()
                             }else{
                                 launch {
                                     val next = viewModel.getNextPriceRange(meter!!.code, from)
                                     if (next!=null){
                                         // No permitir que el rango mayor Nuevo sea mayor o igual al rango mayor-1 del siguienterango
                                         if(to>=next.toKw-1){
-                                            dlg_txt_to_kw.error = getString(R.string.invalid_kw_range)
-                                            dlg_txt_to_kw.requestFocus()
+                                            toKw.error = getString(R.string.invalid_kw_range)
+                                            toKw.requestFocus()
                                         }else {
                                             // Reasignar el rango minimo del siguiete para que no queden rangos fuera
                                             next.fromKw = to + 1
                                             viewModel.updatePriceRange(next)
                                             price.toKw = to
-                                            price.price = dlg_txt_price_kw.text.toString().toFloat()
+                                            price.price = priceKw.text.toString().toFloat()
                                             viewModel.updatePriceRange(price)
                                             dismiss()
                                             Snackbar.make(binding.coordinator, R.string.item_updated, Snackbar.LENGTH_SHORT).show()
                                         }
                                     }else{
                                         price.toKw = to
-                                        price.price = dlg_txt_price_kw.text.toString().toFloat()
+                                        price.price = priceKw.text.toString().toFloat()
                                         viewModel.updatePriceRange(price)
                                         dismiss()
                                         Snackbar.make(binding.coordinator, R.string.item_updated, Snackbar.LENGTH_SHORT).show()
@@ -305,21 +307,24 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                     .title(R.string.edit)
                     .negativeButton(R.string.cancel) { dismiss() }
                     .positiveButton(R.string.ok) {
-                        if(checkNonEmptyEditText(dlg_txt_to_kw) && checkNonEmptyEditText(dlg_txt_price_kw)){
-                            if(checkValidRangeValues(dlg_txt_from_kw, dlg_txt_to_kw)){
-                                val from = dlg_txt_from_kw.text.toString().toInt()
-                                val to = dlg_txt_to_kw.text.toString().toInt()
+                        val fromKw = it.getCustomView().findViewById(R.id.dlg_txt_from_kw) as TextInputEditText
+                        val toKw = it.getCustomView().findViewById(R.id.dlg_txt_to_kw) as TextInputEditText
+                        val priceKw = it.getCustomView().findViewById(R.id.dlg_txt_price_kw) as TextInputEditText
+                        if(checkNonEmptyEditText(toKw) && checkNonEmptyEditText(priceKw)){
+                            if(checkValidRangeValues(fromKw, toKw)){
+                                val from = fromKw.text.toString().toInt()
+                                val to = toKw.text.toString().toInt()
                                 launch {
                                     val op = viewModel.getOverlappingPrice(from, to, viewModel.meter.value!!.code)
                                     if(op!= null){
-                                        dlg_txt_from_kw.error = getString(R.string.range_overlaps)
-                                        dlg_txt_to_kw.error = getString(R.string.range_overlaps)
-                                        dlg_txt_from_kw.requestFocus()
+                                        fromKw.error = getString(R.string.range_overlaps)
+                                        toKw.error = getString(R.string.range_overlaps)
+                                        fromKw.requestFocus()
                                     }else{
                                         val price = PriceRange(meterCode = viewModel.meter.value!!.code)
                                         price.fromKw = from
                                         price.toKw = to
-                                        price.price = dlg_txt_price_kw.text.toString().toFloat()
+                                        price.price = priceKw.text.toString().toFloat()
                                         viewModel.savePrice(price)
                                         dismiss()
                                         Snackbar.make(binding.coordinator, R.string.item_saved, Snackbar.LENGTH_LONG).show()

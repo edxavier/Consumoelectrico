@@ -1,6 +1,7 @@
 package com.nicrosoft.consumoelectrico.ui2
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -19,19 +20,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.listItems
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
+import com.nicrosoft.consumoelectrico.databinding.FragmentElectricReadingListBinding
 import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricReadingAdapter
 import com.nicrosoft.consumoelectrico.utils.*
 import com.nicrosoft.consumoelectrico.utils.handlers.CsvHandler
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
-import kotlinx.android.synthetic.main.emeter_list_fragment.*
 import kotlinx.coroutines.launch
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
@@ -50,20 +52,20 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
     private lateinit var navController: NavController
     private lateinit var mainNavController: NavController
     private lateinit var adapter:ElectricReadingAdapter
+    private lateinit var binding:FragmentElectricReadingListBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_electric_reading_list, container, false)
+        binding = FragmentElectricReadingListBinding.inflate(inflater)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_detail)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = findNavController()
         mainNavController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
-        //requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
-
+        viewModel = ViewModelProvider(requireActivity(), vmFactory)[ElectricViewModel::class.java]
         initLayout()
         loadData()
     }
@@ -97,13 +99,13 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
 
     private fun toggleMessageVisibility(isEmpty:Boolean){
         if(isEmpty) {
-            message_.setVisible()
-            animation_view.fadeZoomIn()
-            message_title.slideIn()
-            message_body.slideIn()
+            binding.message.setVisible()
+            binding.animationView.fadeZoomIn()
+            binding.messageTitle.slideIn()
+            binding.messageBody.slideIn()
         }
         else
-            message_.setHidden()
+            binding.message.setHidden()
     }
 
     private fun initLayout() {
@@ -111,12 +113,13 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
         val animAdapter = ScaleInAnimationAdapter(adapter)
         animAdapter.setFirstOnly(false)
         animAdapter.setInterpolator(OvershootInterpolator())
-        emeter_list.itemAnimator = FadeInDownAnimator()
-        emeter_list.adapter = animAdapter
-        emeter_list.setHasFixedSize(true)
+        binding.emeterList.itemAnimator = FadeInDownAnimator()
+        binding.emeterList.adapter = animAdapter
+        binding.emeterList.setHasFixedSize(true)
 
     }
 
+    @SuppressLint("CheckResult")
     @OptIn(ExperimentalTime::class)
     override fun onItemClickListener(reading: ElectricReading) {
         launch {
@@ -128,7 +131,7 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
             if((reading.readingDate.hoursSinceDate(period!!.fromDate)/24)<1)
                 options.removeAt(0)
             MaterialDialog(requireContext()).show {
-                title(text = reading.readingValue.toTwoDecimalPlace())
+                title(text = "${getString(R.string.label_reading)}: ${reading.readingValue.toTwoDecimalPlace()} kWh")
                 listItems(items = options) { _, index, _ ->
                     var option = index
                     if(options.size == 2)
@@ -159,6 +162,7 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
         }
     }
 
+    @SuppressLint("CheckResult")
     @ExperimentalTime
     private fun showEditReadingDialog(reading: ElectricReading) {
         MaterialDialog(requireContext()).show {
@@ -246,30 +250,7 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
             //putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri)
         }
         startSaveFileForResult.launch(intent)
-        /*
-        MaterialDialog(requireContext()).show {
-                folderChooser(context,
-                        initialDirectory = initialPath,
-                        emptyTextRes = R.string.title_choose_folder,
-                        allowFolderCreation = true) { _, folder ->
-                    // Folder selected
-                    launch {
-                        //val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
-                        var name = getString(R.string.label_readings) + " " + viewModel.meter.value!!.name + Date().formatDate(context)
-                        name = name.replace(" ", "_").replace(",", "")
-                        tempReadings?.let {
-                            val resultPath = CsvHandler.exportMeterReadings(it, "${folder.path}/$name", requireContext())
-                            if (resultPath!=null) {
-                                openFileIntent(resultPath)
-                            }else
-                                showInfoDialog(getString(R.string.export_error))
 
-                        }
-                    }
-
-                }
-        }
-        */
     }
 
     private val startSaveFileForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

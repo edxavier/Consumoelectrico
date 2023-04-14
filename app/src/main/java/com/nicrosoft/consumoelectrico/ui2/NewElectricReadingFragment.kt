@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.datetime.datePicker
 import com.afollestad.materialdialogs.datetime.timePicker
@@ -65,7 +66,7 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity(), vmFactory).get(ElectricViewModel::class.java)
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        navController = findNavController()
         requireActivity().onBackPressedDispatcher.addCallback(this) { navController.navigateUp() }
         tempReading = ElectricReading()
         initUI()
@@ -89,7 +90,7 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
                 launch {
                     val lastTwoReadings =  m.getLastReading(viewModel)
                     if(lastTwoReadings!=null){
-                        nrTxtLastReading.text = "${lastTwoReadings.readingValue.toTwoDecimalPlace()} kWh"
+                        nrTxtLastReading.text = "${getString(R.string.label_last_reading)}\n${lastTwoReadings.readingValue.toTwoDecimalPlace()} kWh"
                         nrTxtReadingSince.text = lastTwoReadings.readingDate.formatDate(requireContext(), true)
                         verifyEndPeriod(Date())
                     }else{

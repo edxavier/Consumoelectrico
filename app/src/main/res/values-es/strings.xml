@@ -123,7 +123,7 @@
     <string name="detail.period.last_lecture.date">Ultima lectura</string>
     <string name="detail.period.lenght">Duración del período</string>
     <string name="detail.period.title2">Detalles de consumo de período</string>
-    <string name="calculator.resume">Consumo diario estimado %1$s kWh</string>
+    <string name="calculator.resume">Consumo estimado por hora: %1$s kWh</string>
     <string name="calculator.title">Calculadora de consumo</string>
     <string name="calculator.menu.pulses">Pulsos por kWh</string>
 
@@ -142,7 +142,7 @@
 
     <string name="detail.period">Periodo</string>
     <string name="detail.consumption">Consumo</string>
-    <string name="calculator.per_hour">Por hora</string>
+    <string name="calculator.per_day">Por día</string>
     <string name="detail.period.readings">Lecturas del periodo</string>
     <string name="label_consumption_since_last_reading">Consumo en %1$s días</string>
     <string name="label_consumption_in_hours">Consumo en %1$s horas</string>
@@ -255,6 +255,9 @@
     <string name="from">Desde</string>
     <string name="to">Hasta</string>
     <string name="hourly_avg">Promedio por hora</string>
-    <string name="since">Hace %d días</string>
+    <string name="since">%d días</string>
+    <string name="hours">%d horas</string>
+    <string name="add">Agregar</string>
+
 
 </resources>

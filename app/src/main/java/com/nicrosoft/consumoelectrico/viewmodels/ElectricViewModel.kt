@@ -1,9 +1,12 @@
 package com.nicrosoft.consumoelectrico.viewmodels
 
 import android.content.Context
-import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.*
@@ -17,21 +20,28 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
+import com.nicrosoft.consumoelectrico.utils.charts.setupAppStyle
 import com.nicrosoft.consumoelectrico.utils.getConsumptionProjection
 import com.nicrosoft.consumoelectrico.utils.hoursSinceDate
-import com.nicrosoft.consumoelectrico.utils.charts.setupAppStyle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.time.ExperimentalTime
 
-class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) : ViewModel() {
+class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : ViewModel() {
+
+    var expandedFab by mutableStateOf(true)
+    var firstVisible by mutableStateOf(0)
+    private val _meters = MutableLiveData<List<ElectricMeter>>()
+    var meters: LiveData<List<ElectricMeter>> = _meters
 
     var meter = MutableLiveData<ElectricMeter>()
-    fun selectedMeter(_meter: ElectricMeter) { meter.value = _meter }
 
+    init {
+        meters = dao.getMeters()
+    }
+    fun selectedMeter(_meter: ElectricMeter) { meter.value = _meter }
 
     fun getElectricMeterList() = dao.getMeters()
     fun getMeterPeriods(meterCode: String) = dao.getMeterPeriods(meterCode)
@@ -365,7 +375,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             entries.add(Entry((meter.value!!.periodLength*24).toFloat(), projection))
         }
         val dataSet = LineDataSet(entries, "Proyeccion")
-        dataSet.setupAppStyle(context)
+        dataSet.setupAppStyle(ctx)
         dataSet.enableDashedLine(15f, 15f, 0f)
         dataSet.color = color
         return dataSet
@@ -380,13 +390,13 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
         readings.forEach { r -> entries.add(Entry(r.consumptionHours, r.kwAggConsumption)) }
         readingsBefore?.forEach { r -> entriesBefore.add(Entry(r.consumptionHours, r.kwAggConsumption)) }
 
-        val dataSet = LineDataSet(entries, context.getString(R.string.chart_legend_accumulated))
-        val dataSetBefore = LineDataSet(entriesBefore, context.getString(R.string.previous_period))
+        val dataSet = LineDataSet(entries, ctx.getString(R.string.chart_legend_accumulated))
+        val dataSetBefore = LineDataSet(entriesBefore, ctx.getString(R.string.previous_period))
 
-        dataSet.setupAppStyle(context)
-        dataSetBefore.setupAppStyle(context)
+        dataSet.setupAppStyle(ctx)
+        dataSetBefore.setupAppStyle(ctx)
         dataSetBefore.enableDashedLine(8f, 7f, 0f)
-        dataSetBefore.color = ContextCompat.getColor(context, R.color.md_grey_500)
+        dataSetBefore.color = ContextCompat.getColor(ctx, R.color.md_grey_500)
         dataSetBefore.setDrawCircles(false)
         dataSetBefore.isHighlightEnabled = false
 
@@ -396,7 +406,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
 
         if(readings.isNotEmpty()){
             val projectionDs = getConsumptionProjectionDataSet(readings.last(),
-                    ContextCompat.getColor(context, R.color.md_blue_400))
+                    ContextCompat.getColor(ctx, R.color.md_blue_400))
             dataSets.add(projectionDs)
         }
         return LineData(dataSets)
@@ -408,11 +418,11 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             dailyEntries.add(Entry(r.consumptionHours, (r.kwAvgConsumption*24)))
             hourlyEntries.add(Entry(r.consumptionHours, r.kwAvgConsumption))
         }
-        val dailyDataSet = LineDataSet(dailyEntries, context.getString(R.string.chart_legend_avg))
+        val dailyDataSet = LineDataSet(dailyEntries, ctx.getString(R.string.chart_legend_avg))
         val hourlyDataSet = LineDataSet(hourlyEntries, "Promedio por hora")
-        dailyDataSet.setupAppStyle(context)
-        hourlyDataSet.setupAppStyle(context)
-        hourlyDataSet.color = ContextCompat.getColor(context, R.color.md_teal_500)
+        dailyDataSet.setupAppStyle(ctx)
+        hourlyDataSet.setupAppStyle(ctx)
+        hourlyDataSet.color = ContextCompat.getColor(ctx, R.color.md_teal_500)
         val dataSets: MutableList<ILineDataSet> = ArrayList()
         dataSets.add(dailyDataSet)
         //dataSets.add(hourlyDataSet)
@@ -430,7 +440,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             entries.add(Entry( r.consumptionHours, total))
         }
         val dataSet = LineDataSet(entries, "Gasto vs dias")
-        dataSet.setupAppStyle(context)
+        dataSet.setupAppStyle(ctx)
         val dataSets: MutableList<ILineDataSet> = ArrayList()
         dataSets.add(dataSet)
         return LineData(dataSets)
@@ -446,7 +456,7 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             entries.add(Entry(r.kwAggConsumption, total))
         }
         val dataSet = LineDataSet(entries, "Gasto vs kWh")
-        dataSet.setupAppStyle(context)
+        dataSet.setupAppStyle(ctx)
         val dataSets: MutableList<ILineDataSet> = ArrayList()
         dataSets.add(dataSet)
         return LineData(dataSets)
@@ -460,9 +470,9 @@ class ElectricViewModel(val context: Context, private val dao:ElectricMeterDAO) 
             entries.add(BarEntry(index.toFloat(), period.totalKw))
         }
 
-        val pDataSet = BarDataSet(entries, context.getString(R.string.label_billing_period))
-        pDataSet.color = ContextCompat.getColor(context, R.color.primaryColor)
-        pDataSet.valueTypeface = ResourcesCompat.getFont(context, R.font.source_sans_pro_semibold)
+        val pDataSet = BarDataSet(entries, ctx.getString(R.string.label_billing_period))
+        pDataSet.color = ContextCompat.getColor(ctx, R.color.primaryColor)
+        pDataSet.valueTypeface = ResourcesCompat.getFont(ctx, R.font.source_sans_pro_semibold)
         pDataSet.valueTextSize = 10f
         val dataSets: MutableList<IBarDataSet> = ArrayList()
         dataSets.add(pDataSet)

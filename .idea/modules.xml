@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Consumoelectrico.iml" filepath="$PROJECT_DIR$/Consumoelectrico.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Consumoelectrico.iml" filepath="$PROJECT_DIR$/.idea/modules/Consumoelectrico.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Consumoelectrico.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Consumoelectrico.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Consumoelectrico.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Consumoelectrico.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Consumoelectrico.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Consumoelectrico.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Consumoelectrico.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Consumoelectrico.app.unitTest.iml" />
     </modules>
   </component>
 </project>

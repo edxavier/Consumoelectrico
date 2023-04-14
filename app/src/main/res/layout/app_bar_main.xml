@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:id="@+id/coordinator"
-    tools:context="com.nicrosoft.consumoelectrico.activities.Main">
+    tools:context="com.nicrosoft.consumoelectrico.MainKt">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

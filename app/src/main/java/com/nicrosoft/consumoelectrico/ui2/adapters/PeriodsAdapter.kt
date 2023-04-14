@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
+import com.nicrosoft.consumoelectrico.databinding.ItemPeriodBinding
 import com.nicrosoft.consumoelectrico.utils.formatDate
 import com.nicrosoft.consumoelectrico.utils.toTwoDecimalPlace
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 import com.pixplicity.easyprefs.library.Prefs
-import kotlinx.android.synthetic.main.item_period.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -33,7 +33,8 @@ class PeriodsAdapter(
         }
     }
 
-    class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    class ViewHolder(itemView: View, _binding: ItemPeriodBinding): RecyclerView.ViewHolder(itemView){
+        val binding: ItemPeriodBinding = _binding
 
         @SuppressLint("SetTextI18n")
         fun bind(period: ElectricBillPeriod, listener: PeriodItemListener?,  viewModel: ElectricViewModel){
@@ -41,8 +42,9 @@ class PeriodsAdapter(
                 //Disparar evento para que la vista que lo implemente tenda el objeto al que se le dio click
                 this.setOnClickListener { listener?.onPeriodItemClickListener(period) }
                 with(this){
-                    item_label_from_period.text = period.fromDate.formatDate(context)
-                    item_label_to_period.text = period.toDate.formatDate(context)
+                    binding.itemLabelFromPeriod
+                    binding.itemLabelFromPeriod.text = period.fromDate.formatDate(context)
+                    binding.itemLabelToPeriod.text = period.toDate.formatDate(context)
 
                     GlobalScope.launch {
                         val lastR = viewModel.getLastPeriodReading(period.code)
@@ -52,17 +54,17 @@ class PeriodsAdapter(
                         else
                             viewModel.getFirstPeriodReading(period.code)
                         firstReading?.let { fr ->
-                            item_first_reading.text = " ${fr.readingValue.toTwoDecimalPlace()} Kwh"
+                            binding.itemFirstReading.text = " ${fr.readingValue.toTwoDecimalPlace()} Kwh"
                         }
-                        item_last_reading.text = "${lastR?.readingValue?.toTwoDecimalPlace()} Kwh"
+                        binding.itemLastReading.text = "${lastR?.readingValue?.toTwoDecimalPlace()} Kwh"
                     }
                     val coinSymbol = Prefs.getString("price_simbol", "$")
-                    item_label_total_kw.text = period.totalKw.toTwoDecimalPlace()
-                    item_label_total_spend.text = "$coinSymbol${period.totalBill.toTwoDecimalPlace()}"
+                    binding.itemLabelTotalKw.text = period.totalKw.toTwoDecimalPlace()
+                    binding.itemLabelTotalSpend.text = "$coinSymbol${period.totalBill.toTwoDecimalPlace()}"
                     if(period.active)
-                        item_period_status.setBackgroundColor(ContextCompat.getColor(context, R.color.md_green_500))
+                        binding.itemPeriodStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.md_green_500))
                     else
-                        item_period_status.setBackgroundColor(ContextCompat.getColor(context, R.color.md_grey_500))
+                        binding.itemPeriodStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.md_grey_500))
 
                 }
             }
@@ -70,7 +72,8 @@ class PeriodsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context!!).inflate(R.layout.item_period, parent, false))
+        val binding = ItemPeriodBinding.inflate(LayoutInflater.from(parent.context!!))
+        return ViewHolder(binding.root, binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

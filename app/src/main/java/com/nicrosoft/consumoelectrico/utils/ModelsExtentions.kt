@@ -8,9 +8,7 @@ import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
 suspend fun ElectricMeter.getLastReading(viewModel: ElectricViewModel): ElectricReading? {
     var lastReadings:ElectricReading? = null
     val period = viewModel.getLastPeriod(this.code)
-    if (period!=null){
-        lastReadings = viewModel.getLastPeriodReading(period.code)
-    }
+    period?.let { lastReadings = viewModel.getLastPeriodReading(period.code) }
     return lastReadings
 }
 

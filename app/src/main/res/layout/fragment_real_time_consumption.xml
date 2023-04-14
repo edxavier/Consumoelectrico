@@ -8,14 +8,14 @@
         android:id="@+id/timer_area"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/md_amber_800"
+        android:background="@color/md_blue_grey_400"
         android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            app:tint="@color/md_amber_700"
+            app:tint="@color/md_indigo_500_50"
             android:id="@+id/play_icon"
             app:srcCompat="@drawable/ic_play_arrow"
             android:layout_width="match_parent"
@@ -24,12 +24,12 @@
 
         <Chronometer
             android:keepScreenOn="true"
+            android:textColor="@color/md_text_white_87"
             android:id="@+id/chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:fontFamily="serif-monospace"
-            android:textColor="@color/md_white_1000"
             android:textSize="48sp" />
 
 
@@ -40,7 +40,7 @@
         android:id="@+id/consumption_area"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/md_amber_700"
+        android:background="@color/md_blue_grey_600"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -49,7 +49,7 @@
         app:layout_constraintTop_toBottomOf="@+id/timer_area">
 
         <androidx.appcompat.widget.AppCompatImageView
-            app:tint="@color/md_amber_400"
+            app:tint="@color/md_indigo_500_25"
             android:layout_margin="60dp"
             android:id="@+id/consumption_icon"
             app:srcCompat="@drawable/ic_gauge"
@@ -63,10 +63,10 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:fontFamily="sans-serif-condensed"
-            android:text="00 kWh"
+            android:text="@string/initial_calculation"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Display3"
-            android:textColor="@color/md_white_1000" />
+            android:textColor="@color/md_text_white" />
 
         <TextView
             android:layout_width="match_parent"
@@ -74,16 +74,18 @@
             android:layout_alignBottom="@+id/txt_consumption"
             android:layout_alignParentStart="true"
             android:fontFamily="sans-serif-condensed"
-            android:text="@string/calculator.per_hour"
+            android:text="@string/calculator.per_day"
             android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-            android:textColor="@color/md_white_1000" />
+            android:layout_marginTop="8dp"
+            android:paddingTop="8dp"
+            android:textSize="14sp"
+            android:textColor="@color/md_text_white_87"  />
 
         <TextView
             android:textStyle="bold"
             android:textSize="16sp"
             android:textAlignment="center"
-            android:textColor="@color/md_white_1000"
+            android:textColor="@color/md_text_white_87"
             android:id="@+id/txt_resume"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -96,9 +98,9 @@
             android:visibility="gone"
             android:text="@string/calculator.hint"
             android:textStyle="bold"
-            android:textSize="12sp"
+            android:textSize="18sp"
             android:textAlignment="center"
-            android:textColor="@color/md_white_1000"
+            android:textColor="@color/md_text_white_87"
             android:id="@+id/txt_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
