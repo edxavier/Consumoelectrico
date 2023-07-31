@@ -92,7 +92,7 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
             if (params.editingItem) {
                 //requireActivity().toolbar.title = getString(R.string.edit)
 
-                meter = viewModel.meter.value
+                meter = viewModel.meter
                 meter?.let {
                     binding.txtEmeterName.setText(it.name)
                     binding.txtEmeterDescription.setText(it.description)
@@ -138,7 +138,7 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
 
     private fun loadPrices(){
         try {
-            viewModel.getPriceList(viewModel.meter.value!!.code).observe(viewLifecycleOwner, Observer {
+            viewModel.getPriceList(viewModel.meter.code).observe(viewLifecycleOwner, Observer {
                 adapter.submitList(it)
                 if(it.isEmpty()) {
                     binding.priceMessage.setVisible()
@@ -179,10 +179,10 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
     private fun updateMeter(){
         if(!validatedForm())
             return
-        val updateMeter = viewModel.meter.value
+        val updateMeter = viewModel.meter
         with(binding){
             try {
-                updateMeter?.let {
+                updateMeter.let {
                     updateMeter.name = txtEmeterName.text.toString()
                     updateMeter.description = txtEmeterDescription.text.toString()
                     updateMeter.fixedPrices = txtEmeterFixedCharges.text.toString().toFloat()
@@ -315,13 +315,13 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                                 val from = fromKw.text.toString().toInt()
                                 val to = toKw.text.toString().toInt()
                                 launch {
-                                    val op = viewModel.getOverlappingPrice(from, to, viewModel.meter.value!!.code)
+                                    val op = viewModel.getOverlappingPrice(from, to, viewModel.meter.code)
                                     if(op!= null){
                                         fromKw.error = getString(R.string.range_overlaps)
                                         toKw.error = getString(R.string.range_overlaps)
                                         fromKw.requestFocus()
                                     }else{
-                                        val price = PriceRange(meterCode = viewModel.meter.value!!.code)
+                                        val price = PriceRange(meterCode = viewModel.meter.code)
                                         price.fromKw = from
                                         price.toKw = to
                                         price.price = priceKw.text.toString().toFloat()
@@ -336,7 +336,7 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
         }
         try {
             launch {
-                val lastPrice = viewModel.getLastPriceRange(viewModel.meter.value!!.code)
+                val lastPrice = viewModel.getLastPriceRange(viewModel.meter.code)
                 val fromKw = dlg.getCustomView().findViewById(R.id.dlg_txt_from_kw) as TextInputEditText
                 fromKw.setText("0")
                 lastPrice?.let { fromKw.setText((it.toKw+1).toString()) }

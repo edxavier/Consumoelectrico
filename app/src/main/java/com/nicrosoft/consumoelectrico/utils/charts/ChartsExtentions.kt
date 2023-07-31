@@ -53,6 +53,7 @@ fun Chart<*>.setupLineChartStyle(xFormatter: ValueFormatter, markerView: MarkerV
         axisLeft.axisMinimum = 0f
         axisRight.isEnabled = false
         axisLeft.typeface = typeFaceBold
+        axisLeft.granularity = 1f
     }
 }
 
@@ -114,7 +115,11 @@ fun Chart<*>.drawLimit(limitValue:Float) {
         this
     else
         this as LineChart
-    val typeFaceRegular = ResourcesCompat.getFont(context, R.font.source_sans_pro)
+    val typeFaceRegular = try {
+         ResourcesCompat.getFont(context, R.font.source_sans_pro)
+    }catch (e:Exception){
+        Typeface.DEFAULT
+    }
     with(mChart){
         val limit = LimitLine(limitValue, context.getString(R.string.chart_legend_period_limit))
         limit.lineWidth = 1.1f

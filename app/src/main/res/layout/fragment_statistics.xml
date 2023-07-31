@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,7 +52,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/detail_meter_name" />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <View
-            android:layout_marginTop="4dp"
             android:background="@color/divider"
             android:layout_gravity="center"
             android:layout_width="match_parent"
@@ -545,7 +545,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:layout_margin="12dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -553,12 +552,12 @@
             <TextView
                 style="@style/AppTheme.Title"
                 android:textAlignment="center"
-                android:text="@string/detail.chart2.title"
+                android:text="@string/detail.chart3.title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <com.github.mikephil.charting.charts.LineChart
                 android:layout_marginTop="8dp"
-                android:id="@+id/cost_vs_day_chart"
+                android:id="@+id/daily_avg_hist_chart"
                 android:layout_width="match_parent"
                 android:layout_height="210dp" />
         </LinearLayout>

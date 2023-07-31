@@ -36,7 +36,7 @@ import java.util.*
 
 @Composable
 fun MeterPreviewCard(
-    onClick: (() -> Unit)? = null,
+    onMoreVertClick: (() -> Unit)? = null,
     onDetailsClick: ((meter:ElectricMeter) -> Unit)? = null,
     meter:ElectricMeter,
     viewModel:ElectricViewModel,
@@ -61,8 +61,10 @@ fun MeterPreviewCard(
         val scope = rememberCoroutineScope()
         SideEffect {
             scope.launch {
-                meter.getLastReading(viewModel)?.let {
+                viewModel.getMeterReadings(meter.code).firstOrNull()?.let {
                     lastRead = it
+                }?:run{
+                    lastRead = viewModel.getMeterReadings(meter.code, true).firstOrNull()?:lastRead
                 }
             }
         }
@@ -83,13 +85,18 @@ fun MeterPreviewCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
-                Text(text = meter.name.replaceFirstChar { it.uppercase() }, fontSize = 22.sp,
-                    color = Color.White, fontWeight = FontWeight(500), modifier = Modifier.weight(1f))
+                Text(
+                    text = meter.name.replaceFirstChar { it.uppercase() },
+                    fontSize = 18.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.weight(1f)
+                )
                 Image(
                     painter = painterResource(id = R.drawable.more_vert),
                     contentDescription = null,
                     modifier = Modifier.clickable {
-                        onClick?.let { it() }
+                        onMoreVertClick?.let { it() }
                     }
                 )
             }
@@ -106,13 +113,15 @@ fun MeterPreviewCard(
                 mStringSpan.setSpan(SubscriptSpan(), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 mStringSpan.setSpan(RelativeSizeSpan(0.5f),start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 val annotatedString = buildAnnotatedString {
-                    append("${lastRead.readingValue.toInt()} ")
-                    withStyle(style = SpanStyle(fontSize = 12.sp)) {
+                    append("${lastRead.readingValue.toInt()}".padStart(5, '0'))
+                    withStyle(
+                        style = SpanStyle(fontSize = 12.sp, fontWeight = FontWeight.Light)
+                    ) {
                         append("kWh")
                     }
                 }
                 Text(
-                    text = annotatedString, color = Color.White, fontSize = 16.sp,
+                    text = annotatedString, color = Color.White, fontSize = 14.sp,
                     modifier = Modifier.weight(1f)
                 )
                 Image(painter = painterResource(id = R.drawable.access_time),
@@ -149,12 +158,13 @@ fun MeterPreviewCard(
                     textAlign = TextAlign.Center,
                 )
                 Text(
-                    text = (dailyAvg).toTwoDecimalPlace(), fontSize = 28.sp,
+                    text = (dailyAvg).toTwoDecimalPlace(), fontSize = 22.sp,
                     fontWeight = FontWeight(600),
                     color = color
                 )
                 Text(
-                    text = stringResource(id = R.string.daily_avg_unit), fontSize = 14.sp,
+                    text = stringResource(id = R.string.daily_avg_unit),
+                    fontSize = 12.sp,
                     color = color
                 )
             }

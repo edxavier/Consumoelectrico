@@ -42,7 +42,7 @@
     <string name="main.emty.title">No hay datos para mostrar.</string>
     <string name="main.empty.suggest">Registra lecturas frecuentemente para dar seguimiento a tu consumo electrico.</string>
 
-    <string name="end_period">Finalizar periodo</string>
+    <string name="end_period">Finalizar periodo con esta lectura</string>
     <string name="end_period_ask">¿Esta seguro que desea finalizar periodo en esta fecha?</string>
     <string name="end_period_psoitive">Continuar</string>
 
@@ -148,11 +148,12 @@
     <string name="label_consumption_in_hours">Consumo en %1$s horas</string>
     <string name="lecturas_desde_hasta">Lecturas del %1$s al %2$s</string>
     <string name="detail.chart1.title">Historial de consumo acumulado</string>
-    <string name="detail.chart2.title">Historial de consumo promedio</string>
+    <string name="detail.chart2.title">Consumo promedio del periodo</string>
+    <string name="detail.chart3.title">Histórico de consumo médio</string>
     <string name="detail.show.readings">Mostrar lecturas de período</string>
     <string name="details">Detalles</string>
     <string name="new_reading">Nueva lectura</string>
-    <string name="readings.show.all_reading">Todas las lecturas</string>
+    <string name="readings.show.all_reading">Mostrar todas</string>
     <string name="readings.show.period_reading">Lecturas del período</string>
     <string name="date_format_save">dd_MMMM_yyyy</string>
     <string name="export_all">Exportar todas las lecturas</string>
@@ -258,6 +259,9 @@
     <string name="since">%d días</string>
     <string name="hours">%d horas</string>
     <string name="add">Agregar</string>
+    <string name="never">Nunca</string>
+    <string name="undo_notice">Esta acción deshará el período actual y asociará todas las lecturas al período anterior; si no se encuentra ningún período anterior, se eliminarán los datos de lectura.</string>
+    <string name="undo_period">Deshacer período</string>
 
 
 </resources>

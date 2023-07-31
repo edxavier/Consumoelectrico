@@ -8,5 +8,6 @@ class LineChartDataSets {
     var costPerDayDs: LineData = LineData()
     var costPerKwDs: LineData = LineData()
     var dailyAvgDs: LineData = LineData()
+    var dailyAvgHist: LineData = LineData()
     var periodDs: BarData = BarData()
 }

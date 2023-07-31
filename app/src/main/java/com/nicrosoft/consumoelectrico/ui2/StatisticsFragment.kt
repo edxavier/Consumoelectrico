@@ -2,13 +2,14 @@ package com.nicrosoft.consumoelectrico.ui2
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.compose.foundation.layout.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
@@ -54,18 +55,19 @@ class StatisticsFragment : ScopeFragment(), DIAware {
         loadDetailData()
         loadChartsData()
         loadNativeAd()
+
     }
 
     @SuppressLint("SetTextI18n")
     private fun loadDetailData() {
         try {
-            val meter = viewModel.meter.value!!
+            val meter = viewModel.meter
             binding.detailMeterName.text = meter.name
             binding.detailMeterDesc.text = meter.description
             launch {
                 try {
-                    var period = viewModel.getLastPeriod(meter.code)
-                    period = viewModel.updatePeriodTotals(period!!.code)
+                    var period = viewModel.getMeterLatestPeriod(meter.code)
+                    period = viewModel.updatePeriodTotals(period!!)
                     period.let { p ->
                         val lastReading = viewModel.getLastPeriodReading(p.code)
                         binding.detailPeriodConsumption.text = "${p.totalKw.toTwoDecimalPlace()} kWh"
@@ -96,7 +98,7 @@ class StatisticsFragment : ScopeFragment(), DIAware {
                             binding.detailTotal.text = "$coinSymbol${dExpenses.total.toTwoDecimalPlace()}"
                         }
                         //val firstReading = viewModel.getFirstPeriodReading(p.code)
-                        val periods = viewModel.getMeterAllPeriods(meter.code)
+                        val periods = viewModel.getAllPeriods(meter.code)
                         // Ya que viene en orden inverso, la pos 0 es el periodo actual y la 1 el anterior al actual
                         val firstReading = if (periods.size > 1)
                             viewModel.getLastPeriodReading(periods[1].code)
@@ -123,21 +125,32 @@ class StatisticsFragment : ScopeFragment(), DIAware {
         launch {
 
             binding.aggConsumptionChart.setupLineChartStyle(HoursValueFormatter(), MyMarkerView(requireContext(), R.layout.marker))
-            binding.aggConsumptionChart.setupLineChartStyle(HoursValueFormatter(), MyMarkerView(requireContext(), R.layout.marker))
-            binding.costVsDayChart.setupLineChartStyle(HoursValueFormatter(), CostVsDayMarkerView(requireContext(), R.layout.marker))
+            binding.avgConsumptionChart.setupLineChartStyle(HoursValueFormatter(), MyMarkerView(requireContext(), R.layout.marker))
+            binding.dailyAvgHistChart.setupLineChartStyle(ReadingAvgKwValueFormatter(), ReadingVsAvgKwMarkerView(requireContext(), R.layout.marker))
             binding.costVsKwhChart.setupLineChartStyle(KwValueFormatter(), CostVsKwMarkerView(requireContext(), R.layout.marker))
             val barLabels = viewModel.getPeriodDataLabels()
             binding.periodsChart.setupBarChartStyle(barLabels)
 
-            binding.aggConsumptionChart.drawLimit(viewModel.meter.value!!.maxKwLimit.toFloat())
-            binding.avgConsumptionChart.drawLimit((viewModel.meter.value!!.maxKwLimit/viewModel.meter.value!!.periodLength).toFloat())
+            binding.aggConsumptionChart.drawLimit(viewModel.meter.maxKwLimit.toFloat())
+            binding.avgConsumptionChart.drawLimit((viewModel.meter.maxKwLimit/viewModel.meter.periodLength).toFloat())
+            binding.dailyAvgHistChart.drawLimit((viewModel.meter.maxKwLimit/viewModel.meter.periodLength).toFloat())
 
-            val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
+            val period = viewModel.getMeterLatestPeriod(viewModel.meter.code)
             period?.let {
                 val lineData = viewModel.getLineChartData(period)
                 binding.aggConsumptionChart.data = lineData.consumptionDs
+
                 binding.avgConsumptionChart.data = lineData.dailyAvgDs
-                binding.costVsDayChart.data = lineData.costPerDayDs
+                binding.avgConsumptionChart.axisLeft.axisMaximum = (lineData.dailyAvgDs.yMax) + 1
+                binding.avgConsumptionChart.axisLeft.axisMinimum = (lineData.dailyAvgDs.yMin) - 1
+
+                binding.dailyAvgHistChart.data = lineData.dailyAvgHist
+                binding.dailyAvgHistChart.axisLeft.axisMaximum = (lineData.dailyAvgHist.yMax) + 1
+                binding.dailyAvgHistChart.axisLeft.axisMinimum = (lineData.dailyAvgHist.yMin) - 1
+
+                binding.dailyAvgHistChart.xAxis.axisMinimum = (lineData.dailyAvgHist.xMin)
+                binding.dailyAvgHistChart.xAxis.axisMaximum = (lineData.dailyAvgHist.xMax)
+
                 binding.costVsKwhChart.data = lineData.costPerKwDs
                 binding.periodsChart.data = lineData.periodDs
                 if(barLabels.size>2) {

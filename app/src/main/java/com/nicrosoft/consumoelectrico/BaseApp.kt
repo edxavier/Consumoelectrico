@@ -14,8 +14,6 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.nicrosoft.consumoelectrico.data.AppDataBase
 import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
 import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
-import com.nicrosoft.consumoelectrico.utils.workers.BackupWorker
-import com.nicrosoft.consumoelectrico.utils.workers.ExternalBackupWorker
 import com.nicrosoft.consumoelectrico.utils.workers.ReadReminderWorker
 import com.pixplicity.easyprefs.library.Prefs
 import org.kodein.di.*
@@ -49,46 +47,20 @@ class BaseApp : MultiDexApplication(), DIAware {
         FirebaseApp.initializeApp(this)
         //if(BuildConfig.DEBUG) {
         //   FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+        MobileAds.initialize(this)
         val conf = RequestConfiguration
             .Builder()
-            .setTestDeviceIds(listOf("45D8AEB3B66116F8F24E001927292BD5", AdRequest.DEVICE_ID_EMULATOR))
+            .setTestDeviceIds(
+                listOf("AC5F34885B0FE7EF03A409EB12A0F949", AdRequest.DEVICE_ID_EMULATOR)
+            )
             .build()
 
         MobileAds.setRequestConfiguration(conf)
-        MobileAds.initialize(this)
-        /*Realm.init(this)
-        val config = RealmConfiguration.Builder()
-                .schemaVersion(1) // Must be bumped when the schema changes
-                .migration(Migration()) // Migration to run instead of throwing an exception
-                .build()
-        try {
-            Realm.compactRealm(config)
-        } catch (ignored: Exception) {
-        }
-        Realm.setDefaultConfiguration(config)
-         */
-
-        /*LocalDateTime now = LocalDateTime.now();
-        int hour = now.getHourOfDay();
-        if(hour >=18 || hour <=5) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }*/
 
         val workManager = WorkManager.getInstance(this)
         val constraints: Constraints = Constraints.Builder()
                 //.setRequiresBatteryNotLow(true)
                 //.setRequiresStorageNotLow(true)
-                .build()
-        //The minimum time interval between reruns of a task is 15 minute or 900000 seconds.
-        //val backupWorker = PeriodicWorkRequestBuilder<BackupWorker>(24, TimeUnit.HOURS)
-        //        .setConstraints(constraints)
-                //.setInitialDelay(24, TimeUnit.HOURS)
-        //        .build()
-        val externalBackupWorker = PeriodicWorkRequestBuilder<ExternalBackupWorker>(6, TimeUnit.HOURS)
-                .setConstraints(constraints)
-                .setInitialDelay(15, TimeUnit.DAYS)
                 .build()
         val readReminderWork = PeriodicWorkRequestBuilder<ReadReminderWorker>(4, TimeUnit.HOURS)
                 .setConstraints(constraints)
@@ -97,7 +69,6 @@ class BaseApp : MultiDexApplication(), DIAware {
 
         workManager.enqueue(readReminderWork)
         //workManager.enqueue(backupWorker)
-        workManager.enqueue(externalBackupWorker)
 
         Prefs.Builder()
             .setContext(this)

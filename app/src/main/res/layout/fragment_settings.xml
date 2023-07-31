@@ -45,6 +45,7 @@
             </LinearLayout>
 
         </LinearLayout>
+        <!--
 
         <LinearLayout
             android:padding="8dp"
@@ -83,7 +84,6 @@
             </LinearLayout>
 
         </LinearLayout>
-        <!--
 
         <LinearLayout
             android:id="@+id/container_price"

@@ -6,53 +6,11 @@
     android:background="@color/md_white_1000"
     xmlns:tools="http://schemas.android.com/tools">
 
-
-    <LinearLayout
-        android:id="@+id/message_"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_list"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="4dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:layout_height="match_parent"/>
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:layout_marginTop="16dp"
-            android:layout_gravity="center"
-            android:id="@+id/animation_view"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/bulb_animation" />
-
-        <TextView
-            android:id="@+id/message_title"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/main.emty.title"
-            tools:ignore="MissingPrefix" />
-
-
-        <TextView
-            android:id="@+id/message_body"
-            style="@style/TextAppearance.MaterialComponents.Body2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:gravity="center"
-            android:text="@string/main.empty.suggest"
-            tools:ignore="MissingPrefix" />
-
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/period_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        app:layoutManager="LinearLayoutManager"
-        />
-    </RelativeLayout>
+</RelativeLayout>

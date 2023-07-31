@@ -2,31 +2,26 @@ package com.nicrosoft.consumoelectrico
 
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.anjlab.android.iab.v3.BillingProcessor
-import com.anjlab.android.iab.v3.PurchaseInfo
+import com.android.billingclient.api.*
+import com.android.billingclient.api.Purchase.PurchaseState
 import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
-import com.google.android.play.core.review.ReviewInfo
-import com.google.android.play.core.review.ReviewManager
-import com.google.android.play.core.review.ReviewManagerFactory
-import com.nicrosoft.consumoelectrico.databinding.ActivityMainktBinding
-import com.nicrosoft.consumoelectrico.databinding.ContentMainktBinding
 import com.nicrosoft.consumoelectrico.ui.destinos.*
-import com.nicrosoft.consumoelectrico.utils.helpers.RestoreHelper
 import com.nicrosoft.consumoelectrico.utils.setHidden
 import com.nicrosoft.consumoelectrico.utils.setVisible
 import com.pixplicity.easyprefs.library.Prefs
@@ -34,20 +29,24 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
-class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
+class MainKt : ScopeActivity(), PurchasesUpdatedListener, PurchasesResponseListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     var PRODUCT_SKU = "remove_ads"
-    var bp: BillingProcessor? = null
     private lateinit var navController: NavController
+    private lateinit var billingClient: BillingClient
 
-    private var reviewInfo: ReviewInfo? = null
-    private lateinit var manager: ReviewManager
+    // private var reviewInfo: ReviewInfo? = null
+    // private lateinit var manager: ReviewManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        manager = ReviewManagerFactory.create(this)
+        billingClient =  BillingClient.newBuilder(this)
+            .setListener(this)
+            .enablePendingPurchases()
+            .build()
+        startBillingConnection()
+        // manager = ReviewManagerFactory.create(this)
         //manager = FakeReviewManager(this)
         setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_mainkt)
@@ -63,7 +62,7 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
         val inflater = navController.navInflater
         navController.graph  = inflater.inflate(R.navigation.mobile_navigation)
 
-        bp = BillingProcessor(this, BuildConfig.APP_BILLING_PUB_KEY, BuildConfig.MERCHANT_ID, this)
+        // bp = BillingProcessor(this, BuildConfig.APP_BILLING_PUB_KEY, BuildConfig.MERCHANT_ID, this)
         setSupportActionBar(toolbar)
         setupGlobalAdsConfig()
         setupBanner()
@@ -87,7 +86,7 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
         //StringBuilder path = new StringBuilder(getFilesDir().getAbsolutePath());
         //RestoreHelper.getInternalStoragePath(this)
 
-        val request = manager.requestReviewFlow()
+        /*val request = manager.requestReviewFlow()
         request.addOnCompleteListener { it ->
             reviewInfo = if (it.isSuccessful) {
                 //Received ReviewInfo object
@@ -98,6 +97,9 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
                 null
             }
         }
+                    Prefs.putBoolean("isPurchased", true)
+
+        */
 
         launch {
             delay(4000)
@@ -108,6 +110,29 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
         //MediationTestSuite.launch(this)
     }
 
+    fun startBillingConnection() {
+
+        billingClient.startConnection(object : BillingClientStateListener {
+            override fun onBillingSetupFinished(billingResult: BillingResult) {
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                    queryProductDetails()
+                }
+            }
+
+            override fun onBillingServiceDisconnected() {
+                Log.i("EDER", "Billing connection disconnected")
+                startBillingConnection()
+            }
+        })
+    }
+    fun queryProductDetails() {
+
+        val params2 = QueryPurchasesParams.newBuilder()
+            .setProductType(BillingClient.ProductType.INAPP)
+        val purchasesResult = billingClient.queryPurchasesAsync(params2.build(), this)
+       Log.e("EDER",  purchasesResult.toString())
+
+    }
     private fun requestReview() {
         val ne = Prefs.getInt("app_starts", 0)
         Prefs.putInt("app_starts", ne + 1)
@@ -119,12 +144,14 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
             val max = 12
             val rnd = r.nextInt(max - min) + min
             Prefs.putInt("request_rate_after", rnd)
-            reviewInfo?.let {
+            /*reviewInfo?.let {
                 val flow = manager.launchReviewFlow(this, it)
                 flow.addOnCompleteListener { task ->
                     //Irrespective of the result, the app flow should continue
                 }
             }
+
+             */
         }
     }
 
@@ -138,14 +165,6 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
         MobileAds.setRequestConfiguration(adRequest)
     }
 
-    /*
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.mainkt, menu)
-        return true
-    }
-
-     */
 
     private fun setupBanner() {
         val adView =  AdView(this)
@@ -165,19 +184,7 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
         //nav_view.menu.findItem(R.id.destino_ocultar_publicidad).isVisible = false
     }
 
-    override fun onBillingInitialized() {
-        if (bp!!.isPurchased(PRODUCT_SKU)) {
-            Prefs.putBoolean("isPurchased", true)
-        }
-    }
 
-    override fun onPurchaseHistoryRestored() {}
-
-    override fun onProductPurchased(productId: String, details: PurchaseInfo?) {
-        Prefs.putBoolean("isPurchased", true)
-    }
-
-    override fun onBillingError(errorCode: Int, error: Throwable?) {}
 
     override fun onBackPressed() {
         //if (searchView.onBackPressed()) {
@@ -213,5 +220,19 @@ class MainKt : ScopeActivity(), BillingProcessor.IBillingHandler {
 
         //return the optimal size depends on your orientation (landscape or portrait)
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
+    }
+
+    override fun onPurchasesUpdated(p0: BillingResult, p1: MutableList<Purchase>?) {
+        p1?.forEach {
+            print(it.purchaseState)
+        }
+    }
+
+    override fun onQueryPurchasesResponse(p0: BillingResult, p1: MutableList<Purchase>) {
+        p1.forEach {
+            if(it.purchaseState == PurchaseState.PURCHASED){
+                Prefs.putBoolean("isPurchased", true)
+            }
+        }
     }
 }

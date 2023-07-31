@@ -47,7 +47,6 @@ object CsvHandler {
             writer.close()
             return fileUri
         }catch (e:Exception){
-            Log.e("EDER", e.stackTraceToString())
             return null
         }
     }

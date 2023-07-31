@@ -32,7 +32,7 @@
     <string name="label_days_consumption">Dias consumidos</string>
     <string name="main.emty.title">Não há dados para mostrar</string>
     <string name="main.empty.suggest">Registre as leituras com frequência para acompanhar o consumo de eletricidade doméstica.</string>
-    <string name="end_period">Fim do período de cobrança</string>
+    <string name="end_period">Termine o período com esta leitura</string>
     <string name="end_period_ask">Tem certeza de terminar o período de cobrança nessa data?</string>
     <string name="end_period_psoitive">Continuar</string>
     <string name="edit_reading">Editar leitura</string>
@@ -129,10 +129,11 @@
     <string name="lecturas_desde_hasta">Leituras de  %1$s a %2$s</string>
     <string name="detail.chart1.title">Histórico de consumo acumulado</string>
     <string name="detail.chart2.title">Histórico médio de consumo</string>
+    <string name="detail.chart3.title">Histórico médio de consumo</string>
     <string name="detail.show.readings">Mostrar lecturas del período</string>
     <string name="details">Detalhes</string>
     <string name="new_reading">Nova leitura</string>
-    <string name="readings.show.all_reading">Todas as lecturas</string>
+    <string name="readings.show.all_reading">Mostre tudo</string>
     <string name="readings.show.period_reading">Leituras do período</string>
     <string name="date_format_save">dd_MMMM_yyyy</string>
     <string name="export_all">Exporte todas as leituras</string>
@@ -237,7 +238,9 @@ Você pode encerrar o período registrando uma nova leitura ou selecionar da lis
     <string name="since">%d dias</string>
     <string name="hours">%d horas</string>
     <string name="add">Adicionar</string>
-
+    <string name="never">Nunca</string>
+    <string name="undo_notice">Esta ação irá desfazer o período atual e associar todas as leituras ao período anterior, se nenhum período anterior for encontrado, os dados de leitura serão excluídos.</string>
+    <string name="undo_period">Desfazer período</string>
 
 
 </resources>

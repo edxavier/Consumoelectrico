@@ -28,9 +28,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="more_vert" />
-                            <entry key="sourceFile" value="C:\Users\Eder Xavier Rojas\Downloads\telegram.svg" />
+                            <entry key="outputName" value="undo_left" />
+                            <entry key="sourceFile" value="C:\Users\edxr\Downloads\undo-left-round-square-svgrepo-com.svg" />
                           </map>
                         </option>
                       </PersistentState>

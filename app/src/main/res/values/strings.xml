@@ -30,7 +30,7 @@
     </string-array>
     <string name="cancel">Cancel</string>
     <string name="edit_reading">Edit reading</string>
-    <string name="end_period">End billing period</string>
+    <string name="end_period">End billing period with this Reading</string>
     <string name="end_period_ask">Are you sure to finish the billing period on this date?</string>
     <string name="end_period_psoitive">Continue</string>
     <string name="alert_over_range">Reading out of range</string>
@@ -155,11 +155,12 @@
     <string name="label_consumption_in_hours">Consumption in %1$s hours</string>
     <string name="lecturas_desde_hasta">Readings from %1$s to %2$s</string>
     <string name="detail.chart1.title">Accumulated consumption history</string>
-    <string name="detail.chart2.title">Average consumption history</string>
+    <string name="detail.chart2.title">Period daily average consumption</string>
+    <string name="detail.chart3.title">Period daily average consumption history</string>
     <string name="detail.show.readings">Show period readings</string>
     <string name="details">Details</string>
     <string name="new_reading">New reading</string>
-    <string name="readings.show.all_reading">All readings</string>
+    <string name="readings.show.all_reading">Show all</string>
     <string name="readings.show.period_reading">Period readings</string>
     <string name="date_format_save">MMMM_dd_yyyy</string>
     <string name="date_time_format" translatable="false">dd-MM-yyyy HH:mm:ss</string>
@@ -296,6 +297,9 @@
     <string name="daily_avg_unit">kWh/d</string>
     <string name="add">Add</string>
     <string name="initial_calculation">00 kWh</string>
+    <string name="never">Never</string>
+    <string name="undo_notice">This action will undo current period and associate all readings to previous period, if no previous period found, reading data will be deleted</string>
+    <string name="undo_period">Undo period</string>
 
 
 </resources>

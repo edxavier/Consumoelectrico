@@ -1,22 +1,26 @@
 package com.nicrosoft.consumoelectrico.ui2
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.view.*
-import android.view.animation.OvershootInterpolator
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Scaffold
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -28,12 +32,11 @@ import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.databinding.FragmentElectricReadingListBinding
-import com.nicrosoft.consumoelectrico.ui2.adapters.ElectricReadingAdapter
+import com.nicrosoft.consumoelectrico.screens.readings.ReadingsScreen
+import com.nicrosoft.consumoelectrico.screens.ui.theme.ConsumoelectricoTheme
 import com.nicrosoft.consumoelectrico.utils.*
 import com.nicrosoft.consumoelectrico.utils.handlers.CsvHandler
 import com.nicrosoft.consumoelectrico.viewmodels.ElectricViewModel
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
-import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.coroutines.launch
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
@@ -42,7 +45,7 @@ import java.util.*
 import kotlin.time.ExperimentalTime
 
 
-class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAdapter.AdapterItemListener {
+class ElectricReadingListFragment : ScopeFragment(), DIAware {
     private var tempReadings: List<ElectricReading>? = null
     override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
@@ -51,7 +54,6 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
 
     private lateinit var navController: NavController
     private lateinit var mainNavController: NavController
-    private lateinit var adapter:ElectricReadingAdapter
     private lateinit var binding:FragmentElectricReadingListBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -66,64 +68,45 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
         navController = findNavController()
         mainNavController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         viewModel = ViewModelProvider(requireActivity(), vmFactory)[ElectricViewModel::class.java]
-        initLayout()
         loadData()
     }
     
     private fun loadData(showAll: Boolean = false){
-        launch {
-            val period = try {viewModel.getLastPeriod(viewModel.meter.value!!.code)}catch (e:Exception){null}
-            if(period!=null) {
-                if(showAll){
-                    viewModel.getAllMeterReadings(period.meterCode).observe(viewLifecycleOwner, Observer {
-                        tempReadings = it
-                        toggleMessageVisibility(it.isEmpty())
-                        adapter.submitList(it)
-                    })
-                }else{
-                    viewModel.getPeriodMetersReadings(period.code).observe(viewLifecycleOwner, Observer {
-                        tempReadings = it
-                        toggleMessageVisibility(it.isEmpty())
-                        adapter.submitList(it)
-                    })
+
+        binding.readingsCompose.setContent {
+            ConsumoelectricoTheme(darkTheme = false, dynamicColor = false){
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ){ padding ->
+                    val readingsState by viewModel.readingUiState.collectAsState()
+                    LaunchedEffect(key1 = true){
+                        viewModel.getMeterReadings(viewModel.meter.code, allReadings = showAll)
+                    }
+
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
+                            .padding(padding)
+                    ) {
+                        ReadingsScreen(
+                            onItemClick = { reading->
+                                onItemClickListener(reading = reading)
+                            },
+                            readings = readingsState.readingList,
+                            isLoading = readingsState.isLoading
+                        )
+                    }
                 }
-            }else{
-                toggleMessageVisibility(true)
             }
-            viewModel.getAllMeterReadings(viewModel.meter.value!!.code)
-                .observe(viewLifecycleOwner) {
-                    tempReadings = it
-                }
         }
-    }
-
-    private fun toggleMessageVisibility(isEmpty:Boolean){
-        if(isEmpty) {
-            binding.message.setVisible()
-            binding.animationView.fadeZoomIn()
-            binding.messageTitle.slideIn()
-            binding.messageBody.slideIn()
-        }
-        else
-            binding.message.setHidden()
-    }
-
-    private fun initLayout() {
-        adapter = ElectricReadingAdapter(this)
-        val animAdapter = ScaleInAnimationAdapter(adapter)
-        animAdapter.setFirstOnly(false)
-        animAdapter.setInterpolator(OvershootInterpolator())
-        binding.emeterList.itemAnimator = FadeInDownAnimator()
-        binding.emeterList.adapter = animAdapter
-        binding.emeterList.setHasFixedSize(true)
-
     }
 
     @SuppressLint("CheckResult")
     @OptIn(ExperimentalTime::class)
-    override fun onItemClickListener(reading: ElectricReading) {
+    private fun onItemClickListener(reading: ElectricReading) {
         launch {
-            val period = viewModel.getLastPeriod(reading.meterCode!!)
+            val period = viewModel.getMeterLatestPeriod(reading.meterCode?:"")
             // val meter = viewModel.getMeter(reading.meterCode!!)
             val options = resources.getStringArray(R.array.readings_options).toMutableList()
             // if(reading.readingDate.hoursSinceDate(period!!.fromDate)/24<=meter.periodLength-5)
@@ -154,8 +137,9 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
             negativeButton(R.string.cancel)
             positiveButton(R.string.agree){
                 launch {
-                    val period = viewModel.getLastPeriod(reading.meterCode!!)
+                    val period = viewModel.getMeterLatestPeriod(reading.meterCode!!)
                     viewModel.terminatePeriod(reading, period!!, reading.meterCode!!)
+                    viewModel.getMeterReadings(viewModel.meter.code)
                     loadData()
                 }
             }
@@ -175,6 +159,8 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
                     if(viewModel.validatedReadingValue(reading.readingDate, text.toString().toFloat(), reading.meterCode!!)){
                         reading.readingValue = text.toString().toFloat()
                         viewModel.updateReadingValue(reading)
+                        viewModel.getMeterReadings(viewModel.meter.code)
+                        loadData()
                     }else{
                         Toast.makeText(context, getString(R.string.invalid_kw_range), Toast.LENGTH_SHORT)
                                 .show()
@@ -200,8 +186,11 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
                             message(text = "No es posible eliminar esta lectura, si se equivoco debe eliminar el periodo completo")
                             positiveButton(R.string.ok)
                         }
-                    }else
+                    }else {
                         viewModel.deleteElectricReading(reading)
+                        viewModel.getMeterReadings(viewModel.meter.code)
+                        loadData()
+                    }
                 }
             }
             negativeButton(R.string.cancel)
@@ -222,7 +211,16 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
                 exportDialog()
             }
             R.id.action_show_all_meter_readings->{
-                loadData(showAll = true)
+                launch {
+                    viewModel.getMeterReadings(viewModel.meter.code, allReadings = true)
+                    loadData()
+                }
+            }
+            R.id.action_show_period_readings->{
+                launch {
+                    viewModel.getMeterReadings(viewModel.meter.code, allReadings = false)
+                    loadData()
+                }
             }
         }
         return super.onOptionsItemSelected(item)
@@ -230,24 +228,19 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
 
 
     private fun exportDialog(){
-        if (tempReadings==null) {
+        tempReadings = viewModel.readingUiState.value.readingList
+        if (tempReadings?.size==0 ) {
             showInfoDialog("No hay datos para exportar")
             return
         }
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            //ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-            return
-        }
 
 
-        var name = getString(R.string.label_readings) + " " + viewModel.meter.value!!.name + Date().formatDate(requireContext())
+        var name = getString(R.string.label_readings) + " " + viewModel.meter.name + Date().formatDate(requireContext())
         name = name.replace(" ", "_").replace(",", "")
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "text/csv"
             putExtra(Intent.EXTRA_TITLE, name)
-            //putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri)
         }
         startSaveFileForResult.launch(intent)
 
@@ -270,14 +263,6 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK){
-            exportDialog()
-        }else{
-            showInfoDialog("No se concedieron los permisos")
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 
     private fun showInfoDialog(message:String){
         MaterialDialog(requireContext()).show {
@@ -288,11 +273,11 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware, ElectricReadingAda
     }
 
     private fun openFileIntent(fileUri:Uri){
+        // This try to open the file after creation
+
         val myMime = MimeTypeMap.getSingleton()
         val newIntent = Intent(Intent.ACTION_VIEW)
-        // val file = File(filePath)
         val mimeType = myMime.getMimeTypeFromExtension("csv")
-        // val uri: Uri = FileProvider.getUriForFile(requireActivity(), BuildConfig.APPLICATION_ID.toString() + ".provider", file)
         newIntent.setDataAndType(fileUri, mimeType)
         newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

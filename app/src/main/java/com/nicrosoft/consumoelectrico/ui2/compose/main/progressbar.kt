@@ -36,7 +36,7 @@ fun CircularProgressbar(
         fontSize = 20.sp, fontWeight = FontWeight(700)
     ),
     remainingTextStyle: TextStyle = TextStyle(
-        fontSize = 14.sp
+        fontSize = 12.sp
     )
 ) {
 
@@ -81,9 +81,9 @@ fun CircularProgressbar(
                 radius = (size / 2 - indicatorThickness).toPx(),
                 center = Offset(x = this.size.width / 2, y = this.size.height / 2)
             )
-
+            val max = if(usage>maxUsage) usage else maxUsage
             // Convert the dataUsage to angle
-            val sweepAngle = (dataUsageAnimate.value) * 360 / maxUsage
+            val sweepAngle = (dataUsageAnimate.value) * 360 / max
 
             // Foreground indicator
             drawArc(
@@ -131,8 +131,6 @@ private fun DisplayText(
             text = (animateNumber.value).toInt().toString().padStart(2, '0'),
             style = dataTextStyle
         )
-
-        Spacer(modifier = Modifier.height(2.dp))
 
         Text(
             text = measureUnit,

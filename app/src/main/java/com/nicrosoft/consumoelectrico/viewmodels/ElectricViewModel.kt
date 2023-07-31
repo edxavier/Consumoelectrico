@@ -1,14 +1,16 @@
 package com.nicrosoft.consumoelectrico.viewmodels
 
 import android.content.Context
+import android.graphics.Typeface
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
@@ -20,10 +22,17 @@ import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
+import com.nicrosoft.consumoelectrico.screens.states.MeterListState
+import com.nicrosoft.consumoelectrico.screens.states.ReadingListState
 import com.nicrosoft.consumoelectrico.utils.charts.setupAppStyle
 import com.nicrosoft.consumoelectrico.utils.getConsumptionProjection
 import com.nicrosoft.consumoelectrico.utils.hoursSinceDate
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,21 +43,95 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
     var expandedFab by mutableStateOf(true)
     var firstVisible by mutableStateOf(0)
     private val _meters = MutableLiveData<List<ElectricMeter>>()
-    var meters: LiveData<List<ElectricMeter>> = _meters
 
-    var meter = MutableLiveData<ElectricMeter>()
+    private val _meterUiState = MutableStateFlow(MeterListState())
+    val meterUiState: StateFlow<MeterListState> = _meterUiState.asStateFlow()
 
-    init {
-        meters = dao.getMeters()
+    private val _readingUiState = MutableStateFlow(ReadingListState())
+    val readingUiState: StateFlow<ReadingListState> = _readingUiState.asStateFlow()
+
+    var meter = ElectricMeter(name = "", code = "")
+
+    fun selectedMeter(_meter: ElectricMeter) { meter = _meter }
+
+    fun getElectricMeterList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val meters = dao.getMeters()
+            _meterUiState.update { state ->
+                state.copy(
+                    meterList = meters,
+                    isLoading = false
+                )
+            }
+        }
     }
-    fun selectedMeter(_meter: ElectricMeter) { meter.value = _meter }
+    suspend fun getAllPeriods(meterCode: String) = withContext(Dispatchers.IO){
+        val periods = dao.getAllPeriods(meterCode)
+        _readingUiState.update { state ->
+            state.copy(
+                periods = periods,
+                isLoading = false
+            )
+        }
+        return@withContext periods
+    }
 
-    fun getElectricMeterList() = dao.getMeters()
-    fun getMeterPeriods(meterCode: String) = dao.getMeterPeriods(meterCode)
-    fun getAllMeterReadings(meterCode:String) = dao.getAllMeterReadings(meterCode)
+    @OptIn(ExperimentalTime::class)
+    suspend fun undoLastPeriod(meterCode: String) = withContext(Dispatchers.IO){
+        val periods = dao.getAllPeriods(meterCode)
+        if(periods.size>=2){
+            val current = periods[0]
+            val previous = periods[1]
+            val currentPeriodReadings = getMeterPeriodReadings(current.code)
+            val latestPreviousPeriodReading = getLastPeriodReading(previous.code)
 
-    suspend fun getMeterAllPeriods(meterCode: String) = withContext(Dispatchers.IO){ dao.getMeterAllPeriods(meterCode) }
-    suspend fun getPeriodMetersReadings(periodCode:String) = withContext(Dispatchers.IO){ dao.getPeriodMetersReadings(periodCode) }
+            currentPeriodReadings.forEach {
+                it.periodCode = previous.code
+                dao.updateElectricReading(it)
+            }
+            dao.deleteBillingPeriod(current)
+            previous.active = true
+            if(currentPeriodReadings.isNotEmpty())
+                previous.toDate = currentPeriodReadings.first().readingDate
+            dao.updatePeriod(previous)
+
+            latestPreviousPeriodReading?.let {
+                recomputeLaterReadings(latestPreviousPeriodReading, restartAggConsumption = false)
+            }
+            updatePeriodTotals(previous)
+        }else if(periods.size==1){
+            dao.deleteBillingPeriod(periods[0])
+        }
+        return@withContext periods
+    }
+
+    suspend fun getMeterReadings(meterCode: String, allReadings: Boolean = false): List<ElectricReading> = withContext(Dispatchers.IO){
+        var readings: List<ElectricReading> = listOf()
+        _readingUiState.update { state ->
+            state.copy(isLoading = true)
+        }
+        readings = if(allReadings){
+            getMeterAllReadings(meterCode)
+        }else{
+            val latestPeriod = getMeterLatestPeriod(meterCode)
+            if (latestPeriod!=null){
+                getMeterPeriodReadings(latestPeriod.code)
+            }else {
+                listOf()
+            }
+        }
+        _readingUiState.update { state ->
+            state.copy(
+                readingList = readings,
+                isLoading = false
+            )
+        }
+        return@withContext readings
+    }
+    private fun getMeterAllReadings(meterCode:String) = dao.getAllMeterReadings(meterCode)
+    private suspend fun getMeterPeriodReadings(periodCode:String) = withContext(Dispatchers.IO){ dao.getPeriodMetersReadings(periodCode) }
+
+
     suspend fun getFirstMeterReading(meterCode:String) = withContext(Dispatchers.IO){ dao.getFirstMeterReading(meterCode) }
     suspend fun getLastPriceRange(meterCode:String) = withContext(Dispatchers.IO){ dao.getLastPriceRange(meterCode) }
     suspend fun getNextPriceRange(meterCode:String, priceFrom:Int) = withContext(Dispatchers.IO){ dao.getNextPriceRange(meterCode, priceFrom) }
@@ -69,7 +152,7 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
 
     suspend fun getLastPeriodReading(periodCode: String) = withContext(Dispatchers.IO){ dao.getLastPeriodReading(periodCode) }
     suspend fun getFirstPeriodReading(periodCode: String) = withContext(Dispatchers.IO){ dao.getFirstPeriodReading(periodCode) }
-    suspend fun getLastPeriod(meterCode: String) = withContext(Dispatchers.IO){ dao.getLastElectricPeriod(meterCode) }
+    suspend fun getMeterLatestPeriod(meterCode: String) = withContext(Dispatchers.IO){ dao.getLastElectricPeriod(meterCode) }
 
     suspend fun validatedReadingValue(readingDate: Date, readingValue:Float, meterCode: String):Boolean = withContext(Dispatchers.IO){
         val future = dao.countInvalidFutureReadings(readingDate, readingValue, meterCode)
@@ -79,39 +162,24 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
 
     @ExperimentalTime
     suspend fun savedReading(reading: ElectricReading, meterCode: String, terminatePeriod:Boolean) = withContext(Dispatchers.IO){
-        val period = dao.getLastElectricPeriod(meterCode)
-        if (period!=null){
-            reading.periodCode = period.code
+        val period = getMeterLatestPeriod(meterCode)
+        val allReadings = getMeterAllReadings(meterCode)
+        period?.let { p ->
+            reading.periodCode = p.code
             reading.meterCode = meterCode
-            val totalReadings = dao.getTotalPeriodReading(period.code)
-            if (totalReadings>0){
-                val previous = dao.getPreviousReading(period.code, reading.readingDate)
-                val next = dao.getNextReading(period.code, reading.readingDate)
-                if(previous!=null) {
-                    computeReading(reading, previous, next, period, false)
-                    updatePeriodTotals(period.code)
-                    if(terminatePeriod) {terminatePeriod(reading, period, meterCode)}
-                }else {
-                    //No se encontro lecturas anterirores a la neuva en este periodo, esta pasa a ser la primera
-                    //Cargar ultima lectura del periodo aanterior
-                    val previousReading = dao.getLastMeterReading(meterCode, reading.readingDate)
-                    computeReading(reading, previousReading!!, next, period, true)
-                    updatePeriodTotals(period.code)
-                }
-            }else{
-                //Si el periodo no tiene lecturas, cargar las ultimas lecturas del periodo anterior
-                val previousReading = dao.getLastMeterReading(meterCode, reading.readingDate)
-                val nextReading = null
-                if(previousReading!=null){
-                    computeReading(reading, previousReading, nextReading,  period, true)}
-
+            val readingBefore = allReadings.firstOrNull { it.readingDate < reading.readingDate }
+            val readingAfter = allReadings.firstOrNull { it.readingDate > reading.readingDate }
+            readingBefore?.let {
+                val isFirstPeriodReading = readingBefore.periodCode != reading.periodCode
+                computeReading(reading, readingBefore, readingAfter, period, isFirstPeriodReading)
+                updatePeriodTotals(period)
             }
-            val lr = dao.getLastPeriodReading(period.code)
-            if(lr!=null)
-                period.toDate = lr.readingDate
+            val latestRead = getMeterReadings(meterCode).firstOrNull()
+            if(latestRead!=null)
+                period.toDate = latestRead.readingDate
             dao.updatePeriod(period)
-            updatePeriodTotals(period.code)
-        }else{
+            updatePeriodTotals(period)
+        }?:run{
             //Si es el primer periodo crear de cero
             createFirstPeriod(reading,meterCode)
         }
@@ -121,7 +189,7 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
         val newPeriod = ElectricBillPeriod(fromDate = reading.readingDate, meterCode = meterCode, toDate = reading.readingDate)
         dao.savePeriod(newPeriod)
         val period = dao.getLastElectricPeriod(meterCode)
-        if(period!=null) {
+        period?.let{
             reading.periodCode = period.code
             reading.meterCode = meterCode
             dao.saveReading(reading)
@@ -131,7 +199,8 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
     @ExperimentalTime
     private fun computeReading(current:ElectricReading, previous:ElectricReading,
                                next:ElectricReading?, period:ElectricBillPeriod, isFirstPeriodReading:Boolean){
-        //inicializar  variable p, para calcular las horas desde que inicio el periodo hasta la fecha de la lectura actual
+        //inicializar  variable p, para calcular las horas desde que inicio el
+        // periodo hasta la fecha de la lectura actual
         val totalHours = current.readingDate.hoursSinceDate(period.fromDate)
         var previousHours = current.readingDate.hoursSinceDate(previous.readingDate)
 
@@ -143,10 +212,8 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
         else
             current.kwAggConsumption = current.kwConsumption + previous.kwAggConsumption
         current.kwAvgConsumption = current.kwAggConsumption / current.consumptionHours
-        if (current.kwAvgConsumption == null){ current.kwAvgConsumption = 0f }
 
         next?.let {
-            //Log.e("EDER", "HAY LECTURAS POSTERIORES")
             previousHours = next.readingDate.hoursSinceDate(current.readingDate)
             next.kwConsumption = next.readingValue - current.readingValue
             next.consumptionPreviousHours = previousHours.toFloat()
@@ -190,14 +257,13 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
             dao.updatePeriod(newPeriod)
         }
         dao.updatePeriod(period)
-        updatePeriodTotals(period.code)
-        updatePeriodTotals(newPeriod.code)
+        updatePeriodTotals(period)
+        updatePeriodTotals(newPeriod)
     }
 
 
     @ExperimentalTime
     suspend fun updateReadingValue(reading:ElectricReading) = withContext(Dispatchers.IO){
-        val pCode = reading.periodCode
         val previous = dao.getPreviousReading(reading.periodCode!!, reading.readingDate)
         val next = dao.getNextReading(reading.periodCode!!, reading.readingDate)
         var previousPeriodLastReading:ElectricReading? = null
@@ -206,8 +272,7 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
         }
         recomputeAndUpdate(previous, reading, previousPeriodLastReading)
         recomputeAndUpdate(reading, next, previousPeriodLastReading)
-        updatePeriodTotals(pCode!!)
-        //dao.updateElectricReading(reading)
+        updatePeriodTotals(getMeterLatestPeriod(reading.meterCode?:"")!!)
     }
 
 
@@ -246,7 +311,6 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
 
     @ExperimentalTime
     suspend fun deleteElectricReading(reading:ElectricReading) = withContext(Dispatchers.IO){
-        //Log.e("EDER", "DELETED ${reading.readingValue}")
         val pCode = reading.periodCode
         val previous = dao.getPreviousReading(reading.periodCode!!, reading.readingDate)
         val next = dao.getNextReading(reading.periodCode!!, reading.readingDate)
@@ -255,34 +319,44 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
             previousPeriodLastReading = dao.getLastMeterReading(reading.meterCode!!, reading.readingDate)
         recomputeAndUpdate(previous, next, previousPeriodLastReading)
         dao.deleteElectricReading(reading)
-        updatePeriodTotals(pCode!!)
-        //Log.e("EDER", "DELETED ${reading.readingValue}")
+        updatePeriodTotals(getMeterLatestPeriod(reading.meterCode?:"")!!)
+
     }
 
-    suspend fun updatePeriodTotals(periodCode: String): ElectricBillPeriod = withContext(Dispatchers.IO){
-        val period = dao.getPeriod(periodCode)
+    suspend fun updatePeriodTotals(period:ElectricBillPeriod): ElectricBillPeriod = withContext(Dispatchers.IO){
         period.totalKw = dao.getTotalPeriodKw(period.code)
-        period.totalBill = calculateEnergyCosts(period.totalKw, meter.value!!).total
+        period.totalBill = calculateEnergyCosts(period.totalKw, meter).total
         dao.updatePeriod(period)
-        return@withContext dao.getPeriod(periodCode)
-        //Log.e("EDER_COSTUPDATED", costUpdated.toString())
+        return@withContext dao.getPeriod(period.code)
     }
 
     @ExperimentalTime
-    private fun recomputeLaterReadings(reading: ElectricReading){
+    private fun recomputeLaterReadings(reading: ElectricReading, restartAggConsumption: Boolean=true){
+        Log.w("EDER", "RESET COUTNERS $restartAggConsumption ${reading.readingValue}")
         val laterReadings = dao.getReadingsAfter(reading.periodCode!!, reading.readingDate)
         laterReadings.forEachIndexed { index, electricReading ->
             //Log.e("EDER", "RECALCULANDO lecturas")
             //Recalcular lecturas despues de la lectura pasada, que solo seria en caso de que esta sea la primer lectura de la hsitoria del medidor
             if(index == 0){
-                electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(reading.readingDate).toFloat()
-                //electricReading.consumptionPreviousHours = electricReading.readingDate.hoursSinceDate(newPeriod.fromDate).toFloat()
-                electricReading.kwAggConsumption = electricReading.kwConsumption
-                electricReading.kwAvgConsumption = electricReading.kwAggConsumption / electricReading.consumptionHours
+                if(restartAggConsumption) {
+                    // Reset el conteo de consumo
+                    electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(reading.readingDate).toFloat()
+                    electricReading.kwAggConsumption = electricReading.kwConsumption
+                    electricReading.kwAvgConsumption = electricReading.kwAggConsumption / electricReading.consumptionHours
+                }else{
+                    // continual el conteo de consumo
+                    electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(reading.readingDate).toFloat() + reading.consumptionHours
+                    // electricReading.consumptionPreviousHours = electricReading.readingDate.hoursSinceDate(reading.readingDate).toFloat()
+                    electricReading.kwAggConsumption = electricReading.kwConsumption + reading.kwAggConsumption
+                    electricReading.kwAvgConsumption = electricReading.kwAggConsumption / electricReading.consumptionHours
+                }
             }else{
                 val prev = laterReadings[index-1]
-                electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(reading.readingDate).toFloat()
-                //electricReading.consumptionPreviousHours = electricReading.readingDate.hoursSinceDate(newPeriod.fromDate).toFloat()
+                if(restartAggConsumption)
+                    electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(reading.readingDate).toFloat()
+                else
+                    electricReading.consumptionHours = electricReading.readingDate.hoursSinceDate(reading.readingDate).toFloat() + reading.consumptionHours
+                // electricReading.consumptionPreviousHours = electricReading.readingDate.hoursSinceDate(prev.readingDate).toFloat()
                 electricReading.kwAggConsumption = electricReading.kwConsumption + prev.kwAggConsumption
                 electricReading.kwAvgConsumption = electricReading.kwAggConsumption / electricReading.consumptionHours
             }
@@ -318,7 +392,6 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
     private fun calculatePricesExpenses(totalKWh: Float, prices:List<PriceRange>, meter: ElectricMeter):Float{
         var expenses = 0f
         var energy = totalKWh
-        //Log.e("EDER INICIO", "Exp: $expenses ---- energy: $energy")
         prices.forEach { p ->
             if(p.toKw<totalKWh){
                 val diff = if(p.fromKw>0)
@@ -340,27 +413,25 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
         }
         if(energy>0)
             expenses += energy * meter.kwPrice
-        //Log.e("EDER", "Rest: ${energy-energy} Gasto: $expenses")
-        //Log.e("EDER FIN", "--------------------------------------------------------")
         return expenses
     }
 
     suspend fun getLineChartData(period: ElectricBillPeriod): LineChartDataSets = withContext(Dispatchers.IO){
         val dSets = LineChartDataSets()
-        val periods = dao.getMeterAllPeriods(period.meterCode)
+        val periods = dao.getAllPeriods(period.meterCode)
         val periodBefore =  if (periods.size>1)
             periods[1]
         else
             null
         val readingsBefore = if(periodBefore!=null) {
-            //Log.e("EDER", periodBefore.fromDate.toString())
             dao.getPeriodReadings(periodBefore.code)
         }else
             null
         val readings = dao.getPeriodReadings(period.code)
-
+        val allReadings = dao.getAllMeterReadingsAsc(period.meterCode)
         dSets.consumptionDs = getConsumptionChartDataSets(readings, readingsBefore)
         dSets.dailyAvgDs = getAvgConsumptionChartDataSets(readings)
+        dSets.dailyAvgHist = getAvgConsumptionHistChartDataSets(periods.reversed())
         dSets.costPerDayDs = getCostPerDayChartDataSets(readings)
         dSets.costPerKwDs = getCostPerKwhChartDataSets(readings)
         dSets.periodDs = getPeriodDataSets()
@@ -369,10 +440,10 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
 
     private fun getConsumptionProjectionDataSet(reading: ElectricReading, color:Int): LineDataSet{
         val entries: MutableList<Entry> = ArrayList()
-        if(reading.kwAggConsumption < meter.value!!.maxKwLimit){
-            val projection = reading.getConsumptionProjection(meter.value!!)
+        if(reading.kwAggConsumption < meter.maxKwLimit){
+            val projection = reading.getConsumptionProjection(meter)
             entries.add(Entry(reading.consumptionHours, reading.kwAggConsumption))
-            entries.add(Entry((meter.value!!.periodLength*24).toFloat(), projection))
+            entries.add(Entry((meter.periodLength*24).toFloat(), projection))
         }
         val dataSet = LineDataSet(entries, "Proyeccion")
         dataSet.setupAppStyle(ctx)
@@ -394,11 +465,15 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
         val dataSetBefore = LineDataSet(entriesBefore, ctx.getString(R.string.previous_period))
 
         dataSet.setupAppStyle(ctx)
+        dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
+        dataSet.cubicIntensity = 0.15f
         dataSetBefore.setupAppStyle(ctx)
         dataSetBefore.enableDashedLine(8f, 7f, 0f)
         dataSetBefore.color = ContextCompat.getColor(ctx, R.color.md_grey_500)
         dataSetBefore.setDrawCircles(false)
         dataSetBefore.isHighlightEnabled = false
+        dataSetBefore.mode = LineDataSet.Mode.CUBIC_BEZIER
+        dataSetBefore.cubicIntensity = 0.15f
 
         val dataSets: MutableList<ILineDataSet> = ArrayList()
         dataSets.add(dataSet)
@@ -421,6 +496,8 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
         val dailyDataSet = LineDataSet(dailyEntries, ctx.getString(R.string.chart_legend_avg))
         val hourlyDataSet = LineDataSet(hourlyEntries, "Promedio por hora")
         dailyDataSet.setupAppStyle(ctx)
+        dailyDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
+        dailyDataSet.cubicIntensity = 0.12f
         hourlyDataSet.setupAppStyle(ctx)
         hourlyDataSet.color = ContextCompat.getColor(ctx, R.color.md_teal_500)
         val dataSets: MutableList<ILineDataSet> = ArrayList()
@@ -429,10 +506,28 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
         return LineData(dataSets)
     }
 
+    private fun getAvgConsumptionHistChartDataSets(periods:List<ElectricBillPeriod>): LineData {
+        val dailyEntries: MutableList<Entry> = ArrayList()
+        periods.forEachIndexed { i, p ->
+            val totalHours = p.toDate.hoursSinceDate(p.fromDate)
+            val kwAvgConsumption = p.totalKw / totalHours
+            if (!kwAvgConsumption.isNaN())
+                dailyEntries.add(Entry((i+1).toFloat(), (kwAvgConsumption*24)))
+        }
+        val dailyDataSet = LineDataSet(dailyEntries, ctx.getString(R.string.chart_legend_avg))
+        dailyDataSet.setupAppStyle(ctx)
+        dailyDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
+        dailyDataSet.cubicIntensity = 0.15f
+        // dailyDataSet.setDrawCircles(false)
+        val dataSets: MutableList<ILineDataSet> = ArrayList()
+        dataSets.add(dailyDataSet)
+        return LineData(dataSets)
+    }
+
     private suspend fun getCostPerDayChartDataSets(readings:List<ElectricReading>): LineData {
         val entries: MutableList<Entry> = ArrayList()
         readings.forEach { r ->
-            val cost = calculateEnergyCosts(r.kwAggConsumption, meter.value!!)
+            val cost = calculateEnergyCosts(r.kwAggConsumption, meter)
             val total = if (cost.energy > 0)
                 cost.total
             else
@@ -441,6 +536,8 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
         }
         val dataSet = LineDataSet(entries, "Gasto vs dias")
         dataSet.setupAppStyle(ctx)
+        dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
+        dataSet.cubicIntensity = 0.15f
         val dataSets: MutableList<ILineDataSet> = ArrayList()
         dataSets.add(dataSet)
         return LineData(dataSets)
@@ -448,7 +545,7 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
     private suspend fun getCostPerKwhChartDataSets(readings:List<ElectricReading>): LineData {
         val entries: MutableList<Entry> = ArrayList()
         readings.forEach { r ->
-            val cost = calculateEnergyCosts(r.kwAggConsumption, meter.value!!)
+            val cost = calculateEnergyCosts(r.kwAggConsumption, meter)
             val total = if (cost.energy > 0)
                 cost.total
             else
@@ -457,13 +554,15 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
         }
         val dataSet = LineDataSet(entries, "Gasto vs kWh")
         dataSet.setupAppStyle(ctx)
+        dataSet.setupAppStyle(ctx)
+        dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
         val dataSets: MutableList<ILineDataSet> = ArrayList()
         dataSets.add(dataSet)
         return LineData(dataSets)
     }
 
     private fun getPeriodDataSets(): BarData {
-        val periods = dao.getMeterAllPeriods(meter.value!!.code)
+        val periods = dao.getAllPeriods(meter.code)
         val entries: MutableList<BarEntry> = ArrayList()
 
         periods.sortedBy { it.fromDate }.forEachIndexed{ index, period ->
@@ -472,7 +571,7 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
 
         val pDataSet = BarDataSet(entries, ctx.getString(R.string.label_billing_period))
         pDataSet.color = ContextCompat.getColor(ctx, R.color.primaryColor)
-        pDataSet.valueTypeface = ResourcesCompat.getFont(ctx, R.font.source_sans_pro_semibold)
+        pDataSet.valueTypeface = try{ResourcesCompat.getFont(ctx, R.font.source_sans_pro_semibold)}catch (e:Exception){Typeface.DEFAULT}
         pDataSet.valueTextSize = 10f
         val dataSets: MutableList<IBarDataSet> = ArrayList()
         dataSets.add(pDataSet)
@@ -486,7 +585,7 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
         val labels: MutableList<String> = ArrayList()
         val timeFormat = SimpleDateFormat("MMMyy", Locale.getDefault())
         try {
-            val periods = dao.getMeterAllPeriods(meter.value!!.code)
+            val periods = dao.getAllPeriods(meter.code)
             periods.sortedBy { it.fromDate }.forEach{ period ->
                 labels.add(timeFormat.format(period.fromDate))
             }

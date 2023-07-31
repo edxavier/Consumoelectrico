@@ -15,15 +15,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.view.MenuHost
@@ -40,6 +38,8 @@ import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.databinding.EmeterListFragmentBinding
+import com.nicrosoft.consumoelectrico.screens.CircularProgress
+import com.nicrosoft.consumoelectrico.screens.NoDataScreen
 import com.nicrosoft.consumoelectrico.ui2.compose.main.MeterList
 import com.nicrosoft.consumoelectrico.ui2.compose.main.MeterPreviewCard
 import com.nicrosoft.consumoelectrico.utils.*
@@ -78,79 +78,27 @@ class ElectricListFragment : ScopeFragment(), DIAware, MenuProvider {
         super.onViewCreated(view, savedInstanceState)
         navController = findNavController()
         viewModel = ViewModelProvider(requireActivity(), vmFactory)[ElectricViewModel::class.java]
-        launch {
-            delay(1500)
-            migrate()
-        }
-        binding.addMeterBtn.setOnClickListener { fabAction() }
-        toggleMessageVisibility(true)
-        viewModel.meters.observe(viewLifecycleOwner) {
-            toggleMessageVisibility(it.isEmpty())
-            if (it.isNotEmpty()) {
-                initLayout()
-            }
-        }
-    }
-
-    private fun migrate() {
-        if(!Prefs.getBoolean("migrated", false) and backupHelper.migrationDataAvailable()){
-            MaterialDialog(requireContext()).show {
-                title(R.string.notice)
-                message(R.string.migration_message)
-                positiveButton(R.string.ok){
-                    launch{
-                        try {
-                            doMigration()
-                            Prefs.putBoolean("migrated", true)
-                            Toast.makeText(requireContext(), getString(R.string.migration_success), Toast.LENGTH_LONG).show()
-                        }catch (e: Exception){
-                            Prefs.putBoolean("migrated", true)
-                            showErrorDialog("FALLO DE MIGRACION", getString(R.string.migration_error), e.stackTraceToString())
-                            FirebaseCrashlytics.getInstance().log("FALLO DE MIGRACION")
-                            FirebaseCrashlytics.getInstance().recordException(e)
-                        }
-                    }
-                }
-                negativeButton(R.string.no_thanks){  }
-            }
-        }
-    }
-
-    private fun doMigration(){
-        //backupHelper.tryMigration()
         initLayout()
     }
 
 
-    private fun toggleMessageVisibility(isEmpty: Boolean){
-        if(isEmpty) {
-            with(binding){
-                message.setVisible()
-                animationView.fadeZoomIn()
-                messageTitle.slideIn()
-                addMeterBtn.slideIn()
-                messageBody.slideIn()
-                composeList.setHidden()
-            }
-        }
-        else {
-            binding.message.setHidden()
-            binding.composeList.setVisible()
-        }
-    }
-
     @OptIn(ExperimentalFoundationApi::class)
     private fun initLayout() {
         binding.composeList.setContent {
-            val meterList by viewModel.meters.observeAsState(initial = emptyList())
+            val metersState by viewModel.meterUiState.collectAsState()
             val listState = rememberLazyListState()
             val expandedFabState = remember {
                 derivedStateOf {
                     listState.firstVisibleItemScrollOffset
                 }
             }
-            if (meterList.isNotEmpty()) {
-                toggleMessageVisibility(false)
+            LaunchedEffect(true){
+                viewModel.getElectricMeterList()
+            }
+            if(metersState.isLoading){
+                CircularProgress()
+            }else if(metersState.meterList.isNotEmpty()) {
+                // toggleMessageVisibility(false)
                 MeterList(
                     viewModel = viewModel,
                     onFabClick = {
@@ -169,9 +117,9 @@ class ElectricListFragment : ScopeFragment(), DIAware, MenuProvider {
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                             state = listState
                         ) {
-                            items(items = meterList, key = { it.code }) { myMeter ->
+                            items(items = metersState.meterList, key = { it.code }) { myMeter ->
                                 MeterPreviewCard(
-                                    onClick = { onItemClickListener(meter = myMeter) },
+                                    onMoreVertClick = { showMoreVertOptions(meter = myMeter) },
                                     meter = myMeter,
                                     viewModel = viewModel,
                                     onDetailsClick = {
@@ -190,6 +138,24 @@ class ElectricListFragment : ScopeFragment(), DIAware, MenuProvider {
 
                     }
                 )
+            }else{
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    NoDataScreen(
+                        message = getString(R.string.main_empty_suggest),
+                        imageId = R.raw.empty_box,
+                        title = getString(R.string.main_emty_title)
+                    )
+                    Button(onClick = {
+                        fabAction()
+                    }) {
+                        Text(text = getString(R.string.add))
+                    }
+                }
             }
         }
 
@@ -208,7 +174,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, MenuProvider {
         navController.navigate(action)
     }
     @SuppressLint("CheckResult")
-    fun onItemClickListener(meter: ElectricMeter) {
+    fun showMoreVertOptions(meter: ElectricMeter) {
         MaterialDialog(requireContext()).show {
             title(text = meter.name)
             listItems(R.array.medidor_options) { _, index, _ ->
@@ -243,6 +209,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, MenuProvider {
             positiveButton(R.string.agree){
                 launch {
                     viewModel.deleteElectricMeter(meter)
+                    viewModel.getElectricMeterList()
                 }
             }
             negativeButton(R.string.cancel)
@@ -311,6 +278,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, MenuProvider {
                     when(val restoreResult = JsonBackupHandler.restoreBackup(backupHelper, uri, requireContext())){
                         is AppResult.OK -> {
                             delay(300)
+                            viewModel.getElectricMeterList()
                             showInfoDialog(getString(R.string.import_succes))
                         }
                         is AppResult.AppException -> {

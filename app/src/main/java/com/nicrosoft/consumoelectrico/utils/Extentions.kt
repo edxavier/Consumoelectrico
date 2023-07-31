@@ -103,7 +103,9 @@ fun String.removeZeroDecimal():String {
 fun Float.toTwoDecimalPlace(): String{
     return String.format(Locale.US, "%.2f", this).replace(",", ".").removeZeroDecimal()
 }
-
+fun Float.toOneDecimalPlace(): String{
+    return String.format(Locale.US, "%.1f", this).replace(",", ".").removeZeroDecimal()
+}
 fun FloatingActionButton. hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(this.windowToken, 0)

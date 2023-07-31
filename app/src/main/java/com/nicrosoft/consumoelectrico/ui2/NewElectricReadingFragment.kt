@@ -5,12 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.addCallback
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.datetime.datePicker
@@ -71,31 +68,24 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
         tempReading = ElectricReading()
         initUI()
         loadNativeAd()
-        /*viewModel.getAllMeterReadings(viewModel.meter.value!!.code).observe(viewLifecycleOwner, Observer { it ->
-            it.forEach {
-                //Log.e("EDER", "Fecha: ${it.readingDate.formatDate(requireContext())} - " +
-                  //      "Lectura: ${it.readingValue} - Consumo: ${it.kwConsumption} - AVG: ${it.kwAvgConsumption} " +
-                    //    "- TOTAL: ${it.kwAggConsumption} - HrPrev${it.consumptionPreviousHours} - TotalHr${it.consumptionHours}")
-            }
-        })*/
     }
 
     @ExperimentalTime
     @SuppressLint("SetTextI18n")
     private fun initUI() {
         binding.apply {
-            meter = viewModel.meter.value
+            meter = viewModel.meter
             meter?.let { m ->
                 nrTxtMedidorName.text = m.name
                 launch {
-                    val lastTwoReadings =  m.getLastReading(viewModel)
-                    if(lastTwoReadings!=null){
-                        nrTxtLastReading.text = "${getString(R.string.label_last_reading)}\n${lastTwoReadings.readingValue.toTwoDecimalPlace()} kWh"
-                        nrTxtReadingSince.text = lastTwoReadings.readingDate.formatDate(requireContext(), true)
+                    val lastReading =  viewModel.getMeterReadings(m.code, true).firstOrNull()
+                    if(lastReading!=null){
+                        nrTxtLastReading.text = "${getString(R.string.label_last_reading)}\n${lastReading.readingValue.toTwoDecimalPlace()} kWh"
+                        nrTxtReadingSince.text = lastReading.readingDate.formatDate(requireContext(), true)
                         verifyEndPeriod(Date())
                     }else{
                         nrTxtLastReading.text = "---- kWh"
-                        nrTxtReadingSince.text = "Never"
+                        nrTxtReadingSince.text = getString(R.string.never)
                         nrEndPeriodSw.setHidden()
                         MaterialDialog(requireContext()).show {
                             title(R.string.notice)
@@ -150,15 +140,14 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
 
     private fun verifyEndPeriod(date: Date) {
         launch {
-            period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
+            period = viewModel.getMeterLatestPeriod(viewModel.meter.code)
             val p = Period(LocalDate(period?.fromDate), LocalDate(date), PeriodType.days())
-            //if(p.days <= viewModel.meter.value!!.periodLength-5) {
             // Hide end period check if period passed time its less than 1 day
             if(p.days < 1) {
                 binding.nrEndPeriodSw.setHidden()
             }else {
                 binding.nrEndPeriodSw.setVisible()
-                binding.nrEndPeriodSw.isEnabled = p.days < viewModel.meter.value!!.periodLength+5
+                // binding.nrEndPeriodSw.isEnabled = p.days < viewModel.meter.periodLength+5
             }
         }
     }
@@ -223,19 +212,19 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
     @SuppressLint("InflateParams")
     private fun loadNativeAd(){
         val builder = AdLoader.Builder(requireContext(), getString(R.string.admob_native))
-        builder.forNativeAd { nativeAd ->
-            try {
+        try {
+            builder.forNativeAd { nativeAd ->
                 if (isAdded) {
                     val adBinding = AdNativeLayoutBinding.inflate(layoutInflater)
                     //val nativeAdview = AdNativeLayoutBinding.inflate(layoutInflater).root
                     binding.nativeAdFrameLayout.removeAllViews()
                     binding.nativeAdFrameLayout.addView(populateNativeAd(nativeAd, adBinding))
                 }
-            }catch (e:Exception){}
-        }
 
-        val adLoader = builder.build()
-        adLoader.loadAd(AdRequest.Builder().build())
+            }
+            val adLoader = builder.build()
+            adLoader.loadAd(AdRequest.Builder().build())
+        }catch (e:Exception){}
     }
 
     private fun populateNativeAd(nativeAd: NativeAd, adView: AdNativeLayoutBinding): NativeAdView {

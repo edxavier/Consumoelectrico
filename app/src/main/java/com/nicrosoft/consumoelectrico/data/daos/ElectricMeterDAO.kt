@@ -17,6 +17,9 @@ interface ElectricMeterDAO {
     fun deleteElectricMeter(meter: ElectricMeter)
 
     @Delete
+    fun deleteBillingPeriod(period: ElectricBillPeriod)
+
+    @Delete
     fun deleteElectricReading(reading: ElectricReading)
 
     @Update
@@ -61,14 +64,14 @@ interface ElectricMeterDAO {
     fun getPreviousPriceRange(meterCode:String, priceFrom:Int): PriceRange?
 
     @Query("SELECT * FROM electric_meter order by id desc")
-    fun getMeters(): LiveData<List<ElectricMeter>>
+    fun getMeters(): List<ElectricMeter>
 
 
     @Query("SELECT * FROM electric_bill_period where meter_code=:meterCode order by from_date desc")
-    fun getMeterPeriods(meterCode: String): LiveData<List<ElectricBillPeriod>>
+    fun getMeterPeriods(meterCode: String): List<ElectricBillPeriod>
 
     @Query("SELECT * FROM electric_bill_period where meter_code=:meterCode order by from_date desc")
-    fun getMeterAllPeriods(meterCode: String):List<ElectricBillPeriod>
+    fun getAllPeriods(meterCode: String):List<ElectricBillPeriod>
 
     @Query("SELECT * FROM electric_meter where code=:meterCode order by id desc")
     fun getMeter(meterCode: String): ElectricMeter
@@ -77,7 +80,7 @@ interface ElectricMeterDAO {
     fun getPeriod(periodCode: String): ElectricBillPeriod
 
     @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode order by reading_date desc")
-    fun getPeriodMetersReadings(periodCode: String): LiveData<List<ElectricReading>>
+    fun getPeriodMetersReadings(periodCode: String): List<ElectricReading>
 
     @Query("SELECT * FROM electric_meter_reading where period_code=:periodCode order by reading_date asc")
     fun getPeriodReadings(periodCode: String): List<ElectricReading>
@@ -86,7 +89,9 @@ interface ElectricMeterDAO {
     fun getTotalPeriodReading(periodCode: String): Int
 
     @Query("SELECT * FROM electric_meter_reading where meter_code=:meterCode order by id desc")
-    fun getAllMeterReadings(meterCode: String): LiveData<List<ElectricReading>>
+    fun getAllMeterReadings(meterCode: String): List<ElectricReading>
+    @Query("SELECT * FROM electric_meter_reading where meter_code=:meterCode order by id asc")
+    fun getAllMeterReadingsAsc(meterCode: String): List<ElectricReading>
 
     @Query("SELECT * FROM electric_meter_reading where meter_code=:meterCode order by reading_date asc limit 1")
     fun getFirstMeterReading(meterCode: String): ElectricReading
