@@ -17,8 +17,8 @@ android {
         applicationId "com.nicrosoft.consumoelectrico"
         minSdkVersion 26
         targetSdkVersion 34
-        versionCode 1020
-        versionName "3.7.0-2023.7.ce"
+        versionCode 1021
+        versionName "3.7.1-2024.02.ce"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -52,7 +52,7 @@ android {
         jvmTarget = "11"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.8"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
     buildFeatures {
         viewBinding true
@@ -62,6 +62,7 @@ android {
         abortOnError false
         checkReleaseBuilds false
     }
+    namespace 'com.nicrosoft.consumoelectrico'
 }
 
 dependencies {
@@ -78,18 +79,18 @@ dependencies {
 
     // Android Studio Preview support
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.compose.material3:material3:1.2.0-alpha03'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.compose.material3:material3:1.2.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation("androidx.compose.ui:ui-tooling")
     // Optional - Integration with activities
-    implementation("androidx.activity:activity-compose:1.7.2")
-    implementation "androidx.compose.runtime:runtime-livedata:1.6.0-alpha02"
+    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation "androidx.compose.runtime:runtime-livedata:1.6.1"
     // END COMPOSE DEPENDENCIES
 
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
-    def room_version = "2.5.2"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.6.1"
+    def room_version = "2.6.1"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     // optional - Kotlin Extensions and Coroutines support for Room
@@ -100,11 +101,11 @@ dependencies {
 
     implementation 'androidx.multidex:multidex:2.0.1'
     // implementation 'com.anjlab.android.iab.v3:library:2.0.3'
-    implementation 'androidx.recyclerview:recyclerview:1.3.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.11.0'
 
 
     implementation 'com.pixplicity.easyprefs:EasyPrefs:1.10.0'
@@ -112,23 +113,23 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart-Realm:v3.0.3@aar'
     implementation 'joda-time:joda-time:2.10.5'
 
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.6.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.6.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.6.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.6.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
     testImplementation 'junit:junit:4.13.2'
 
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-ads:22.2.0'
+    implementation 'com.google.firebase:firebase-ads:22.6.0'
     implementation 'com.google.firebase:firebase-crash:16.2.1'
     // Recommended: Add the Firebase SDK for Google Analytics.
-    implementation 'com.google.firebase:firebase-analytics:21.3.0'
+    implementation 'com.google.firebase:firebase-analytics:21.5.1'
     // Add the Firebase SDK for Crashlytics.
-    implementation 'com.google.firebase:firebase-crashlytics:18.4.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.6.2'
     // Add the SDK for Firebase Cloud Messaging
     //implementation 'com.google.firebase:firebase-messaging:22.0.0'
-    implementation 'com.google.firebase:firebase-config-ktx:21.4.1'
+    implementation 'com.google.firebase:firebase-config-ktx:21.6.1'
 
     implementation 'com.opencsv:opencsv:5.1'
     //implementation 'com.obsez.android.lib.filechooser:filechooser:1.2.0'
@@ -138,7 +139,7 @@ dependencies {
 
     //implementation 'com.firebase:firebase-jobdispatcher:0.8.6'
 
-    implementation "androidx.core:core-ktx:1.10.1"
+    implementation "androidx.core:core-ktx:1.12.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 
@@ -153,7 +154,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:files:3.3.0'
 
     // Preference
-    implementation "androidx.preference:preference-ktx:1.2.0"
+    implementation "androidx.preference:preference-ktx:1.2.1"
 
     // Kotlin Android Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
@@ -180,9 +181,9 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.14.0"
 
     //WORK MANAGER
-    implementation "androidx.work:work-runtime-ktx:2.8.1"
+    implementation "androidx.work:work-runtime-ktx:2.9.0"
 
-    implementation("com.android.billingclient:billing:6.0.1")
+    implementation("com.android.billingclient:billing:6.1.0")
 
 }
 apply plugin: 'com.google.gms.google-services'

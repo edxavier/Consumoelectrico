@@ -163,15 +163,14 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
     @ExperimentalTime
     suspend fun savedReading(reading: ElectricReading, meterCode: String, terminatePeriod:Boolean) = withContext(Dispatchers.IO){
         val period = getMeterLatestPeriod(meterCode)
-        val allReadings = getMeterAllReadings(meterCode)
         period?.let { p ->
             reading.periodCode = p.code
             reading.meterCode = meterCode
-            val readingBefore = allReadings.firstOrNull { it.readingDate < reading.readingDate }
-            val readingAfter = allReadings.firstOrNull { it.readingDate > reading.readingDate }
-            readingBefore?.let {
-                val isFirstPeriodReading = readingBefore.periodCode != reading.periodCode
-                computeReading(reading, readingBefore, readingAfter, period, isFirstPeriodReading)
+            val previous = dao.getPreviousReading(reading.periodCode!!, reading.readingDate)
+            val next = dao.getNextReading(reading.periodCode!!, reading.readingDate)
+            previous?.let {
+                val isFirstPeriodReading = previous.periodCode != reading.periodCode
+                computeReading(reading, previous, next, period, isFirstPeriodReading)
                 updatePeriodTotals(period)
             }
             val latestRead = getMeterReadings(meterCode).firstOrNull()
@@ -203,8 +202,8 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
         // periodo hasta la fecha de la lectura actual
         val totalHours = current.readingDate.hoursSinceDate(period.fromDate)
         var previousHours = current.readingDate.hoursSinceDate(previous.readingDate)
-
         current.kwConsumption = current.readingValue - previous.readingValue
+
         current.consumptionHours = totalHours.toFloat()
         current.consumptionPreviousHours = previousHours.toFloat()
         if (isFirstPeriodReading)
