@@ -15,10 +15,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.afollestad.materialdialogs.MaterialDialog
 import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.databinding.FragmentElectricPeriodsBinding
 import com.nicrosoft.consumoelectrico.screens.periods.PeriodsScreen
 import com.nicrosoft.consumoelectrico.screens.ui.theme.ConsumoelectricoTheme
@@ -29,7 +30,7 @@ import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
 import org.kodein.di.instance
 
-class ElectricPeriodsFragment : ScopeFragment(), DIAware {
+class ElectricPeriodsFragment : Fragment(), DIAware {
 
     override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
@@ -38,7 +39,7 @@ class ElectricPeriodsFragment : ScopeFragment(), DIAware {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
         binding = FragmentElectricPeriodsBinding.inflate(inflater)
         return binding.root
@@ -74,7 +75,7 @@ class ElectricPeriodsFragment : ScopeFragment(), DIAware {
                                     title(text = "${getString(R.string.undo_period)} ${period.fromDate.formatDate(requireContext())}")
                                     message(R.string.undo_notice)
                                     positiveButton(R.string.agree){
-                                        launch {
+                                        lifecycleScope.launch {
                                             viewModel.undoLastPeriod(period.meterCode)
                                             viewModel.getAllPeriods(viewModel.meter.code)
                                             loadData()

@@ -4,8 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -189,9 +189,11 @@ fun ReadingCard(
             }
         }
         if(reading.comments.isNotEmpty()) {
-            Divider(modifier = Modifier
-                .height(1.dp)
-                .fillMaxWidth())
+            HorizontalDivider(
+                modifier = Modifier
+                    .height(1.dp)
+                    .fillMaxWidth()
+            )
             Text(
                 text = reading.comments,
                 color = MaterialTheme.colorScheme.outline,

@@ -40,6 +40,10 @@
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
             android:value="true" />
+        <property
+            android:name="android.adservices.AD_SERVICES_CONFIG"
+            android:resource="@xml/gma_ad_services_config"
+            tools:replace="android:resource" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4124b2e7a8f5eb8f27a14edcb51751f9b8e26cd9" />

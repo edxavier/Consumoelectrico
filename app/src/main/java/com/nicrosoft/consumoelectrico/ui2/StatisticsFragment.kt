@@ -2,13 +2,14 @@ package com.nicrosoft.consumoelectrico.ui2
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.compose.foundation.layout.*
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.ads.AdLoader
@@ -17,7 +18,6 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.databinding.AdNativeLayoutBinding
 import com.nicrosoft.consumoelectrico.databinding.FragmentStatisticsBinding
 import com.nicrosoft.consumoelectrico.utils.*
@@ -29,7 +29,7 @@ import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
 import org.kodein.di.instance
 
-class StatisticsFragment : ScopeFragment(), DIAware {
+class StatisticsFragment : Fragment(), DIAware {
     override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
     private lateinit var viewModel: ElectricViewModel
@@ -64,7 +64,7 @@ class StatisticsFragment : ScopeFragment(), DIAware {
             val meter = viewModel.meter
             binding.detailMeterName.text = meter.name
             binding.detailMeterDesc.text = meter.description
-            launch {
+            lifecycleScope.launch {
                 try {
                     var period = viewModel.getMeterLatestPeriod(meter.code)
                     period = viewModel.updatePeriodTotals(period!!)
@@ -122,7 +122,7 @@ class StatisticsFragment : ScopeFragment(), DIAware {
     }
 
     private fun loadChartsData() {
-        launch {
+        lifecycleScope.launch {
 
             binding.aggConsumptionChart.setupLineChartStyle(HoursValueFormatter(), MyMarkerView(requireContext(), R.layout.marker))
             binding.avgConsumptionChart.setupLineChartStyle(HoursValueFormatter(), MyMarkerView(requireContext(), R.layout.marker))
@@ -212,7 +212,7 @@ class StatisticsFragment : ScopeFragment(), DIAware {
                 nativeAdView.bodyView = adBodyText
             }
             nativeAd.mediaContent?.let {
-                adMedia.setMediaContent(it)
+                adMedia.mediaContent = it
                 adMedia.setVisible()
                 adMedia.setImageScaleType(ImageView.ScaleType.FIT_XY)
                 nativeAdView.mediaView = adMedia

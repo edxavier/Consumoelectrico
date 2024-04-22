@@ -62,9 +62,9 @@ class BaseApp : MultiDexApplication(), DIAware {
                 //.setRequiresBatteryNotLow(true)
                 //.setRequiresStorageNotLow(true)
                 .build()
-        val readReminderWork = PeriodicWorkRequestBuilder<ReadReminderWorker>(4, TimeUnit.HOURS)
+        val readReminderWork = PeriodicWorkRequestBuilder<ReadReminderWorker>(12, TimeUnit.HOURS)
                 .setConstraints(constraints)
-                .setInitialDelay(4, TimeUnit.HOURS)
+                .setInitialDelay(1, TimeUnit.HOURS)
                 .build()
 
         workManager.enqueue(readReminderWork)

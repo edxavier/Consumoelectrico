@@ -6,22 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.databinding.FragmentSettingsBinding
 import com.pixplicity.easyprefs.library.Prefs
 
-class SettingsFragment : ScopeFragment() {
+class SettingsFragment : Fragment() {
 
     private lateinit var navController: NavController
     private lateinit var binding: FragmentSettingsBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         binding = FragmentSettingsBinding.inflate(layoutInflater)
         return binding.root
     }

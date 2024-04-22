@@ -168,9 +168,16 @@ class ElectricViewModel(val ctx: Context, private val dao:ElectricMeterDAO) : Vi
             reading.meterCode = meterCode
             val previous = dao.getPreviousReading(reading.periodCode!!, reading.readingDate)
             val next = dao.getNextReading(reading.periodCode!!, reading.readingDate)
-            previous?.let {
+            if(previous!=null){
                 val isFirstPeriodReading = previous.periodCode != reading.periodCode
                 computeReading(reading, previous, next, period, isFirstPeriodReading)
+                updatePeriodTotals(period)
+                if(terminatePeriod) {terminatePeriod(reading, period, meterCode)}
+            }else{
+                //No se encontro lecturas anterirores a la neuva en este periodo, esta pasa a ser la primera
+                //Cargar ultima lectura del periodo aanterior
+                val previousReading = dao.getLastMeterReading(meterCode, reading.readingDate)
+                computeReading(reading, previousReading!!, next, period, true)
                 updatePeriodTotals(period)
             }
             val latestRead = getMeterReadings(meterCode).firstOrNull()

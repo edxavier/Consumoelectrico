@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.afollestad.materialdialogs.MaterialDialog
@@ -18,7 +20,6 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
@@ -37,7 +38,7 @@ import java.util.*
 import kotlin.time.ExperimentalTime
 
 
-class NewElectricReadingFragment : ScopeFragment(), DIAware {
+class NewElectricReadingFragment : Fragment(), DIAware {
     private var meter: ElectricMeter? = null
     private var period: ElectricBillPeriod? = null
     override val di by closestDI()
@@ -51,7 +52,7 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
     //private var minDate = Calendar.getInstance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_new_emeter_reading, container, false)
         binding = FragmentNewEmeterReadingBinding.inflate(inflater, container, false)
@@ -77,7 +78,7 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
             meter = viewModel.meter
             meter?.let { m ->
                 nrTxtMedidorName.text = m.name
-                launch {
+                lifecycleScope.launch {
                     val lastReading =  viewModel.getMeterReadings(m.code, true).firstOrNull()
                     if(lastReading!=null){
                         nrTxtLastReading.text = "${getString(R.string.label_last_reading)}\n${lastReading.readingValue.toTwoDecimalPlace()} kWh"
@@ -115,7 +116,7 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
                 }
             }
             nrFab.setOnClickListener {
-                launch {
+                lifecycleScope.launch {
                     if(!validateInputs())
                         return@launch
                     if(!validateReadingValue())
@@ -139,7 +140,7 @@ class NewElectricReadingFragment : ScopeFragment(), DIAware {
     }
 
     private fun verifyEndPeriod(date: Date) {
-        launch {
+        lifecycleScope.launch {
             period = viewModel.getMeterLatestPeriod(viewModel.meter.code)
             val p = Period(LocalDate(period?.fromDate), LocalDate(date), PeriodType.days())
             // Hide end period check if period passed time its less than 1 day

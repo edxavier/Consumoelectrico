@@ -4,13 +4,15 @@ import android.os.Bundle
 import android.view.*
 import android.view.animation.OvershootInterpolator
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
@@ -23,7 +25,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange
 import com.nicrosoft.consumoelectrico.databinding.FragmentNewElectricMeterBinding
@@ -43,7 +44,7 @@ import org.kodein.di.android.x.closestDI
 import org.kodein.di.instance
 
 
-class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceItemListener {
+class NewElectricFragment : Fragment(), DIAware, PriceRangeAdapter.PriceItemListener {
     private var meter: ElectricMeter? = null
     private var cargosFijos: String = "----"
     private var impuestos: String = "----"
@@ -115,7 +116,7 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                 fab.hideKeyboard()
             }
             buttonAddPrice.setOnClickListener {
-                launch {
+                lifecycleScope.launch {
                     if(params.editingItem){
                         showCreateDialog()
                     }else{
@@ -165,7 +166,7 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                 newMeter.loseDiscount = swLoseDiscount.isChecked
                 newMeter.periodLength = txtEmeterPeriodLen.text.toString().toInt()
                 newMeter.readReminder = txtEmeterReminder.text.toString().toInt()
-                launch {
+                lifecycleScope.launch {
                     viewModel.saveElectricMeter(newMeter)
                     navController.navigateUp()
                 }
@@ -193,7 +194,7 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                     updateMeter.loseDiscount = swLoseDiscount.isChecked
                     updateMeter.periodLength = txtEmeterPeriodLen.text.toString().toInt()
                     updateMeter.readReminder = txtEmeterReminder.text.toString().toInt()
-                    launch {
+                    lifecycleScope.launch {
                         viewModel.updateElectricMeter(updateMeter)
                         navController.navigateUp()
                     }
@@ -249,9 +250,9 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                     .title(R.string.edit)
                     .negativeButton(R.string.cancel) { dismiss() }
                     .positiveButton(R.string.ok) {
-                        val fromKw = it.getCustomView().findViewById(R.id.dlg_txt_from_kw) as TextInputEditText
-                        val toKw = it.getCustomView().findViewById(R.id.dlg_txt_to_kw) as TextInputEditText
-                        val priceKw = it.getCustomView().findViewById(R.id.dlg_txt_price_kw) as TextInputEditText
+                        val fromKw: TextInputEditText = it.getCustomView().findViewById(R.id.dlg_txt_from_kw)
+                        val toKw: TextInputEditText = it.getCustomView().findViewById(R.id.dlg_txt_to_kw)
+                        val priceKw: TextInputEditText = it.getCustomView().findViewById(R.id.dlg_txt_price_kw)
                         if(checkNonEmptyEditText(toKw) && checkNonEmptyEditText(priceKw)){
                             val from = fromKw.text.toString().toInt()
                             val to = toKw.text.toString().toInt()
@@ -260,7 +261,7 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                                 toKw.error = getString(R.string.invalid_kw_range)
                                 toKw.requestFocus()
                             }else{
-                                launch {
+                                lifecycleScope.launch {
                                     val next = viewModel.getNextPriceRange(meter!!.code, from)
                                     if (next!=null){
                                         // No permitir que el rango mayor Nuevo sea mayor o igual al rango mayor-1 del siguienterango
@@ -290,9 +291,9 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                     }
         }
         try {
-            val fromKw = dlg.getCustomView().findViewById(R.id.dlg_txt_from_kw) as TextInputEditText
-            val toKw = dlg.getCustomView().findViewById(R.id.dlg_txt_to_kw) as TextInputEditText
-            val priceKw = dlg.getCustomView().findViewById(R.id.dlg_txt_price_kw) as TextInputEditText
+            val fromKw: TextInputEditText = dlg.getCustomView().findViewById(R.id.dlg_txt_from_kw)
+            val toKw: TextInputEditText = dlg.getCustomView().findViewById(R.id.dlg_txt_to_kw)
+            val priceKw: TextInputEditText = dlg.getCustomView().findViewById(R.id.dlg_txt_price_kw)
             fromKw.setText(price.fromKw.toString())
             toKw.setText(price.toKw.toString())
             priceKw.setText(price.price.toString())
@@ -307,14 +308,14 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                     .title(R.string.edit)
                     .negativeButton(R.string.cancel) { dismiss() }
                     .positiveButton(R.string.ok) {
-                        val fromKw = it.getCustomView().findViewById(R.id.dlg_txt_from_kw) as TextInputEditText
-                        val toKw = it.getCustomView().findViewById(R.id.dlg_txt_to_kw) as TextInputEditText
-                        val priceKw = it.getCustomView().findViewById(R.id.dlg_txt_price_kw) as TextInputEditText
+                        val fromKw: TextInputEditText = it.getCustomView().findViewById(R.id.dlg_txt_from_kw)
+                        val toKw: TextInputEditText = it.getCustomView().findViewById(R.id.dlg_txt_to_kw)
+                        val priceKw: TextInputEditText = it.getCustomView().findViewById(R.id.dlg_txt_price_kw)
                         if(checkNonEmptyEditText(toKw) && checkNonEmptyEditText(priceKw)){
                             if(checkValidRangeValues(fromKw, toKw)){
                                 val from = fromKw.text.toString().toInt()
                                 val to = toKw.text.toString().toInt()
-                                launch {
+                                lifecycleScope.launch {
                                     val op = viewModel.getOverlappingPrice(from, to, viewModel.meter.code)
                                     if(op!= null){
                                         fromKw.error = getString(R.string.range_overlaps)
@@ -335,9 +336,9 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                     }
         }
         try {
-            launch {
+            lifecycleScope.launch {
                 val lastPrice = viewModel.getLastPriceRange(viewModel.meter.code)
-                val fromKw = dlg.getCustomView().findViewById(R.id.dlg_txt_from_kw) as TextInputEditText
+                val fromKw: TextInputEditText = dlg.getCustomView().findViewById(R.id.dlg_txt_from_kw)
                 fromKw.setText("0")
                 lastPrice?.let { fromKw.setText((it.toKw+1).toString()) }
             }
@@ -350,7 +351,7 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
             title(R.string.delete)
             message(R.string.delete_item_notice)
             positiveButton(R.string.agree){
-                launch {
+                lifecycleScope.launch {
                     val next = viewModel.getNextPriceRange(meter!!.code, price.fromKw)
                     next?.let {
                         next.fromKw = price.fromKw
@@ -394,9 +395,9 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                     positiveButton(R.string.ok)
                 }
                 try {
-                    val txtPriceKw = dlg.getCustomView().findViewById(R.id.txt_help_kw_price) as TextView
-                    val txtFixedPrices = dlg.getCustomView().findViewById(R.id.txt_help_fixed_prices) as TextView
-                    val txtTaxes = dlg.getCustomView().findViewById(R.id.txt_help_taxes) as TextView
+                    val txtPriceKw: TextView = dlg.getCustomView().findViewById(R.id.txt_help_kw_price)
+                    val txtFixedPrices: TextView = dlg.getCustomView().findViewById(R.id.txt_help_fixed_prices)
+                    val txtTaxes: TextView = dlg.getCustomView().findViewById(R.id.txt_help_taxes)
                     txtPriceKw.text = HtmlCompat.fromHtml(precios, HtmlCompat.FROM_HTML_MODE_LEGACY)
                     txtFixedPrices.text = HtmlCompat.fromHtml(cargosFijos, HtmlCompat.FROM_HTML_MODE_LEGACY)
                     txtTaxes.text = HtmlCompat.fromHtml(impuestos, HtmlCompat.FROM_HTML_MODE_LEGACY)
@@ -431,7 +432,10 @@ class NewElectricFragment : ScopeFragment(), DIAware, PriceRangeAdapter.PriceIte
                     precios = processJson(remoteConfig.getString("precios"))
                 }
             }
-        }catch (e:Exception){}
+        }catch (e:Exception){
+            Toast.makeText(requireContext(),
+                "No se pudo descargar las tarifas", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun processJson(json:String): String{

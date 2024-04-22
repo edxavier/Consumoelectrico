@@ -21,7 +21,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -29,7 +31,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.listItems
 import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.databinding.FragmentElectricReadingListBinding
 import com.nicrosoft.consumoelectrico.screens.readings.ReadingsScreen
@@ -45,7 +46,7 @@ import java.util.*
 import kotlin.time.ExperimentalTime
 
 
-class ElectricReadingListFragment : ScopeFragment(), DIAware {
+class ElectricReadingListFragment : Fragment(), DIAware {
     private var tempReadings: List<ElectricReading>? = null
     override val di by closestDI()
     private val vmFactory by instance<ElectricVMFactory>()
@@ -57,7 +58,7 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware {
     private lateinit var binding:FragmentElectricReadingListBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         setHasOptionsMenu(true)
         binding = FragmentElectricReadingListBinding.inflate(inflater)
         return binding.root
@@ -105,7 +106,7 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware {
     @SuppressLint("CheckResult")
     @OptIn(ExperimentalTime::class)
     private fun onItemClickListener(reading: ElectricReading) {
-        launch {
+        lifecycleScope.launch {
             val period = viewModel.getMeterLatestPeriod(reading.meterCode?:"")
             // val meter = viewModel.getMeter(reading.meterCode!!)
             val options = resources.getStringArray(R.array.readings_options).toMutableList()
@@ -136,7 +137,7 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware {
             message(R.string.end_period_notice)
             negativeButton(R.string.cancel)
             positiveButton(R.string.agree){
-                launch {
+                lifecycleScope.launch {
                     val period = viewModel.getMeterLatestPeriod(reading.meterCode!!)
                     viewModel.terminatePeriod(reading, period!!, reading.meterCode!!)
                     viewModel.getMeterReadings(viewModel.meter.code)
@@ -155,7 +156,7 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware {
             //message(R.string.edit_reading)
             input (prefill = reading.readingValue.toTwoDecimalPlace(), inputType = InputType.TYPE_CLASS_NUMBER)
             { _, text ->
-                launch {
+                lifecycleScope.launch {
                     if(viewModel.validatedReadingValue(reading.readingDate, text.toString().toFloat(), reading.meterCode!!)){
                         reading.readingValue = text.toString().toFloat()
                         viewModel.updateReadingValue(reading)
@@ -178,7 +179,7 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware {
             title(text = reading.readingValue.toTwoDecimalPlace())
             message(R.string.delete_notice)
             positiveButton(R.string.agree){
-                launch {
+                lifecycleScope.launch {
                     val fr = viewModel.getFirstMeterReading(reading.meterCode!!)
                     if(reading.code == fr.code){
                         MaterialDialog(requireContext()).show {
@@ -211,13 +212,13 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware {
                 exportDialog()
             }
             R.id.action_show_all_meter_readings->{
-                launch {
+                lifecycleScope.launch {
                     viewModel.getMeterReadings(viewModel.meter.code, allReadings = true)
                     loadData()
                 }
             }
             R.id.action_show_period_readings->{
-                launch {
+                lifecycleScope.launch {
                     viewModel.getMeterReadings(viewModel.meter.code, allReadings = false)
                     loadData()
                 }
@@ -250,7 +251,7 @@ class ElectricReadingListFragment : ScopeFragment(), DIAware {
             result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { uri ->
-                launch {
+                lifecycleScope.launch {
                     tempReadings?.let {
                         val resultPath = CsvHandler.exportMeterReadings(it, uri, requireContext())
                         if (resultPath!=null) {

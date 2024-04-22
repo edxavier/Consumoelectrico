@@ -6,10 +6,12 @@ import android.util.Log
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -29,7 +31,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
-class MainKt : ScopeActivity(), PurchasesUpdatedListener, PurchasesResponseListener {
+class MainKt : AppCompatActivity(), PurchasesUpdatedListener, PurchasesResponseListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     var PRODUCT_SKU = "remove_ads"
@@ -101,7 +103,7 @@ class MainKt : ScopeActivity(), PurchasesUpdatedListener, PurchasesResponseListe
 
         */
 
-        launch {
+        lifecycleScope.launch {
             delay(4000)
             requestReview()
         }
@@ -111,7 +113,7 @@ class MainKt : ScopeActivity(), PurchasesUpdatedListener, PurchasesResponseListe
     }
 
     fun startBillingConnection() {
-
+        var connectionTries = 0
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
@@ -120,8 +122,13 @@ class MainKt : ScopeActivity(), PurchasesUpdatedListener, PurchasesResponseListe
             }
 
             override fun onBillingServiceDisconnected() {
-                Log.i("EDER", "Billing connection disconnected")
-                startBillingConnection()
+                connectionTries += 1
+                lifecycleScope.launch {
+                    if(connectionTries <= 10) {
+                        delay(1000)
+                        startBillingConnection()
+                    }
+                }
             }
         })
     }

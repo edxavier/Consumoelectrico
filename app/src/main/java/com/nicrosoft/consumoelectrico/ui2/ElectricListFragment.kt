@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.*
 import android.webkit.MimeTypeMap
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.EaseInOutCubic
@@ -26,8 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.afollestad.materialdialogs.MaterialDialog
@@ -35,7 +36,6 @@ import com.afollestad.materialdialogs.list.listItems
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.nicrosoft.consumoelectrico.BuildConfig
 import com.nicrosoft.consumoelectrico.R
-import com.nicrosoft.consumoelectrico.ScopeFragment
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.databinding.EmeterListFragmentBinding
 import com.nicrosoft.consumoelectrico.screens.CircularProgress
@@ -55,7 +55,7 @@ import org.kodein.di.instance
 import java.io.File
 import java.util.*
 
-class ElectricListFragment : ScopeFragment(), DIAware, MenuProvider {
+class ElectricListFragment : Fragment(), DIAware, MenuProvider {
     private lateinit var userBackupDir: File
     private lateinit var appBackupsDir: File
     override val di by closestDI()
@@ -195,7 +195,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, MenuProvider {
     }
 
     private fun showItemDetails(meter: ElectricMeter) {
-        launch {
+        lifecycleScope.launch {
             viewModel.selectedMeter(meter)
             val action = ElectricListFragmentDirections.actionNavEmaterListToElectricDetailFragment()
             navController.navigate(action)
@@ -207,7 +207,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, MenuProvider {
             title(text = "${getString(R.string.delete)} ${meter.name}?")
             message(R.string.delete_medidor_notice)
             positiveButton(R.string.agree){
-                launch {
+                lifecycleScope.launch {
                     viewModel.deleteElectricMeter(meter)
                     viewModel.getElectricMeterList()
                 }
@@ -233,7 +233,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, MenuProvider {
             result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { uri ->
-                launch {
+                lifecycleScope.launch {
                     //val period = viewModel.getLastPeriod(viewModel.meter.value!!.code)
                     //var name = "USER_BACKUP " + Date().backupFormat(requireContext())
                     //name = name.replace(" ", "_")
@@ -274,7 +274,7 @@ class ElectricListFragment : ScopeFragment(), DIAware, MenuProvider {
             result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { uri ->
-                launch {
+                lifecycleScope.launch {
                     when(val restoreResult = JsonBackupHandler.restoreBackup(backupHelper, uri, requireContext())){
                         is AppResult.OK -> {
                             delay(300)
