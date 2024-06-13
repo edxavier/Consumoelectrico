@@ -180,6 +180,7 @@ class MainKt : AppCompatActivity(), PurchasesUpdatedListener, PurchasesResponseL
         adView.setHidden()
         adView.setAdSize(getAdSize())
         adView.adUnitId = getString(R.string.admob_banner)
+        // adView.adUnitId = "ca-app-pub-3940256099942544/9214589741"
 
         adView.loadAd(AdRequest.Builder().build())
         adView.adListener = object : AdListener() {

@@ -61,8 +61,8 @@ class ElectricDetailFragment : Fragment(), DIAware {
         if (ne + 1 == Prefs.getInt("show_after", 3)) {
             Prefs.putInt("exec_count", 0)
             val r = Random()
-            val min = 3
-            val max = 5
+            val min = 2
+            val max = 3
             val rnd = r.nextInt(max - min) + min
             Prefs.putInt("show_after", rnd)
             mInterstitialAd?.show(requireActivity())

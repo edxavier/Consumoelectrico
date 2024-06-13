@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.webkit.MimeTypeMap
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -56,8 +57,9 @@ class ElectricReadingListFragment : Fragment(), DIAware {
     private lateinit var navController: NavController
     private lateinit var mainNavController: NavController
     private lateinit var binding:FragmentElectricReadingListBinding
+    lateinit var myAdView: FrameLayout
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         setHasOptionsMenu(true)
         binding = FragmentElectricReadingListBinding.inflate(inflater)
@@ -70,6 +72,10 @@ class ElectricReadingListFragment : Fragment(), DIAware {
         mainNavController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         viewModel = ViewModelProvider(requireActivity(), vmFactory)[ElectricViewModel::class.java]
         loadData()
+        activity?.apply {
+            myAdView = findViewById(R.id.adViewContainer)
+            myAdView.setHidden()
+        }
     }
     
     private fun loadData(showAll: Boolean = false){
@@ -287,5 +293,10 @@ class ElectricReadingListFragment : Fragment(), DIAware {
         } catch (e: ActivityNotFoundException) {
             showInfoDialog("No Application handler for this type of file.")
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        myAdView.setVisible()
     }
 }
