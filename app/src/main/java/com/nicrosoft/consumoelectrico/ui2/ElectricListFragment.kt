@@ -11,6 +11,7 @@ import android.view.*
 import android.webkit.MimeTypeMap
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -125,7 +126,7 @@ class ElectricListFragment : Fragment(), DIAware, MenuProvider {
                                     onDetailsClick = {
                                         showItemDetails(it)
                                     },
-                                    modifier = Modifier.animateItemPlacement(
+                                    modifier = Modifier.animateContentSize(
                                         animationSpec = tween(
                                             durationMillis = 350,
                                             easing = EaseInOutCubic

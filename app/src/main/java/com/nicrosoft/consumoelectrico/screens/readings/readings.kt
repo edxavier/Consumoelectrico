@@ -2,6 +2,7 @@ package com.nicrosoft.consumoelectrico.screens.readings
 
 import android.provider.Settings.Global.getString
 import android.util.Log
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -56,7 +57,7 @@ fun ReadingsScreen(
                     reading = reading,
                     prevReading = previousReading,
                     onClick = { onItemClick?.let { it(reading) } },
-                    modifier = Modifier.animateItemPlacement(
+                    modifier = Modifier.animateContentSize(
                         animationSpec = tween(
                             durationMillis = 350,
                             easing = EaseInOutCubic

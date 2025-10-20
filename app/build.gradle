@@ -1,24 +1,30 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-//apply plugin: 'kotlin-android-extensions'
-apply plugin: "androidx.navigation.safeargs.kotlin"
-apply plugin: 'com.google.firebase.crashlytics'
-//apply plugin: 'realm-android'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
+    id 'com.google.devtools.ksp'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
 
 android {
-    compileSdkVersion 34
+    compileSdkVersion 36
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlin {
+        jvmToolchain(17)
     }
 
     defaultConfig {
         applicationId "com.nicrosoft.consumoelectrico"
         minSdkVersion 26
-        targetSdkVersion 34
-        versionCode 1023
-        versionName "3.7.3-2024.06.ce"
+        targetSdkVersion 36
+        versionCode 1024
+        versionName "3.7.4-2025.10.ce"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -45,18 +51,10 @@ android {
     }
     sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/xml'] } }
 
-    // To inline the bytecode built with JVM target 1.8 into
-    // bytecode that is being built with JVM target 1.6. (e.g. navArgs)
-
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
-    }
     buildFeatures {
         viewBinding true
         compose = true
+        buildConfig = true
     }
     lint {
         abortOnError false
@@ -64,74 +62,79 @@ android {
     }
     namespace 'com.nicrosoft.consumoelectrico'
 }
-
+repositories {
+    google()
+    mavenCentral()
+}
 dependencies {
 
-    implementation platform("androidx.compose:compose-bom:2024.04.01")
+    implementation platform("androidx.compose:compose-bom:2025.10.00")
     //androidTestImplementation composeBom
     // Material Design 3
     //implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material")
     implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.compose.material:material-icons-extended")
     // or only import the main APIs for the underlying toolkit systems,
     // such as input and measurement/layout
     implementation("androidx.compose.ui:ui")
 
     // Android Studio Preview support
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
-    implementation 'androidx.compose.material3:material3:1.2.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.4'
+    implementation 'androidx.compose.material3:material3:1.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation("androidx.compose.ui:ui-tooling")
     // Optional - Integration with activities
-    implementation("androidx.activity:activity-compose:1.9.0")
-    implementation "androidx.compose.runtime:runtime-livedata:1.6.6"
+    implementation("androidx.activity:activity-compose:1.11.0")
+    implementation "androidx.compose.runtime:runtime-livedata:1.9.3"
     // END COMPOSE DEPENDENCIES
 
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
-    debugImplementation "androidx.compose.ui:ui-test-manifest:1.6.6"
-    def room_version = "2.6.1"
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    // optional - Kotlin Extensions and Coroutines support for Room
-    implementation "androidx.room:room-ktx:$room_version"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4'
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.9.3"
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "androidx.room:room-runtime:2.8.2"
+    ksp "androidx.room:room-compiler:2.8.2"
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:2.8.2"
+
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation 'androidx.multidex:multidex:2.0.1'
     // implementation 'com.anjlab.android.iab.v3:library:2.0.3'
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.google.android.material:material:1.13.0'
 
 
     implementation 'com.pixplicity.easyprefs:EasyPrefs:1.10.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart-Realm:v3.0.3@aar'
-    implementation 'joda-time:joda-time:2.10.5'
+    implementation 'joda-time:joda-time:2.14.0'
 
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.9.5'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.9.5'
     testImplementation 'junit:junit:4.13.2'
 
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-ads:23.0.0'
+    implementation 'com.google.firebase:firebase-ads:23.6.0'
     implementation 'com.google.firebase:firebase-crash:16.2.1'
     // Recommended: Add the Firebase SDK for Google Analytics.
-    implementation 'com.google.firebase:firebase-analytics:21.6.2'
+    implementation 'com.google.firebase:firebase-analytics:23.0.0'
     // Add the Firebase SDK for Crashlytics.
-    implementation 'com.google.firebase:firebase-crashlytics:18.6.4'
+    implementation 'com.google.firebase:firebase-crashlytics:20.0.3'
     // Add the SDK for Firebase Cloud Messaging
     //implementation 'com.google.firebase:firebase-messaging:22.0.0'
-    implementation 'com.google.firebase:firebase-config-ktx:21.6.3'
+    implementation 'com.google.firebase:firebase-config-ktx:22.1.2'
 
-    implementation 'com.opencsv:opencsv:5.1'
+    implementation 'com.opencsv:opencsv:5.12.0'
     //implementation 'com.obsez.android.lib.filechooser:filechooser:1.2.0'
 
     // progreso circular que se muestra en la lista
@@ -139,8 +142,8 @@ dependencies {
 
     //implementation 'com.firebase:firebase-jobdispatcher:0.8.6'
 
-    implementation "androidx.core:core-ktx:1.13.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.core:core-ktx:1.17.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.2.0"
 
 
     implementation "com.github.lisawray.groupie:groupie:2.10.1"
@@ -157,33 +160,33 @@ dependencies {
     implementation "androidx.preference:preference-ktx:1.2.1"
 
     // Kotlin Android Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2"
 
 
     implementation "com.wajahatkarim:easyvalidation-core:1.0.4"
 
     //ANIMATIONS
-    implementation 'com.airbnb.android:lottie:6.4.0'
-    implementation "com.airbnb.android:lottie-compose:6.1.0"
-    implementation 'jp.wasabeef:recyclerview-animators:4.0.1'
+    implementation 'com.airbnb.android:lottie:6.6.10'
+    implementation "com.airbnb.android:lottie-compose:6.6.10"
+    implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
 
     // Kodein
-    implementation "org.kodein.di:kodein-di:7.0.0"
-    implementation "org.kodein.di:kodein-di-framework-android-x:7.0.0"
+    implementation "org.kodein.di:kodein-di:7.28.0"
+    implementation "org.kodein.di:kodein-di-framework-android-x:7.28.0"
 
     // DATE TIME
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.9'
 
     // JSON PARSING
-    implementation "com.squareup.moshi:moshi:1.15.1"
-    implementation "com.squareup.moshi:moshi-kotlin:1.15.1"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.15.1"
+    implementation "com.squareup.moshi:moshi:1.15.2"
+    implementation "com.squareup.moshi:moshi-kotlin:1.15.2"
+    ksp "com.squareup.moshi:moshi-kotlin-codegen:1.15.2"
 
     //WORK MANAGER
-    implementation "androidx.work:work-runtime-ktx:2.9.0"
+    implementation "androidx.work:work-runtime-ktx:2.10.5"
 
-    implementation("com.android.billingclient:billing:6.2.1")
+    implementation("com.android.billingclient:billing:8.0.0")
 
 }
 apply plugin: 'com.google.gms.google-services'

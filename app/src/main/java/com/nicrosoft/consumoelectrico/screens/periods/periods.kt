@@ -1,5 +1,6 @@
 package com.nicrosoft.consumoelectrico.screens.periods
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -14,9 +15,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.entities.ElectricBillPeriod
-import com.nicrosoft.consumoelectrico.data.entities.ElectricReading
 import com.nicrosoft.consumoelectrico.screens.CircularProgress
 import com.nicrosoft.consumoelectrico.screens.NoDataScreen
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -44,7 +45,7 @@ fun PeriodsScreen(
                     onClick = {
                            onItemClick?.let { it(period) }
                     },
-                    modifier = Modifier.animateItemPlacement(
+                    modifier = Modifier.animateContentSize(
                         animationSpec = tween(
                             durationMillis = 350,
                             easing = EaseInOutCubic

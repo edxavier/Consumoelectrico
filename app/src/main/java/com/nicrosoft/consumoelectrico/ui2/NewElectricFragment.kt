@@ -21,9 +21,10 @@ import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.list.listItems
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.google.firebase.remoteconfig.remoteConfig
 import com.nicrosoft.consumoelectrico.R
 import com.nicrosoft.consumoelectrico.data.entities.ElectricMeter
 import com.nicrosoft.consumoelectrico.data.entities.PriceRange

@@ -12,6 +12,8 @@ import com.google.android.gms.ads.RequestConfiguration
 import com.google.firebase.FirebaseApp
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.nicrosoft.consumoelectrico.data.AppDataBase
+import com.nicrosoft.consumoelectrico.data.daos.BackupDAO
+import com.nicrosoft.consumoelectrico.data.daos.ElectricMeterDAO
 import com.nicrosoft.consumoelectrico.ui2.ElectricVMFactory
 import com.nicrosoft.consumoelectrico.utils.helpers.BackupDatabaseHelper
 import com.nicrosoft.consumoelectrico.utils.workers.ReadReminderWorker
@@ -30,14 +32,14 @@ class BaseApp : MultiDexApplication(), DIAware {
     override val di = DI.lazy {
         import(androidXModule(this@BaseApp))
         // BasedeDatos
-        bind() from singleton { AppDataBase(instance()) }
+        this.bind<AppDataBase>() with singleton { AppDataBase(instance()) }
         //Daos
-        bind() from singleton { instance<AppDataBase>().electricMeterDAO() }
-        bind() from singleton { instance<AppDataBase>().backupDAO() }
+        this.bind<ElectricMeterDAO>() with singleton { instance<AppDataBase>().electricMeterDAO() }
+        this.bind<BackupDAO>() with singleton { instance<AppDataBase>().backupDAO() }
         // ViewModelFactory
-        bind() from provider { ElectricVMFactory(instance(), instance()) }
+        this.bind<ElectricVMFactory>() with provider { ElectricVMFactory(instance(), instance()) }
         //Helper
-        bind() from singleton { BackupDatabaseHelper(instance(), instance()) }
+        this.bind<BackupDatabaseHelper>() with singleton { BackupDatabaseHelper(instance(), instance()) }
     }
 
     override fun onCreate() {

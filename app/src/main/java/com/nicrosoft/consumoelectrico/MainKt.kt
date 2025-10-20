@@ -6,11 +6,12 @@ import android.util.Log
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.MutableLiveData
+import com.android.billingclient.api.PendingPurchasesParams
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -43,9 +44,17 @@ class MainKt : AppCompatActivity(), PurchasesUpdatedListener, PurchasesResponseL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        onBackPressedDispatcher.addCallback(this) {
+            val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START)
+            } else {
+                finish() // o la acción que quieras
+            }
+        }
         billingClient =  BillingClient.newBuilder(this)
             .setListener(this)
-            .enablePendingPurchases()
+            .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
             .build()
         startBillingConnection()
         // manager = ReviewManagerFactory.create(this)
@@ -192,19 +201,6 @@ class MainKt : AppCompatActivity(), PurchasesUpdatedListener, PurchasesResponseL
         //nav_view.menu.findItem(R.id.destino_ocultar_publicidad).isVisible = false
     }
 
-
-
-    override fun onBackPressed() {
-        //if (searchView.onBackPressed()) {
-        //  return
-        //}
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
-    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
