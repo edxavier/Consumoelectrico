@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 36
+    compileSdkVersion 37
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -22,9 +22,9 @@ android {
     defaultConfig {
         applicationId "com.nicrosoft.consumoelectrico"
         minSdkVersion 26
-        targetSdkVersion 36
-        versionCode 1024
-        versionName "3.7.4-2025.10.ce"
+        targetSdkVersion 37
+        versionCode 1025
+        versionName "3.8.0-2026.07.ce"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -68,7 +68,7 @@ repositories {
 }
 dependencies {
 
-    implementation platform("androidx.compose:compose-bom:2026.03.01")
+    implementation platform("androidx.compose:compose-bom:2026.06.01")
     //androidTestImplementation composeBom
     // Material Design 3
     //implementation("androidx.compose.material3:material3")
@@ -82,17 +82,17 @@ dependencies {
 
     // Android Studio Preview support
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.10.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.11.0'
     implementation 'androidx.compose.material3:material3:1.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation("androidx.compose.ui:ui-tooling")
     // Optional - Integration with activities
     implementation("androidx.activity:activity-compose:1.13.0")
-    implementation "androidx.compose.runtime:runtime-livedata:1.10.6"
+    implementation "androidx.compose.runtime:runtime-livedata:1.11.4"
     // END COMPOSE DEPENDENCIES
 
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0'
-    debugImplementation "androidx.compose.ui:ui-test-manifest:1.10.6"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.11.0'
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.11.4"
 
     implementation "androidx.room:room-runtime:2.8.4"
     ksp "androidx.room:room-compiler:2.8.4"
@@ -108,19 +108,19 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'com.google.android.material:material:1.14.0'
 
 
     implementation 'com.pixplicity.easyprefs:EasyPrefs:1.10.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart-Realm:v3.0.3@aar'
-    implementation 'joda-time:joda-time:2.14.1'
+    implementation 'joda-time:joda-time:2.14.2'
 
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.7'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.9.7'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.8'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.9.8'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.7'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.9.7'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.8'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.9.8'
     testImplementation 'junit:junit:4.13.2'
 
     implementation 'com.google.firebase:firebase-core:21.1.1'
@@ -129,7 +129,7 @@ dependencies {
     // Recommended: Add the Firebase SDK for Google Analytics.
     implementation 'com.google.firebase:firebase-analytics:23.2.0'
     // Add the Firebase SDK for Crashlytics.
-    implementation 'com.google.firebase:firebase-crashlytics:20.0.5'
+    implementation 'com.google.firebase:firebase-crashlytics:20.0.6'
     // Add the SDK for Firebase Cloud Messaging
     //implementation 'com.google.firebase:firebase-messaging:22.0.0'
     implementation 'com.google.firebase:firebase-config-ktx:22.1.2'
@@ -142,8 +142,8 @@ dependencies {
 
     //implementation 'com.firebase:firebase-jobdispatcher:0.8.6'
 
-    implementation "androidx.core:core-ktx:1.18.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.2.21"
+    implementation "androidx.core:core-ktx:1.19.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.3.20"
 
 
     implementation "com.github.lisawray.groupie:groupie:2.10.1"
@@ -160,8 +160,8 @@ dependencies {
     implementation "androidx.preference:preference-ktx:1.2.1"
 
     // Kotlin Android Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2'
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0"
 
 
     implementation "com.wajahatkarim:easyvalidation-core:1.0.4"
@@ -172,8 +172,8 @@ dependencies {
     implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
 
     // Kodein
-    implementation "org.kodein.di:kodein-di:7.31.0"
-    implementation "org.kodein.di:kodein-di-framework-android-x:7.31.0"
+    implementation "org.kodein.di:kodein-di:7.32.0"
+    implementation "org.kodein.di:kodein-di-framework-android-x:7.32.0"
 
     // DATE TIME
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.9'
@@ -186,7 +186,7 @@ dependencies {
     //WORK MANAGER
     implementation "androidx.work:work-runtime-ktx:2.11.2"
 
-    implementation("com.android.billingclient:billing:8.3.0")
+    implementation("com.android.billingclient:billing:9.1.0")
 
 }
 apply plugin: 'com.google.gms.google-services'
