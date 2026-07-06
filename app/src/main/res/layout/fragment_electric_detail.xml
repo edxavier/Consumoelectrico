@@ -18,7 +18,9 @@
         android:id="@+id/bottom_nav_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="8dp"
+        android:background="?attr/colorSurface"
+        app:itemRippleColor="@color/md_blue_200"
+        app:elevation="12dp"
         app:labelVisibilityMode="auto"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>

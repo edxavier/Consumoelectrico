@@ -70,9 +70,6 @@ fun Date.formatDate(context: Context, includeTime:Boolean): String{
 @OptIn(ExperimentalTime::class)
 fun Date.hoursSinceDate(prevDate:Date): Long{
     return try {
-        //DurationUnit.HOURS.convert(this.time - prevDate.time , DurationUnit.MILLISECONDS)
-        //convert((this.time - prevDate.time).toDouble(), DurationUnit.MILLISECONDS, DurationUnit.DAYS).toLong()
-
         TimeUnit.MILLISECONDS.toHours(this.time - prevDate.time)
     }catch (e:Exception){ -1 }
 }
@@ -106,7 +103,15 @@ fun Float.toTwoDecimalPlace(): String{
 fun Float.toOneDecimalPlace(): String{
     return String.format(Locale.US, "%.1f", this).replace(",", ".").removeZeroDecimal()
 }
-fun FloatingActionButton. hideKeyboard() {
+
+fun Context.getColorFromAttr(attr: Int): Int {
+    val typedValue = android.util.TypedValue()
+    theme.resolveAttribute(attr, typedValue, true)
+    return typedValue.data
+}
+
+// Updated to View to support ExtendedFloatingActionButton
+fun View.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(this.windowToken, 0)
 }

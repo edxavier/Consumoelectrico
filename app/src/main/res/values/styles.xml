@@ -1,53 +1,56 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="md_corner_radius">12dp</item>
-        <item name="md_color_button_text">?attr/colorSecondary</item>
-        <item name="md_color_title">@color/primaryDarkColor</item>
-
-        <item name="windowActionModeOverlay">true</item>
-
+    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorAccent">@color/secondaryColor</item>
+        <item name="colorOnPrimary">@color/secondaryTextColor</item>
+        <item name="colorPrimaryContainer">@color/primaryLightColor</item>
+        <item name="colorOnPrimaryContainer">@color/primaryDarkColor</item>
+
         <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
-        <item name="android:colorAccent">@color/secondaryColor</item>
+        <item name="colorOnSecondary">@color/secondaryTextColor</item>
+        <item name="colorSecondaryContainer">#CFD8DC</item>
+        <item name="colorOnSecondaryContainer">#1A1C1E</item>
+
+        <item name="colorTertiary">@color/accent</item>
+        <item name="colorOnTertiary">@color/secondaryTextColor</item>
+        <item name="colorTertiaryContainer">#FFF1CC</item>
+        <item name="colorOnTertiaryContainer">#241A00</item>
+
+        <item name="colorSurface">#FBFDFF</item>
+        <item name="colorOnSurface">#191C1E</item>
+        <item name="colorSurfaceVariant">#DFE3E7</item>
+        <item name="colorOnSurfaceVariant">#40484C</item>
+        <item name="colorOutline">#70777C</item>
+        <item name="colorOutlineVariant">#C0C7CD</item>
 
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-
-        <item name="android:windowContentOverlay">@null</item>
-
         <item name="fontFamily">@font/source_sans_pro</item>
-        <item name="materialButtonStyle">@style/AppButton</item>
-
-    </style>
-    <!-- Base application theme. -->
-    <style name="AppTheme.Details" parent="AppTheme">
-        <item name="android:windowTranslucentStatus">false</item>
     </style>
 
     <style name="AppTheme.Title" parent="AppTheme">
-        <item name="fontFamily">@font/source_sans_pro_semibold</item>
-        <item name="android:textColor">@color/md_black_1000_75</item>
+        <item name="android:fontFamily">@font/source_sans_pro_semibold</item>
+        <item name="android:textAppearance">?attr/textAppearanceTitleMedium</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="AppTheme.Section" parent="TextAppearance.MaterialComponents.Overline">
-        <item name="android:fontFamily">@font/source_sans_pro</item>
-        <item name="fontFamily">@font/source_sans_pro_semibold</item>
+    <style name="AppTheme.Section" parent="AppTheme">
+        <item name="android:fontFamily">@font/source_sans_pro_semibold</item>
+        <item name="android:textAppearance">?attr/textAppearanceLabelLarge</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
     <style name="drawerTextStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">@font/source_sans_pro</item>
     </style>
 
-    <!-- Splash Screen Theme. -->
+    <!-- Splash Screen Theme restored -->
     <style name="SplashTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
@@ -57,31 +60,28 @@
         <item name="android:windowBackground">@drawable/splash_drawable</item>
     </style>
 
-
-    <style name="AppButton" parent="Widget.MaterialComponents.Button">
+    <style name="AppButton" parent="Widget.Material3.Button">
         <item name="backgroundTint">?attr/colorSecondary</item>
-        <item name="android:radius">16dp</item>
     </style>
 
-    <style name="filledTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
-        <item name="boxBackgroundColor">@color/md_blue_grey_50</item>
-        <item name="boxCornerRadiusTopEnd">8dp</item>
-        <item name="boxCornerRadiusTopStart">8dp</item>
+    <style name="filledTextInputLayout" parent="Widget.Material3.TextInputLayout.FilledBox">
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">0dp</item>
+        <item name="boxCornerRadiusBottomStart">0dp</item>
     </style>
 
+    <!-- Fix: Forced Dark Icons for light toolbar -->
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.Material3.DynamicColors.Light">
+        <item name="colorControlNormal">?attr/colorOnSurface</item>
+        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
+    </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.Material3.Light" />
 
     <style name="input_error_appearance" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/md_red_500</item>
         <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>

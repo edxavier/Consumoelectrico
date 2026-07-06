@@ -241,6 +241,16 @@ Você pode encerrar o período registrando uma nova leitura ou selecionar da lis
     <string name="never">Nunca</string>
     <string name="undo_notice">Esta ação irá desfazer o período atual e associar todas as leituras ao período anterior, se nenhum período anterior for encontrado, os dados de leitura serão excluídos.</string>
     <string name="undo_period">Desfazer período</string>
+    <string name="active_period">PERÍODO ATIVO</string>
+    <string name="closed_period">PERÍODO FECHADO</string>
+    <string name="tap_to_undo">TOQUE PARA DESFAZER</string>
+    <string name="current_period">PERÍODO ATUAL</string>
+    <string name="total_period">CONSUMO TOTAL</string>
+    <string name="daily_avg_label">MÉDIA DIÁRIA</string>
+    <string name="billing_period">PERÍODO DE FATURAMENTO</string>
+    <string name="save_reading">SALVAR LEITURA</string>
+    <string name="elapsed_time">TEMPO DECORRIDO</string>
+    <string name="tap_to_start_stop">TOQUE PARA INICIAR / PARAR</string>
 
 
 </resources>

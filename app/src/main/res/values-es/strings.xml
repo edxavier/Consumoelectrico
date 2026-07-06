@@ -262,6 +262,16 @@
     <string name="never">Nunca</string>
     <string name="undo_notice">Esta acción deshará el período actual y asociará todas las lecturas al período anterior; si no se encuentra ningún período anterior, se eliminarán los datos de lectura.</string>
     <string name="undo_period">Deshacer período</string>
+    <string name="active_period">PERIODO ACTIVO</string>
+    <string name="closed_period">PERIODO CERRADO</string>
+    <string name="tap_to_undo">TOCA PARA DESHACER</string>
+    <string name="current_period">PERIODO ACTUAL</string>
+    <string name="total_period">CONSUMO TOTAL</string>
+    <string name="daily_avg_label">PROM. DIARIO</string>
+    <string name="billing_period">PERIODO DE FACTURACIÓN</string>
+    <string name="save_reading">GUARDAR LECTURA</string>
+    <string name="elapsed_time">TIEMPO TRANSCURRIDO</string>
+    <string name="tap_to_start_stop">TOCA PARA INICIAR / DETENER</string>
 
 
 </resources>

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.compose.foundation.layout.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -75,7 +74,7 @@ class StatisticsFragment : Fragment(), DIAware {
                             binding.detailLastReading.text = "${lr.readingValue.toTwoDecimalPlace()} kWh"
                             binding.detailLastReadingDate.text = lr.readingDate.formatDate(requireContext())
                             binding.detailPeriodDailyAvgConsumption.text = "${(lr.kwAvgConsumption * 24).toTwoDecimalPlace()} kWh"
-                            if (lr.consumptionHours / 24 < meter.periodLength)
+                            if ((lr.consumptionHours / 24) < meter.periodLength)
                                 binding.detailPeriodEstimatedConsumption.text = "${lr.getConsumptionProjection(meter).toTwoDecimalPlace()} kWh"
                             else
                                 binding.detailPeriodEstimatedConsumption.text = "${p.totalKw.toTwoDecimalPlace()} kWh"
@@ -83,7 +82,7 @@ class StatisticsFragment : Fragment(), DIAware {
                             val periodExp = viewModel.calculateEnergyCosts(p.totalKw, meter)
                             binding.detailPeriodExpenses.text = "$coinSymbol${periodExp.total.toTwoDecimalPlace()}"
                             //Si aun no hemos revasado la duracion periodo estimar el consumo an finalizarlo
-                            val dExpenses = if (lr.consumptionHours / 24 < meter.periodLength) {
+                            val dExpenses = if ((lr.consumptionHours / 24) < meter.periodLength) {
                                 val estimatedExp = viewModel.calculateEnergyCosts(lr.getConsumptionProjection(meter), meter)
                                 binding.detailPeriodEstimatedExpenses.text = "$coinSymbol${estimatedExp.total.toTwoDecimalPlace()}"
                                 estimatedExp
@@ -123,7 +122,6 @@ class StatisticsFragment : Fragment(), DIAware {
 
     private fun loadChartsData() {
         lifecycleScope.launch {
-
             binding.aggConsumptionChart.setupLineChartStyle(HoursValueFormatter(), MyMarkerView(requireContext(), R.layout.marker))
             binding.avgConsumptionChart.setupLineChartStyle(HoursValueFormatter(), MyMarkerView(requireContext(), R.layout.marker))
             binding.dailyAvgHistChart.setupLineChartStyle(ReadingAvgKwValueFormatter(), ReadingVsAvgKwMarkerView(requireContext(), R.layout.marker))
@@ -138,6 +136,7 @@ class StatisticsFragment : Fragment(), DIAware {
             val period = viewModel.getMeterLatestPeriod(viewModel.meter.code)
             period?.let {
                 val lineData = viewModel.getLineChartData(period)
+                
                 binding.aggConsumptionChart.data = lineData.consumptionDs
 
                 binding.avgConsumptionChart.data = lineData.dailyAvgDs

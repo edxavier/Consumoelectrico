@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
- <!-- -->
-    <color name="primary_dark">#ffa000</color>
-  <color name="primary_light">#C8E6C9</color>
-  <color name="accent">#795548</color>
-    <color name="divider">#BDBDBD</color>
+    <!-- Modern Tech/Energy Palette -->
+    <color name="primaryColor">#005FB0</color> <!-- Vibrant Blue -->
+    <color name="primaryLightColor">#D6E3FF</color>
+    <color name="primaryDarkColor">#001B3D</color>
 
+    <color name="secondaryColor">#006874</color> <!-- Deep Teal -->
+    <color name="secondaryLightColor">#97F0FF</color>
+    <color name="secondaryDarkColor">#001F24</color>
 
-  <color name="chart_background">@color/md_blue_grey_600</color>
-  <color name="chart_consumo_line_color">@color/md_blue_400</color>
-  <color name="chart_consumo_line_fill">@color/md_blue_grey_50</color>
+    <color name="accent">#E1A000</color> <!-- Amber (Electricity) -->
+    <color name="divider">#E0E2EC</color>
 
-  <color name="decoview_color_total_color">#FFE2E2E2</color>
-  <color name="decoview_color_value_color">#FFFF8800</color>
-  <color name="label_text_light" >@color/md_white_1000_75</color>
-  <color name="primary">#ffc107</color>
+    <color name="chart_background">#1A1C1E</color>
+    <color name="chart_consumo_line_color">#005FB0</color>
+    <color name="chart_consumo_line_fill">#D6E3FF</color>
 
- <color name="primaryColor">#d17500</color>
- <color name="primaryLightColor">#ffa43e</color>
- <color name="primaryDarkColor">#9a4800</color>
- <color name="secondaryColor">#3f51b5</color>
- <color name="secondaryLightColor">#f95188</color>
- <color name="secondaryDarkColor">#3949ab</color>
- <color name="primaryTextColor">#000000</color>
- <color name="secondaryTextColor">#ffffff</color>
+    <color name="primaryTextColor">#1A1C1E</color>
+    <color name="secondaryTextColor">#FFFFFF</color>
 
- <color name="mdtp_accent_color">?attr/colorSecondaryVariant</color>
+    <color name="primary_dark">#001B3D</color>
+    <color name="primary_light">#D6E3FF</color>
+    <color name="primary">#005FB0</color>
+
+    <color name="decoview_color_total_color">#E0E2EC</color>
+    <color name="decoview_color_value_color">#E1A000</color>
+    <color name="label_text_light" >@color/md_white_1000_75</color>
+
+    <color name="mdtp_accent_color">#005FB0</color>
 
 </resources>

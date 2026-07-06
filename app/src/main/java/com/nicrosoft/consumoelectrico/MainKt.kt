@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.widget.FrameLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -91,7 +90,7 @@ class MainKt : AppCompatActivity(), PurchasesUpdatedListener, PurchasesResponseL
         navView.setupWithNavController(navController)
 
 
-        val headerNav = navView.getHeaderView(0) as RelativeLayout
+        val headerNav = navView.getHeaderView(0)
         val version = headerNav.findViewById<TextView>(R.id.version)
         version.text = BuildConfig.VERSION_NAME
         //StringBuilder path = new StringBuilder(getFilesDir().getAbsolutePath());

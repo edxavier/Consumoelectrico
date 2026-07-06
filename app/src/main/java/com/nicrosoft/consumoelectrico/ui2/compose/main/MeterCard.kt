@@ -77,7 +77,7 @@ fun MeterPreviewCard(
         Column(
             Modifier
                 .fillMaxWidth()
-                .background(brush = Brush.verticalGradient(colors = pinkGradient))
+                .background(brush = Brush.verticalGradient(colors = indigoGradient))
                 .padding(16.dp),
         ) {
             Row(
@@ -105,7 +105,6 @@ fun MeterPreviewCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
-                // Creating a string span
                 val myString = "${lastRead.readingValue.toInt()} kWh"
                 val start = myString.length - 4
                 val end = start + 3
@@ -133,12 +132,12 @@ fun MeterPreviewCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val kwhColor = if (lastRead.kwAggConsumption > meter.maxKwLimit) Color(0xffe91e63) else Color(0xff009688)
-            val daysColor = if (lastRead.consumptionHours/24 > meter.periodLength) Color(0xff9c27b0) else Color(0xff2196f3)
+            val kwhColor = if (lastRead.kwAggConsumption > meter.maxKwLimit) MaterialTheme.colors.error else Color(0xFF006874)
+            val daysColor = if (lastRead.consumptionHours/24 > meter.periodLength) Color(0xFFE1A000) else Color(0xFF005FB0)
 
             CircularProgressbar(
                 maxUsage = meter.maxKwLimit.toFloat(),
@@ -151,7 +150,7 @@ fun MeterPreviewCard(
             ) {
                 val dailyAvg = lastRead.kwAvgConsumption*24
                 val avgLimit =  meter.maxKwLimit / meter.periodLength
-                val color = if (dailyAvg > avgLimit) Color(0xffb71c1c) else Color(0xff455a64)
+                val color = if (dailyAvg > avgLimit) MaterialTheme.colors.error else Color(0xFF40484C)
                 Text(
                     text = stringResource(id = R.string.consumption).uppercase(), fontSize = 12.sp,
                     fontWeight = FontWeight(600),

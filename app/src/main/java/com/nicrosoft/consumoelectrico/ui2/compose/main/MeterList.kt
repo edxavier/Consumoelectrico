@@ -28,7 +28,7 @@ fun MeterList(
                         onClick = {
                             onFabClick?.let { it() }
                         },
-                        backgroundColor = Color(0xff3f51b5),
+                        backgroundColor = Color(0xFF005FB0),
                         contentColor = Color.White
                     ) {
                         Icon(

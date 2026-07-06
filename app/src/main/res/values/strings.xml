@@ -300,6 +300,16 @@
     <string name="never">Never</string>
     <string name="undo_notice">This action will undo current period and associate all readings to previous period, if no previous period found, reading data will be deleted</string>
     <string name="undo_period">Undo period</string>
+    <string name="active_period">ACTIVE PERIOD</string>
+    <string name="closed_period">CLOSED PERIOD</string>
+    <string name="tap_to_undo">TAP TO UNDO</string>
+    <string name="current_period">CURRENT PERIOD</string>
+    <string name="total_period">TOTAL PERIOD</string>
+    <string name="daily_avg_label">DAILY AVG</string>
+    <string name="billing_period">BILLING PERIOD</string>
+    <string name="save_reading">SAVE READING</string>
+    <string name="elapsed_time">ELAPSED TIME</string>
+    <string name="tap_to_start_stop">TAP TO START / STOP</string>
 
 
 </resources>

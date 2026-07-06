@@ -1,17 +1,14 @@
 package com.nicrosoft.consumoelectrico.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
 
 @Composable
@@ -30,7 +27,7 @@ fun NoDataScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LottieAnimation(
@@ -38,18 +35,19 @@ fun NoDataScreen(
                 progress = { progress },
                 modifier = Modifier.size(200.dp)
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = title,
+                style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = message,
+                style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
-                fontSize = 14.sp
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
         }
